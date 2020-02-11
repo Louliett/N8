@@ -1,4 +1,6 @@
-#menu{
-    width: 50%;
-    background-color: #355263;
+.body1{
+    background-color: red;
+}
+.paragraph{
+    color: chartreuse;
 }
