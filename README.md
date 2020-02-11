@@ -1,2 +1,2 @@
 # N8
-A website for a design products store.
+Design products online store.
