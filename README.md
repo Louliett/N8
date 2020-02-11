@@ -1,2 +1,2 @@
 # N8
-A web site for a furniture store.
+A website for a furniture store.
