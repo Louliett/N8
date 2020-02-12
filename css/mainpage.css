@@ -4,3 +4,15 @@
 .paragraph{
     color: chartreuse;
 }
+
+.circle {
+  width: 200px;
+  height 200px;
+  border-radius: 50%;
+  background: red;
+}
+
+.head {
+  color: red;
+  font-size: 50px;
+}
