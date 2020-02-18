@@ -22,7 +22,7 @@
             <img src="img/pink.png" alt="logo" class="logo">
           </div>
           <div class="col-lg-4 col-md-4 cold-sm-4 col-xs-12">
-            <a href="" id="link">Search_Test</a>
+            <a href="" id="link">Search</a>
           </div>
           <div class="col-lg-4 col-md-4 cold-sm-4 col-xs-12">
             <a href="login/login.html" id="link">Login</a>
