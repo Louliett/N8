@@ -1,0 +1,24 @@
+{
+  "name": "n8",
+  "version": "1.0.0",
+  "description": "Design Products Online Store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Louliett/N8.git"
+  },
+  "author": "Lou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Louliett/N8/issues"
+  },
+  "homepage": "https://github.com/Louliett/N8#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
