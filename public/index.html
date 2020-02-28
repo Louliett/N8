@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <label> Get all names </label>
+    <button id="get_customers">Get Customers</button>
+
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NAME</th>
+          </tr>
+        </thead>
+        <tbody id="customers_table"></tbody>
+      </table>
+    </div>
+
+    <p></p>
+
+    <label> Input ID </label>
+    <input type="text" style="width:50px;" id="id">
+    <button id="get_name_by_id">Get Name</button>
+    <output id="name_by_id"></output>
+
+    <p></p>
+
+    <label> Create user </label>
+    <input type="text" id="new_user">
+    <button id="create_user">Create</button>
+    <output id="output"></output>
+
+    <p></p>
+
+    <label> Input ID </label>
+    <input type="text" style="width:50px;" id="id_change">
+    <label>Input name</label>
+    <input type="text" style="width:100px;" id="name_change">
+    <button id="change_name_by_id">Change Name</button>
+
+    <p></p>
+
+    <label> Input ID </label>
+    <input type="text" style="width:50px;" id="id_delete">
+    <button id="delete_name_by_id">Delete</button>
+    <output id="delete_output"></output>
+
+
+
+    <script src="fetchCustomers.js"></script>
+  </body>
+
+</html>

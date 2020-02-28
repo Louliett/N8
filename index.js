@@ -1,81 +1,36 @@
 "use strict"
 
-const mysql = require('mysql');
 const express = require('express');
 const bodyparser = require('body-parser');
+const routes = require('./routes/api');
 var app = express();
 var port = 3000;
 
-app.use(bodyparser.json());
 
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'users',
-  multipleStatements: true
+app.use(function(req, res, next) {
+  console.log("triggered before");
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  console.log("triggered after");
+  next();
+  console.log("trigered done");
 });
+//Middlewares below
+app.use(express.static('public'));
 
-connection.connect((err) => {
-  if(!err) {
-    console.log("DB Connection Successful!");
-  } else {
-    console.log("DB Connection Failed!");
-  }
-});
+//set up bodyparser (order is important!!)
+app.use(bodyparser.json()); // IDEA: add limit
 
-app.listen(port, () => console.log('Express server is running on port: ' + port));
+//initialize routes
+app.use('/api', routes);
 
-app.get('/customers', (request, response) => {
-  connection.query('SELECT * from customers', (err, rows, fields) => {
-    if(!err) {
-      response.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
+//error handling (should always be last!)
 
-app.get('/customers/:id', (request, response) => {
-  connection.query('SELECT * from customers WHERE id = ?',[request.params.id], (err, rows, fields) => {
-    if(!err) {
-      response.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
 
-app.delete('/customers/:id', (request, response) => {
-  connection.query('DELETE FROM customers WHERE id = ?', [request.params.id], (err, rows, fields) => {
-    if(!err) {
-      response.send('Deletion Complete!');
-    } else {
-      console.log(err);
-    }
-  });
-});
 
-app.post('/customers', (request, response) => {
-  let cus = request.body;
-  var sql = "INSERT INTO customers (name) VALUES (?)"
-  connection.query(sql, [cus.name], (err, rows, fields) => {
-    if(!err) {
-      response.send('This person was added: ' + rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-app.put('/customers', (request, response) => {
-  let cus = request.body;
-  var sql = "UPDATE customers SET name = ? WHERE id = ?"
-  connection.query(sql, [cus.name, cus.id], (err, rows, fields) => {
-    if(!err) {
-      response.send('Updated Successfuly!');
-    } else {
-      console.log(err);
-    }
-  });
-});
+//set up the server on a specific port
+app.listen(
+  process.env.port || port, () =>
+  console.log('Express server is running on port: ' + port)
+);
