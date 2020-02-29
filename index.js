@@ -8,14 +8,13 @@ var port = 3000;
 
 
 app.use(function(req, res, next) {
-  console.log("triggered before");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  console.log("triggered after");
+  res.header("Access-Control-Allow-Headers",
+  "Origin, X-Requested-With, Content-Type, Accept");
   next();
-  console.log("trigered done");
 });
+
 //Middlewares below
 app.use(express.static('public'));
 
