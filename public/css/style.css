@@ -12,3 +12,12 @@ table, th, td {
 th {
     font-weight:bold;
 }
+
+nav {
+  background-color: yellow;
+}
+
+textarea {
+  width: 50%;
+  height: 100px;
+}

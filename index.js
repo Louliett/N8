@@ -2,7 +2,7 @@
 
 const express = require('express');
 const bodyparser = require('body-parser');
-const routes = require('./routes/api');
+const routes = require('./routes/n8_api');
 var app = express();
 var port = 3000;
 
@@ -22,7 +22,7 @@ app.use(express.static('public'));
 app.use(bodyparser.json()); // IDEA: add limit
 
 //initialize routes
-app.use('/api', routes);
+app.use('/n8_api', routes);
 
 //error handling (should always be last!)
 
