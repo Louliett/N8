@@ -53,11 +53,6 @@
     <textarea id="product_design"></textarea>
 
     <p></p>
-    <label> Image Link </label>
-    <br>
-    <textarea id="product_image_link"></textarea>
-
-    <p></p>
     <label> Description </label>
     <br>
     <textarea id="product_description"></textarea>
@@ -119,8 +114,16 @@
     </select>
 
     <p></p>
-    <button type="button" id="create_product"> Create </button>
 
+    <label> Upload Product Image(s) </label>
+    <br>
+    <input type="file" name="myImage" id="product_image" multiple/>
+
+    <p></p>
+
+    <button type="button" style="transform: translate(50vw, 0);" id="create_product"> Create </button>
+
+    <p></p>
 
     <script type="module" src="../js/create_product.js"></script>
   </body>

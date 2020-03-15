@@ -13,7 +13,7 @@ var section = [];
 
 (function() {
 
-  fetch('http://localhost:3000/n8_api/subcategory')
+  fetch('http://localhost:3000/products/subcategory')
     .then(response => response.json())
     .then(data => {
 
@@ -37,7 +37,7 @@ var section = [];
 
 (function() {
 
-  fetch('http://localhost:3000/n8_api/category')
+  fetch('http://localhost:3000/products/category')
     .then(response => response.json())
     .then(data => {
 
@@ -61,7 +61,7 @@ var section = [];
 
 (function() {
 
-  fetch('http://localhost:3000/n8_api/section')
+  fetch('http://localhost:3000/products/section')
     .then(response => response.json())
     .then(data => {
 
@@ -93,7 +93,6 @@ create_product_button.addEventListener("click", function(){
   var product_quantity_txt = document.getElementById('product_quantity');
   var product_brand_txt = document.getElementById('product_brand');
   var product_design_txt = document.getElementById('product_design');
-  var product_image_link_txt = document.getElementById('product_image_link');
   var product_description_txt = document.getElementById('product_description');
   var product_material_txt = document.getElementById('product_material');
   var product_colour_txt = document.getElementById('product_colour');
@@ -102,7 +101,7 @@ create_product_button.addEventListener("click", function(){
   var product_height_txt = document.getElementById('product_height');
   var product_volume_txt = document.getElementById('product_volume');
   var product_weight_txt = document.getElementById('product_weight');
-
+  var fileInput = document.getElementById('product_image');
 
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
@@ -111,7 +110,6 @@ create_product_button.addEventListener("click", function(){
   var product_quantity = product_quantity_txt.value;
   var product_brand = product_brand_txt.value;
   var product_design = product_design_txt.value;
-  var product_image_link = product_image_link_txt.value;
   var product_description = product_description_txt.value;
   var product_material = product_material_txt.value;
   var product_colour = product_colour_txt.value;
@@ -123,50 +121,87 @@ create_product_button.addEventListener("click", function(){
   var product_subcategory = product_subcategory_slc.value;
   var product_category = product_category_slc.value;
   var product_section = product_section_slc.value;
+  //imagage upload
+  var key = fileInput.name;
+  var theImage = fileInput.value;
+  var formdata = new FormData();
+
 
 
 
   //var product = new Product(product_name, product_price, product_new_price, product_ean, product_quantity, product_brand, product_design, product_image_link, product_description, product_material, product_colour, product_length, product_width, product_height, product_volume, product_weight, product_subcategory, product_category, product_section);
   let fields = [];
-  fields.push(product_name, product_price, product_new_price, product_ean, product_quantity, product_brand, product_design, product_image_link, product_description, product_material, product_colour, product_length, product_width, product_height, product_volume, product_weight, product_subcategory, product_category, product_section);
+  fields.push(product_name, product_price, product_new_price, product_ean, product_quantity, product_brand, product_design, product_description, product_material, product_colour, product_length, product_width, product_height, product_volume, product_weight, product_subcategory, product_category, product_section);
 
-  //console.log(product);
-  const product = {
-    'name': product_name,
-    'price': product_price,
-    'new_price': product_new_price,
-    'ean': product_ean,
-    'quantity': product_quantity,
-    'brand': product_brand,
-    'design': product_design,
-    'image_link': product_image_link,
-    'description': product_description,
-    'material': product_material,
-    'colour': product_colour,
-    'length': product_length,
-    'width': product_width,
-    'height': product_height,
-    'volume': product_volume,
-    'weight': product_weight,
-    'subcategory': product_subcategory,
-    'category': product_category,
-    'section': product_section
-   };
+  for(var i = 0; i < fileInput.files.length; i++) {
+    formdata.append(key, fileInput.files[i], theImage);
+  }
+  //need to append data to the body
+  formdata.append("name", product_name);
+  formdata.append("price", product_price);
+  formdata.append("new_price", product_new_price);
+  formdata.append("ean", product_ean);
+  formdata.append("quantity", product_quantity);
+  formdata.append("brand", product_brand);
+  formdata.append("design", product_design);
+  formdata.append("description", product_description);
+  formdata.append("material", product_material);
+  formdata.append("colour", product_colour);
+  formdata.append("length", product_length);
+  formdata.append("width", product_width);
+  formdata.append("height", product_height);
+  formdata.append("volume", product_volume);
+  formdata.append("weight", product_weight);
+  formdata.append("subcategory", product_subcategory);
+  formdata.append("category", product_category);
+  formdata.append("section", product_section);
+
+  // //console.log(product);
+  // const product = {
+  //   'name': product_name,
+  //   'price': product_price,
+  //   'new_price': product_new_price,
+  //   'ean': product_ean,
+  //   'quantity': product_quantity,
+  //   'brand': product_brand,
+  //   'design': product_design,
+  //   'description': product_description,
+  //   'material': product_material,
+  //   'colour': product_colour,
+  //   'length': product_length,
+  //   'width': product_width,
+  //   'height': product_height,
+  //   'volume': product_volume,
+  //   'weight': product_weight,
+  //   'subcategory': product_subcategory,
+  //   'category': product_category,
+  //   'section': product_section
+  //  };
 
   if(isItEmpty(fields) === true || product_ean === "") {
     console.log("All fields are empty!!!");
   } else {
 
-    const options = {
+    // const options = {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(product)
+    // };
+    //
+    // fetch('http://localhost:3000/products/create-product', options)
+    var requestOptions = {
       method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(product)
+      body: formdata,
+      redirect: 'follow'
     };
 
-    fetch('http://localhost:3000/n8_api/create-product', options)
+    fetch("http://localhost:3000/products/test", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 
     product_name_txt.value = "";
     product_price_txt.value = "";
@@ -175,7 +210,6 @@ create_product_button.addEventListener("click", function(){
     product_quantity_txt.value = "";
     product_brand_txt.value = "";
     product_design_txt.value = "";
-    product_image_link_txt.value = "";
     product_description_txt.value = "";
     product_material_txt.value = "";
     product_colour_txt.value = "";
