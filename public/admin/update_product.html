@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Create Product</title>
+    <title>Update Product</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" href="../img/n8.ico">
   </head>
@@ -95,22 +95,26 @@
     <label> Subcategory </label>
     <br>
     <select id="product_subcategory">
-      <option></option>
+      <option id="default_subcategory"></option>
     </select>
 
     <p></p>
     <label> Category </label>
     <br>
     <select id="product_category">
-      <option></option>
+      <option id="default_category"></option>
     </select>
 
     <p></p>
     <label> Section </label>
     <br>
     <select id="product_section">
-      <option></option>
+      <option id="default_section"></option>
     </select>
+
+    <p></p>
+
+    <div class="container" id="image_div"> </div>
 
     <p></p>
 
@@ -120,11 +124,12 @@
 
     <p></p>
 
-    <button type="button" style="transform: translate(50vw, 0);" id="create_product"> Create </button>
+    <button type="button" style="transform: translate(50vw, 0);" id="update_product"> Update </button>
+    <button type="button" style="transform: translate(50vw, 0);" id="delete_product"> Delete </button>
 
     <p></p>
 
-    <script type="module" src="../js/create_product.js"></script>
+    <script type="module" src="../js/update_product.js"></script>
   </body>
 
 </html>
