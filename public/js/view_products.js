@@ -1,6 +1,6 @@
 "use strict"
+
 var button = document.getElementById('test');
-var myData;
 var letters = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
 letters = letters.split(",");
 var container;
@@ -16,11 +16,8 @@ for (var i = 0; i < letters.length; i++) {
     var letter = event.target.innerHTML;
     getProducts(letter);
   });
-
   document.getElementById("letter_container").appendChild(container);
-
 }
-
 
 
 function getProducts(letter) {
@@ -28,11 +25,9 @@ function getProducts(letter) {
   const data = {
     letter: letter
   }
-
   var raw = JSON.stringify(data);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -44,12 +39,10 @@ function getProducts(letter) {
     .then(response => response.json())
     .then(data => {
 
-      myData = data;
-
-        if(myData.length > 0) {
+        if(data.length > 0) {
             var tempp = "";
 
-            myData.forEach((u) => {
+            data.forEach((u) => {
                 tempp += "<tr class='updateProduct'>"
                 tempp += "<td>" + u.name + "</td>";
                 tempp += "<td>" + u.price + "</td>";
@@ -66,6 +59,7 @@ function getProducts(letter) {
                 tempp += "<td>" + u.height + "</td>";
                 tempp += "<td>" + u.volume + "</td>";
                 tempp += "<td>" + u.weight + "</td>";
+                tempp += "<td>" + u.size + "</td>";
                 tempp += "<td>" + u.subcategory + "</td>";
                 tempp += "<td>" + u.category + "</td>";
                 tempp += "<td>" + u.section + "</td>";
@@ -74,18 +68,15 @@ function getProducts(letter) {
 
               document.getElementById('product_table').innerHTML = tempp;
               var row = document.getElementsByClassName('updateProduct');
-              console.log(row);
 
               for (var i = 0; i < row.length; i++) {
-
                 row[i].addEventListener("click", () => {
                   var key = event.target.parentNode.childNodes[3].innerHTML;
                   document.location.href = "update_product.html?" + key;
+                  console.log(key);
                 });
               }
 
-            }
-
-          }).catch(error =>
-            console.error(error));
+        }
+      }).catch(error => console.error(error));
 }

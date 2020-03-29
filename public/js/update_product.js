@@ -3,9 +3,10 @@
 import { isItEmpty } from './utils.js';
 
 var key = decodeURIComponent(window.location.search).replace("?", "");
-
+//buttons
 var update_product_button = document.getElementById('update_product');
 var delete_product_button = document.getElementById('delete_product');
+//drop down menus
 var product_subcategory_slc = document.getElementById('product_subcategory');
 var product_category_slc = document.getElementById('product_category');
 var product_section_slc = document.getElementById('product_section');
@@ -26,84 +27,51 @@ var product_width_txt = document.getElementById('product_width');
 var product_height_txt = document.getElementById('product_height');
 var product_volume_txt = document.getElementById('product_volume');
 var product_weight_txt = document.getElementById('product_weight');
+var product_size_txt = document.getElementById('product_size');
+//image input
 var fileInput = document.getElementById('product_image');
 var image_div = document.getElementById('image_div');
-//selectors
-
-
-var car = 3;
-
-var subcategory = [];
-var category = [];
-var section = [];
 var images = [];
 var id;
+//sql tables
+var sub_table = "subcategory";
+var cat_table = "category";
+var sec_table = "section";
+//arrays with data from database
+var sub_array = [];
+var cat_array = [];
+var sec_array = [];
 
 
+//populates all the drop down menus
+populateSelectors(sub_table, sub_array, product_subcategory_slc);
+populateSelectors(cat_table, cat_array, product_category_slc);
+populateSelectors(sec_table, sec_array, product_section_slc);
 
-
-
-(function() {
-  fetch('http://localhost:3000/products/subcategory')
+function populateSelectors(table, array, selector) {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+  };
+  fetch('http://localhost:3000/classifications/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {
       for(var i=0; i<data.length; i++) {
-        //console.log(data[i].name);
-        subcategory.push(data[i].name);
+        array.push(data[i].name);
       }
-      for(var i = 0; i < subcategory.length; i++) {
-        var opt = subcategory[i];
+      for(var i = 0; i < array.length; i++) {
+        var opt = array[i];
         var el = document.createElement("option");
         el.textContent = opt;
         el.value = opt;
-        product_subcategory_slc.appendChild(el);
+        selector.appendChild(el);
       }
-    }).catch(error =>
-      console.error(error));
-})();
+    }).catch(error => console.error(error));
 
-
-(function() {
-  fetch('http://localhost:3000/products/category')
-    .then(response => response.json())
-    .then(data => {
-      for(var i=0; i<data.length; i++) {
-        //console.log(data[i].name);
-        category.push(data[i].name);
-      }
-      for(var i = 0; i < category.length; i++) {
-        var opt = category[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        product_category_slc.appendChild(el);
-      }
-    }).catch(error =>
-      console.error(error));
-})();
-
-(function() {
-  fetch('http://localhost:3000/products/section')
-    .then(response => response.json())
-    .then(data => {
-      for(var i=0; i<data.length; i++) {
-        //console.log(data[i].name);
-        section.push(data[i].name);
-      }
-      for(var i = 0; i < section.length; i++) {
-        var opt = section[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        product_section_slc.appendChild(el);
-      }
-    }).catch(error =>
-      console.error(error));
-})();
+}
 
 
 window.addEventListener("load", () => {
-
 
   var default_subcategory = document.getElementById('default_subcategory');
   var default_category = document.getElementById('default_category');
@@ -212,7 +180,6 @@ function deleteImages(name, path, target) {
 
 
 update_product_button.addEventListener("click", () => {
-  console.log(car);
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
   var product_new_price = product_new_price_txt.value;
@@ -228,6 +195,7 @@ update_product_button.addEventListener("click", () => {
   var product_height = product_height_txt.value;
   var product_volume = product_volume_txt.value;
   var product_weight = product_weight_txt.value;
+  var product_size = product_size_txt.value;
   var product_subcategory = product_subcategory_slc.value;
   var product_category = product_category_slc.value;
   var product_section = product_section_slc.value;
@@ -235,16 +203,22 @@ update_product_button.addEventListener("click", () => {
   //imagage upload
   var key = fileInput.name;
   var theImage = fileInput.value;
+  var images_number = fileInput.files.length;
   var formdata = new FormData();
 
 
-  let fields = [];
-  fields.push(product_name, product_price, product_new_price, product_ean, product_quantity, product_brand, product_design, product_description, product_material, product_colour, product_length, product_width, product_height, product_volume, product_weight, product_subcategory, product_category, product_section);
+  let fields = [];//checks if fields are empty
+  fields.push(product_name, product_price, product_new_price, product_ean,
+    product_quantity, product_brand, product_design, product_description,
+    product_material, product_colour, product_length, product_width,
+    product_height, product_volume, product_weight, product_size,
+    product_subcategory, product_category, product_section);
 
+  //appends images to formdata
   for(var i = 0; i < fileInput.files.length; i++) {
     formdata.append(key, fileInput.files[i], theImage);
   }
-
+  //appends text to formdata
   formdata.append("ean", product_ean);
   console.log(formdata.get("ean"));
 
@@ -267,6 +241,7 @@ update_product_button.addEventListener("click", () => {
     'height': product_height,
     'volume': product_volume,
     'weight': product_weight,
+    'size': product_size,
     'subcategory': product_subcategory,
     'category': product_category,
     'section': product_section
@@ -277,7 +252,6 @@ update_product_button.addEventListener("click", () => {
   if(isItEmpty(fields) === true || product_ean === "") {
     console.log("All fields are empty!!!");
   } else {
-
 
       var texthead = new Headers();
       var imagehead = new Headers();
@@ -302,21 +276,18 @@ update_product_button.addEventListener("click", () => {
 
       fetch("http://localhost:3000/products/update-product", updateProductRequest)
       .then(response => response.text())
-      .then((result, newfetch) => {
-        console.log(result)
-
-
-      })
-      .catch(error => console.log('error', error));
-
-      console.log(formdata.get("ean"));
-      fetch("http://localhost:3000/products/upload-images-test", uploadImagesRequest)
-      .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
 
+      //runs only if there are images
+      if(images_number !== 0) {
+        fetch("http://localhost:3000/products/upload-images-test", uploadImagesRequest)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      }
 
-
+      //resets all the textfields
       product_name_txt.value = "";
       product_price_txt.value = "";
       product_new_price_txt.value = "";
@@ -332,6 +303,7 @@ update_product_button.addEventListener("click", () => {
       product_height_txt.value = "";
       product_volume_txt.value = "";
       product_weight_txt.value = "";
+      product_size_txt.value = "";
       product_subcategory_slc.textContent = "";
       product_category_slc.textContent = "";
       product_section_slc.textContent = "";
@@ -342,8 +314,8 @@ update_product_button.addEventListener("click", () => {
 });
 
 
-delete_product_button.addEventListener("click", () => {
-
+delete_product_button.addEventListener("click", (event) => {
+   event.preventDefault();
    var myHeaders = new Headers();
    myHeaders.append("Content-Type", "application/json");
 

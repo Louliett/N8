@@ -1,7 +1,6 @@
 "use strict"
 
 const express = require('express');
-const cors = require('cors');
 const connection = require('../../db');
 const multer = require('multer');
 const path = require('path');
@@ -38,7 +37,6 @@ function checkFileType(file, cb) {
 router.delete('/delete-images', (req, res, next) => {
   var path = req.body.path;
   var name = req.body.name;
-
   sql = "DELETE image, product_image " +
         "FROM image " +
         "INNER JOIN product_image ON image.id = product_image.image_id " +
@@ -60,7 +58,6 @@ router.delete('/delete-images', (req, res, next) => {
       console.log(err);
     }
   });
-
 });
 
 // TODO: fix the sql into a single statement
@@ -68,21 +65,21 @@ router.delete('/delete-product', (req, res, next) => {
 
   var id = req.body.id;
   var path = req.body.path;
-  sql = "delete image, product_image " +
-        "from image " +
-        "inner join product_image on image.id = product_image.image_id " +
-        "where product_id = ?; " +
-        "delete from product_classification " +
-        "where product_id = ?; " +
-        "delete from product " +
-        "where id = ?; ";
-
+  sql = "DELETE image, product_image " +
+        "FROM image " +
+        "INNER JOIN product_image ON image.id = product_image.image_id " +
+        "WHERE product_id = ?; " +
+        "DELETE FROM product_classification " +
+        "WHERE product_id = ?; " +
+        "DELETE FROM product " +
+        "WHERE product.id = ?; ";
+  console.log(id);
   connection.query(sql, [id, id, id], (err, rows, fields) => {
     if(err) {
       console.log(err);
       res.send(err);
     } else {
-      res.send(rows);
+      //res.send(rows);
       try {
         for (var i = 0; i < path.length; i++) {
           fs.unlinkSync("." + path[i])
@@ -94,7 +91,6 @@ router.delete('/delete-product', (req, res, next) => {
       }
     }
   });
-
 });
 
 // TODO: to be deleted
@@ -145,7 +141,7 @@ router.post('/upload-images-test', (req, res) => {
         }
 	    }
 
-      var sql2 = "INSERT INTO image (name, path) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
+      sql = "INSERT INTO image (name, path) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
 
       for (var i = 0; i < imgarray.length; i++) {
         bigboss.push(imgarray[i]);
@@ -156,7 +152,7 @@ router.post('/upload-images-test', (req, res) => {
 
       const newboss = bigboss.flat(Infinity);
 
-      connection.query(sql2, newboss, (err, rows, fields) => {
+      connection.query(sql, newboss, (err, rows, fields) => {
           if(!err) {
             //res.send("insert into image query works!");
             console.log("insert into image query success!");
@@ -169,23 +165,23 @@ router.post('/upload-images-test', (req, res) => {
 
     }
   });
-
-
-
 });
 
-
-router.post('/create-product-test', (req, res) => {
+//to be split into to methods
+router.post('/create-product', (req, res) => {
 
 	let product = req.body;
-  console.log(req.body);
-  sql = "INSERT INTO product (name, price, new_price, ean, quantity, brand, design, description, material, colour, length, width, height, volume, weight) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
+  sql = "INSERT INTO product (name, price, new_price, ean, quantity, brand, design, description, " +
+        "material, colour, length, width, height, volume, weight, size) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
         "INSERT INTO product_classification (product_id, subcategory_id, category_id, section_id) " +
-        "VALUES ((SELECT id FROM product WHERE ean=?), (SELECT id FROM subcategory WHERE name=?), (SELECT id FROM category WHERE name=?), (SELECT id FROM section WHERE name=?)); ";
+        "VALUES ((SELECT id FROM product WHERE ean=?), (SELECT id FROM subcategory WHERE name=?), " +
+        "(SELECT id FROM category WHERE name=?), (SELECT id FROM section WHERE name=?)); ";
 
-  connection.query(sql, [product.name, product.price, product.new_price, product.ean, product.quantity, product.brand, product.design, product.description,
-                         product.material, product.colour, product.length, product.width, product.height, product.volume, product.weight, product.ean,
+  connection.query(sql, [product.name, product.price, product.new_price, product.ean,
+                         product.quantity, product.brand, product.design, product.description,
+                         product.material, product.colour, product.length, product.width,
+                         product.height, product.volume, product.weight, product.size, product.ean,
                          product.subcategory, product.category, product.section], (err, rows, fields) => {
 						if(!err) {
 							res.send("Insert into products query works!");
@@ -196,43 +192,6 @@ router.post('/create-product-test', (req, res) => {
 							console.log("Insert into products query doesnt work!");
       }
     });
-
-});
-
-//select all subcategories
-router.get('/subcategory', (req, res, next) => {
-  sql = "SELECT name FROM subcategory";
-  connection.query(sql, (err, rows, fields) => {
-    if(!err) {
-      res.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-//select all categories
-router.get('/category', (req, res, next) => {
-  sql = "SELECT name FROM category";
-  connection.query(sql, (err, rows, fields) => {
-    if(!err) {
-      res.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-//select all sections
-router.get('/section', (req, res, next) => {
-  sql = "SELECT name FROM section";
-  connection.query(sql, (err, rows, fields) => {
-    if(!err) {
-      res.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
 });
 
 //select all products based on name's first letter
@@ -295,33 +254,16 @@ router.post('/ean-img', (req, res, next) => {
   });
 });
 
-
-// TODO: depricated, to be deletedcreate a new product
-router.post('/create-product', (req, res, next) => {
-  let product = req.body;
-  sql = "INSERT INTO product (name, price, new_price, ean, quantity, brand, design, description, material, colour, length, width, height, volume, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);INSERT INTO product_category (product_id, subcategory_id, category_id, section_id) VALUES ((SELECT id FROM product WHERE ean=?), (SELECT id FROM subcategory WHERE name=?), (SELECT id FROM category WHERE name=?), (SELECT id FROM section WHERE name=?))";
-
-  connection.query(sql, [product.name, product.price, product.new_price, product.ean, product.quantity, product.brand, product.design, product.description, product.material,
-    product.colour, product.length, product.width, product.height, product.volume, product.weight, product.ean, product.subcategory, product.category, product.section], (err, rows, fields) => {
-    if(!err) {
-      //response.send(product);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-
 router.put('/update-product', (req, res, next) => {
   let product = req.body;
   sql = "UPDATE product " +
         "SET name =?, price=?, new_price=?, ean=?, quantity=?, brand=?, design=?, description=?, material=?, colour=?, length=?, width=?, height=?, volume=?, weight=? " +
-        "where id=?; " +
+        "WHERE id=?; " +
         "UPDATE product_classification " +
         "SET subcategory_id=(select id from subcategory where name=?), " +
         "category_id=(select id from category where name=?), " +
         "section_id=(select id from section where name=?) " +
-        "where product_id = ?;"
+        "WHERE product_id = ?;"
 
   connection.query(sql, [product.name, product.price, product.new_price, product.ean, product.quantity, product.brand, product.design, product.description,
                          product.material, product.colour, product.length, product.width, product.height, product.volume, product.weight, product.id,
@@ -386,7 +328,7 @@ router.post('/test', (req, res) => {
 
 		  }
 
-      var sql2 = "INSERT INTO image (name, path) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
+      sql = "INSERT INTO image (name, path) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
 
 
       for (var i = 0; i < imgarray.length; i++) {
@@ -400,7 +342,7 @@ router.post('/test', (req, res) => {
 
       const newboss = bigboss.flat(Infinity);
 
-      connection.query(sql2, newboss, (err, rows, fields) => {
+      connection.query(sql, newboss, (err, rows, fields) => {
           if(!err) {
             //res.send("insert into image query works!");
             console.log("insert into image query success!");
@@ -413,9 +355,6 @@ router.post('/test', (req, res) => {
 
     }
   });
-
-res.status(200).end();
-
 });
 
 

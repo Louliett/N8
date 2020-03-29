@@ -20,7 +20,7 @@ router.get('/customers', (request, response, next) => {
 
 //get a specific user based on id
 router.get('/customers/:id', (request, response, next) => {
-    connection.query('SELECT * from customers WHERE id = ?',[request.params.id], (err, rows, fields) => {
+    connection.query('SELECT * from customers WHERE id = ?', [request.params.id], (err, rows, fields) => {
       if(!err) {
         console.log("this runs");
         response.send(rows);
