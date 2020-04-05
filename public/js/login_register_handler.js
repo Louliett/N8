@@ -1,6 +1,6 @@
 "use strict"
 
-export function verificator(first_name_txt, last_name_txt, email_txt,
+export function validator(first_name_txt, last_name_txt, email_txt,
                             confirm_email_txt, password_txt,
                             confirm_password_txt, text_fields) {
   var firstNameFlag = false;
@@ -50,25 +50,9 @@ export function verificator(first_name_txt, last_name_txt, email_txt,
   if(fieldsFlag == true && firstNameFlag == true && lastNameFlag == true &&
      emailFlag == true  && emailMatchFlag == true && passwordFlag == true &&
      passwordMatchFlag == true) {
-    console.log("fields " + fieldsFlag);
-    console.log("first " + firstNameFlag);
-    console.log("last " + lastNameFlag);
-    console.log("email1 " + emailFlag);
-    console.log("email2 " + emailMatchFlag);
-    console.log("pass1 " + passwordFlag);
-    console.log("pass2 " + passwordMatchFlag);
     return true;
-
   } else {
-    console.log("fields " + fieldsFlag);
-    console.log("first " + firstNameFlag);
-    console.log("last " + lastNameFlag);
-    console.log("email1 " + emailFlag);
-    console.log("email2 " + emailMatchFlag);
-    console.log("pass1 " + passwordFlag);
-    console.log("pass2 " + passwordMatchFlag);
     return false;
-
   }
 
 }
@@ -77,20 +61,20 @@ function alerter(field) {
   return field.css("background-color", "red");
 }
 
-function validator(field) {
+function neutralizer(field) {
   return field.css("background-color", "");
 }
 
 
 //non-strict field checker
-function fields(text_fields) {
+export function fields(text_fields) {
   var checker = 0;
   for(var i = 0; i < text_fields.length; i++) {
     if(text_fields[i].val() === "") {
       alerter(text_fields[i]);
       checker++;
     } else {
-      validator(text_fields[i]);
+      neutralizer(text_fields[i]);
     }
   }
   if(checker == 0) {
@@ -133,12 +117,10 @@ function email(email_txt) {
 
 function emailMatch(email_txt, confirm_email_txt) {
   if(email_txt.val() === confirm_email_txt.val()) {
-    console.log("yass");
     return true;
   } else {
-    console.log("nono");
     alerter(email_txt);
-    alerter(confirm_email_txt)
+    alerter(confirm_email_txt);
     return false;
   }
 }

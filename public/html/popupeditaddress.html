@@ -1,0 +1,129 @@
+
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 0 20 20" width="30" class="closecard"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg></span>
+      <h2>Add new card</h2>
+    </div>
+    <div class="modal-body">
+        <div class='cardinfo'>
+        <div class='cardnumberdiv'>
+                        <p class='separator'>Card Details</p>
+
+      <p class='newcardtitle'>Card Number</p>
+<input type='text' placeholder="#### #### #### ####" data-field-name='cardnumber'>
+            </div>
+                <div class='cardnamediv'>
+
+        <p class='newcardtitle'>Card holder</p>
+<input type='text' placeholder="Owner name" data-field-name='cardowner'>
+                                </div>
+        <div class='expdatediv'>
+
+        <p class='newcardtitle'>Expiration Date</p>
+<select id="frmNewCard_expirationMonth" title="" class="required card_expirationMonth" style="width: 90px;" name="card_expirationMonth"  data-field-name='cardexpmonth'>
+                                        <option value="">
+                                            MM</option>
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+        <select id="frmNewCard_expirationYear" class="required card_expirationYear" style="width: 90px;" name="card_expirationYear" data-field-name='cardexpyear'>
+                                                <option value="">
+                                                    YY</option>
+                                                <option value="2020">
+                                                            20</option>
+                                                    <option value="2021">
+                                                            21</option>
+                                                    <option value="2022">
+                                                            22</option>
+                                                    <option value="2023">
+                                                            23</option>
+                                                    <option value="2024">
+                                                            24</option>
+                                                    <option value="2025">
+                                                            25</option>
+                                                    <option value="2026">
+                                                            26</option>
+                                                    <option value="2027">
+                                                            27</option>
+                                                    <option value="2028">
+                                                            28</option>
+                                                    <option value="2029">
+                                                            29</option>
+                                                    <option value="2030">
+                                                            30</option>
+                                                    <option value="2031">
+                                                            31</option>
+                                                    <option value="2032">
+                                                            32</option>
+                                                    <option value="2033">
+                                                            33</option>
+                                                    <option value="2034">
+                                                            34</option>
+                                                    <option value="2035">
+                                                            35</option>
+                                                    <option value="2036">
+                                                            36</option>
+                                                    </select>
+                        </div>
+        <div class='securitycodediv'>
+                    <p class='newcardtitle'>Security Code</p>
+<input type='text' placeholder="Security Code" maxLength='4' data-field-name='cardsecurity'>
+                    
+        </div>
+            </div>
+        <div class='billing address'>
+            <p class='separator'>Billing Address</p>
+            <p class='newcardtitle'>City</p>
+<select id="cities" class="required card_expirationYear" style="width: 90px;" name="card_expirationYear" data-field-name='billingcity'>
+                                                <option value="">
+                                                    София</option>
+                                                
+                                                    </select>
+            <div class='billingaddresstitle'>
+                <p class='newcardtitle'>Title</p>
+<select id="frmNewCard_expirationYear" class="required card_expirationYear" style="width: 90px;" name="card_expirationYear" data-field-name='cardtitle'>
+                                                <option value="mr">
+                                                    Mr</option>
+    <option value="ms">
+                                                    Ms</option>
+                                                <option value="mrs">
+                                                    Mrs</option>
+    <option value="cancer">
+                                                    Cancer</option>
+                                                    </select>
+                
+                    <p class='newcardtitle'>irst Name</p>
+<input type='text' placeholder="irst name" data-field-name='billingname1'>
+                <p class='newcardtitle'>Last Name</p>
+<input type='text' placeholder="Last Name" data-field-name='billingname2'>
+                <p class='newcardtitle'>Phone Number</p>
+<input type='text' placeholder="Phone Number" data-field-name='billingphone'>
+                <p class='newcardtitle'>Address</p>
+<input type='text' placeholder="Address Line 1" data-field-name='billingaddress1'>
+                <p class='newcardtitle'>Address</p>
+<input type='text' placeholder="Address Line 2" data-field-name='billingaddress2'>
+                <p class='newcardtitle'>Post code</p>
+<input type='text' placeholder="Post Code">
+            
+        
+        </div>
+
+      </div>
+    <div class="modal-footer">
+<button class='addcard'>Add</button>    </div>
+  </div>
+
+</div>

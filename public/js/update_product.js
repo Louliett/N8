@@ -337,5 +337,5 @@ delete_product_button.addEventListener("click", (event) => {
      .then(result => console.log(result))
      .catch(error => console.log('error', error));
 
-   location.href = "http://127.0.0.1:3000/public/admin/view_products.html";
+   location.href = "/public/admin/view_products.html";
 });

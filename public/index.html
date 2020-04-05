@@ -1,60 +1,79 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!doctype html>
+<html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <title>Test</title>
-    <link rel="stylesheet" href="css/style.css">
-  </head>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
 
-  <body>
-    <label> Get all names </label>
-    <button id="get_customers">Get Customers</button>
 
-    <div class="container">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>NAME</th>
-          </tr>
-        </thead>
-        <tbody id="customers_table"></tbody>
-      </table>
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="/public/css/mainpage.css">
+  <link rel="stylesheet" href="/public/css/header.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+</head>
+
+
+
+
+
+
+
+
+<body id="main">
+
+
+
+
+
+  <div id="includedContent"></div>
+
+
+
+
+
+  <div id="wrapper">
+
+
+  </div>
+  <div id="itemrow">
+
+  </div>
+
+
+  <div class='loadMore'>
+    <div class="svg-wrapper">
+      <svg height="60" width="320" xmlns="http://www.w3.org/2000/svg" class="parentshape">
+        <rect class="shape" height="60" width="320" />
+      </svg>
+      <div class="buttontext">load more</div>
     </div>
-
-    <p></p>
-
-    <label> Input ID </label>
-    <input type="text" style="width:50px;" id="id">
-    <button id="get_name_by_id">Get Name</button>
-    <output id="name_by_id"></output>
-
-    <p></p>
-
-    <label> Create user </label>
-    <input type="text" id="new_user">
-    <button id="create_user">Create</button>
-    <output id="output"></output>
-
-    <p></p>
-
-    <label> Input ID </label>
-    <input type="text" style="width:50px;" id="id_change">
-    <label>Input name</label>
-    <input type="text" style="width:100px;" id="name_change">
-    <button id="change_name_by_id">Change Name</button>
-
-    <p></p>
-
-    <label> Input ID </label>
-    <input type="text" style="width:50px;" id="id_delete">
-    <button id="delete_name_by_id">Delete</button>
-    <output id="delete_output"></output>
+  </div>
 
 
 
-    <script src="js/fetchCustomers.js"></script>
-  </body>
+  <div class="footer">
+    <h2 style="color:#ffffff;">Footer</h2>
+    <a>Link1</a>
+    <a>Link2</a>
+  </div>
+
+
+
+
+
+
+
+
+
+
+  <script src="/public/js/index.js"></script>
+</body>
 
 </html>

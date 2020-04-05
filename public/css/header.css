@@ -1,0 +1,519 @@
+
+
+#main{
+    background-color: #ffffff;
+    margin: 0px;
+    padding: 0px;
+}
+#navbar{
+    background-color: #3f4045;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; 
+    z-index: 2;
+    width:100%;
+}
+#wrapper{
+    height: 140px;
+
+}
+#categorySpace{
+    width:100%;
+    background-color: crimson;
+  position: fixed;
+  top: 83px; 
+    z-index: 1;
+    background-color: #ffffff;
+    width:100%;
+    text-align: center;
+    height:40px;
+    padding: 4px 0px 0px 0px;
+    transition: 0.5s;
+}
+
+
+.navbar2{
+  position: fixed;
+  top: 32px; 
+    z-index: 1;
+    background-color: #ffffff;
+    width:100%;
+    text-align: center;
+    height:51px;
+    padding: 4px 0px 4px 0px;
+    transition: 0.5s;
+}
+.logoImg{
+        object-fit: cover;
+    height:44px;
+    transition: 0.4s;
+    
+}
+
+
+#menuitem{
+    display:inline-block;
+}
+
+
+svg {
+  fill:white;
+    transition: 0.3s;
+}
+svg:hover {
+  fill: #fcdebe;
+}
+
+svg.search {
+  fill:#3f4045;
+        position: absolute;
+top:20%;
+}
+svg.search:hover {
+  fill: #fcdebe;
+}
+svg.closesearch {
+  fill:#3f4045;
+    position: absolute;
+top:20%;
+    display:none;
+
+}
+svg.closesearch:hover {
+  fill: crimson;
+}
+
+.menuicons{
+    float:right;
+    margin: 4px 4px 0px 0px;
+}
+
+
+ /* Dropdown Button */
+.dropbtn {
+  background-color: #ffffff;
+  color: black;
+  font-size: 14px;
+  border: none;
+    transition:0.4s;
+    padding: 8px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+      z-index: 1;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3f4045; color: white;} 
+
+#searchIcon{
+    fill: #000000;
+}
+a{
+    padding: 14px;
+}
+*{
+    line-height: 18px;
+    font-family: 'Inconsolata', monospace;
+}
+.searchbar{
+    position: absolute;
+    width:0px;
+    height:100%;
+text-align: left;
+  transition: width 0.8s, height 4s;
+    z-index: 2;
+}
+
+.inputsearch{
+    width:93%;
+    font-size:34px;
+    padding: 5px 0px 5px 20px;
+}
+.searchclose{
+    display:inline-block;
+    position:relative;
+    
+    
+    width: 5%;
+    height:74%;
+}
+input.inputsearch{
+    
+    color: #3f4045;
+    background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #3f4045;
+}
+.footer{
+    width:100%;
+    height:100px;
+    background-color: #3f4045;
+}
+
+
+/* Dropdown Button */
+.dropbtn-subcategory {
+  background-color: #ffffff;
+  color: #3f4045;
+  border: none;
+    font-size: 17px;
+    font-weight: 500;
+    margin:0;
+    padding:0px 8px 0px 8px;
+    height:100%;
+        transition:0.4s;
+
+
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown-subcategory {
+  display: inline-block;
+      z-index: 1;
+    text-align: left;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content-subcategory {
+  display: none;
+  position: absolute;
+    left:0px;
+    top:18px;
+    width:100%;
+    height:440px;
+  background-color: #ffffff;
+    border-top-width: 0px;
+    border-top-style: solid;
+    border-top-color: #3f4045;
+    
+  z-index: 1;
+    
+}
+
+/* Links inside the dropdown */
+.dropdown-content-subcategory a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+    line-height: 8px;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content-subcategory a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown-subcategory:hover .dropdown-content-subcategory {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown-subcategory:hover .dropbtn-subcategory {background-color: #3f4045; color: #ffffff;} 
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-decoration: none;
+    
+}
+.subcategory{
+    vertical-align: top;
+}
+.category{
+    display:inline-block;
+        vertical-align: top;
+    padding: 0px 30px 0px 30px;
+    text-align: left;
+
+}
+.title{
+    font-size: 20px;
+    font-weight: 800;
+    margin-top:15px;
+    margin-bottom:4px;
+}
+.navmenu{
+    transform: translate(0%, 50%);
+    height:50%;
+}
+
+
+/* Dropdown Button */
+.dropbtn-cart {
+  
+        transition:0.4s;
+
+
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown-cart {
+  display: inline-block;
+      z-index: 1;
+    text-align: left;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content-cart {
+  display: none;
+  position: absolute;
+    top: 30px;
+    right:20px;
+    width:300px;
+    height:92vh;
+  background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #fcdebe;
+    padding-top: 20px;
+    
+  z-index: 3;
+    
+}
+
+/* Links inside the dropdown */
+.dropdown-content-cart a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+    line-height: 8px;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content-cart a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown-cart:hover .dropdown-content-cart {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown-cart:hover .dropbtn-cart {background-color: #3f4045; color: #ffffff;}
+
+.basketimage .image{
+    width:120px;
+    height:192px;
+    object-fit: cover;
+}
+.basketimage{
+    display: inline-block;
+            vertical-align: top;
+
+}
+.basketinfo{
+    display: inline-block;
+            vertical-align: top;
+    width:120px;
+    padding-left: 15px;
+
+}
+.checkout{
+    border-width: 1px 0px 0px 0px;
+    border-color: #fcdebe;
+    border-style:solid;
+}
+.basketitem{
+    margin:12px;
+    background-color:#ffffff;
+    
+    
+    
+    
+}
+.itemsdropdown{
+    height: 70%;
+        overflow-y: auto;
+
+}
+.checkout{
+    
+}
+.checkoutbtn{
+    width:100%;
+    background-color: #3f4045;
+    border-width: 0px;
+    color: #ffffff;
+    height:40px;
+    margin-top:8px;
+}
+
+.shoppingtitle{
+    border-bottom-width: 1px;
+    border-bottom-color: #fcdebe;
+    border-bottom-style: solid;
+    margin-bottom: 0px;
+    padding: 0px 8px 8px 8px;
+    text-align: center;
+}
+
+
+/* Dropdown Button */
+.dropbtn-profile {
+  
+        transition:0.4s;
+
+
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown-profile {
+  display: inline-block;
+      z-index: 1;
+    text-align: left;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content-profile {
+  display: none;
+  position: absolute;
+    top: 30px;
+    right:4px;
+    width:199px;
+    height:calc(18vh+8vh);
+  background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #fcdebe;
+    padding-top: 8px;
+    
+  z-index: 3;
+    
+}
+
+/* Links inside the dropdown */
+.dropdown-content-profile a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+    line-height: 8px;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content-profile a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown-profile:hover .dropdown-content-profile {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown-profile:hover .dropbtn-profile {background-color: #3f4045; color: #ffffff;}
+
+.profilebtn{
+    cursor: pointer;
+    width:100%;
+    background-color: #ffffff;
+    border-width: 0px 0px 0px 0px;
+    border-color: #3f4045;
+    border-style: solid;
+    color: #3f4045;
+    height:40px;
+    margin-top:8px;
+    transition:0.3s;
+}
+.profilebtn:hover{
+    cursor: pointer;
+    width:100%;
+    background-color: #3f404599;
+    color: #ffffff;
+}
+*{
+    
+}
+.sub{
+    margin: 8px 4px;
+    font-size: 14px;
+    color: #000000cc;
+    cursor: pointer;
+}
+.sub:hover{
+    color: #000000;
+}
+ul .title{
+    padding-top:30px;
+    font-size: 18px;
+    padding-bottom: 9px;
+        cursor: pointer;
+
+}
+.dropdown-content-subcategory{
+    overflow: auto;
+}
+.category{
+    margin: 4px 31px;
+}
+a{
+        cursor: pointer;
+}
+.dropdown-subcategory a{
+    padding: 0px 14px;
+}
+.searchbar{
+    position: absolute;
+    width:0px;
+    height:100%;
+text-align: left;
+  transition: width 0.8s, height 4s;
+    z-index: 2;
+}
+
+.inputsearch{
+    width:93%;
+    font-size:34px;
+    padding: 5px 0px 5px 20px;
+}
+.searchclose{
+    display:inline-block;
+    position:relative;
+    
+    
+    width: 5%;
+    height:74%;
+}
+input.inputsearch{
+    
+    color: #3f4045;
+    background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #3f4045;
+}
+
+
+
+
+
+
+
+

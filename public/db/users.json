@@ -1,0 +1,21 @@
+[{    "firstName": "Martin",
+    "lastName": "Zannato",
+    "email": "real.martin.zannato@gmail.com",
+    "phoneNumber": "fuck off",
+    "password": "firmwar3",
+    "id": "1"
+    },{
+    "firstName": "Andrei",
+    "lastName": "Casian",
+    "email": "louliet@gmail.com",
+    "phoneNumber": "no",
+    "password": "humansomething",
+            "id": "3"
+},{
+    "firstName": "ADMIN",
+    "lastName": "ADMIN",
+    "email": "admin@n8.com",
+    "phoneNumber": "no",
+    "password": "secure",
+        "id": "89"
+}]

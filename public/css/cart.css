@@ -1,0 +1,141 @@
+#main{
+            background-color:#ffffff;
+    margin: 0px;
+    padding: 0px;
+}
+a{
+    padding: 14px;
+}
+* {box-sizing:border-box}
+
+.checkoutmenu{
+    width: 100%;
+    height: 700px;
+      display: inline-block;
+    padding: 24px 40px 24px 40px;
+
+
+}
+.items{
+        width:60%;
+    height:100%;
+      display: inline-block;
+        vertical-align: top;
+    padding: 0px 30px 0px 0px;
+
+
+
+}
+.sum{
+    position: relative;
+    width:32%;
+    height:50%;
+        background-color:#ccc5b9;
+      display: inline-block;
+        vertical-align: top;
+
+
+
+}
+.item{
+    width:100%;
+    height: 180px;
+    padding: 15px 0px 15px 0px;
+    border-width: 1px 0px 0px 0px;
+    border-style: solid;
+    border-color: #ccc5b9;
+    opacity: 1;
+    -webkit-transition: opacity 800 linear;
+    transition: opacity 800 linear;
+}
+.productimage{
+    width:120px;
+    height:100%;
+    object-fit: cover;
+}
+.itemfooter{
+    width:100%;
+    height: 115px;
+    padding: 15px 0px 15px 0px;
+    border-width: 1px 0px 1px 0px;
+    border-style: solid;
+    border-color: #ffffff;
+}
+.left{
+    display:inline-block;
+        height: 100%;
+    width:15%;
+
+}
+.right{
+    display: inline-block;
+    padding: 0px 0px 0px 15px;
+    height: 100%;
+            vertical-align: top;
+    width:80%;
+
+}
+.leftinfo{
+        display: inline-block;
+    height:100%;
+    width:40%;
+
+}
+.rightinfo{
+        display: inline-block;
+    height:100%;
+    float: right;
+
+}
+select{
+    border-width: 1px;
+    border-color: #ffffff;
+    transition: 0.4s;
+}
+select:hover{
+        border-color: #000000;
+
+}
+.finalize{
+    cursor: pointer;
+    width:58%;
+    height: 44px;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, +150%);
+    background-color: #3f4045;
+    text-align: center;
+vertical-align: middle;
+line-height: 8px;
+    transition:0.3s;
+
+
+
+}
+.info{
+    padding: 0px 15px 0px 15px;
+}
+*{
+    line-height: 18px;
+    font-family: 'Inconsolata', monospace;
+}
+
+
+.removeItem{
+    border-bottom: 1px solid #3f4045;
+    transition: 0.1s;
+    width:40%;
+    -webkit-user-select: none; /* Safari */
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none;
+}
+.removeItem:hover{
+    background-color: #3f404544;
+}
+.removeItem:active{
+    color:#ffffff;
+        border-bottom: 1px solid #ffffff;
+
+}

@@ -11,7 +11,7 @@ var id;
 //select subcategory based on id
 router.post('/subcategory-id', (req, res, next) => {
   id = req.body.id;
-  sql = "SELECT name FROM subcategory WHERE id = ?";
+  sql = "SELECT name FROM subcategory WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -24,7 +24,7 @@ router.post('/subcategory-id', (req, res, next) => {
 //select category based on id
 router.post('/category-id', (req, res, next) => {
   id = req.body.id;
-  sql = "SELECT name FROM category WHERE id = ?"
+  sql = "SELECT name FROM category WHERE id = ?;"
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -37,7 +37,7 @@ router.post('/category-id', (req, res, next) => {
 //select category based on id
 router.post('/section-id', (req, res, next) => {
   id = req.body.id;
-  sql = "SELECT name FROM section WHERE id = ?"
+  sql = "SELECT name FROM section WHERE id = ?;"
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -50,7 +50,7 @@ router.post('/section-id', (req, res, next) => {
 
 //select all subcategories
 router.get('/subcategory', (req, res, next) => {
-  sql = "SELECT * FROM subcategory";
+  sql = "SELECT * FROM subcategory;";
   connection.query(sql, (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -63,7 +63,7 @@ router.get('/subcategory', (req, res, next) => {
 
 //select all categories
 router.get('/category', (req, res, next) => {
-  sql = "SELECT * FROM category";
+  sql = "SELECT * FROM category;";
   connection.query(sql, (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -76,7 +76,7 @@ router.get('/category', (req, res, next) => {
 
 //select all sections
 router.get('/section', (req, res, next) => {
-  sql = "SELECT * FROM section";
+  sql = "SELECT * FROM section;";
   connection.query(sql, (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -87,10 +87,62 @@ router.get('/section', (req, res, next) => {
 
 });
 
+
+
+
+//select all existing subcateogries
+router.get('/present-subcategory', (req, res, next) => {
+  sql = "SELECT DISTINCT subcategory.name " +
+        "FROM product_classification " +
+        "JOIN subcategory ON product_classification.subcategory_id = subcategory.id;";
+  connection.query(sql, (err, rows, fields) => {
+    if(err) {
+      console.log(err);
+    } else {
+      res.send(rows);
+    }
+  });
+
+});
+
+//select all existing categories
+router.get('/present-category', (req, res, next) => {
+  sql = "SELECT DISTINCT category.name " +
+        "FROM product_classification " +
+        "JOIN category ON product_classification.category_id = category.id;";
+  connection.query(sql, (err, rows, fields) => {
+    if(err) {
+      console.log(err);
+    } else {
+      res.send(rows);
+    }
+  });
+
+});
+
+//select all existing sections
+router.get('/present-section', (req, res, next) => {
+  sql = "SELECT DISTINCT section.name " +
+        "FROM product_classification " +
+        "JOIN section ON product_classification.section_id = section.id;";
+  connection.query(sql, (err, rows, fields) => {
+    if(err) {
+      console.log(err);
+    } else {
+      res.send(rows);
+    }
+  });
+
+});
+
+
+
+
+
 //create subcategory
 router.post('/create-subcategory', (req, res, next) => {
   name = req.body.name;
-  sql = "INSERT INTO subcategory (name) VALUES (?)";
+  sql = "INSERT INTO subcategory (name) VALUES (?);";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(name);
@@ -104,7 +156,7 @@ router.post('/create-subcategory', (req, res, next) => {
 //create category
 router.post('/create-category', (req, res, next) => {
   name = req.body.name;
-  sql = "INSERT INTO category (name) VALUES (?)";
+  sql = "INSERT INTO category (name) VALUES (?);";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -117,7 +169,7 @@ router.post('/create-category', (req, res, next) => {
 //create section
 router.post('/create-section', (req, res, next) => {
   name = req.body.name;
-  sql = "INSERT INTO section (name) VALUES (?)";
+  sql = "INSERT INTO section (name) VALUES (?);";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -134,7 +186,7 @@ router.put('/update-subcategory', (req, res, next) => {
   console.log(id);
   console.log(name);
   console.log(req.body);
-  sql = "UPDATE subcategory SET name = ? WHERE id = ?";
+  sql = "UPDATE subcategory SET name = ? WHERE id = ?;";
   connection.query(sql, [name, id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -150,7 +202,7 @@ router.put('/update-subcategory', (req, res, next) => {
 router.put('/update-category', (req, res, next) => {
   id = req.body.id;
   name = req.body.name;
-  sql = "UPDATE category SET name = ? WHERE id = ?";
+  sql = "UPDATE category SET name = ? WHERE id = ?;";
   connection.query(sql, [name, id], (err, rows, fields) => {
     if(err) {
       res.send(err);
@@ -164,7 +216,7 @@ router.put('/update-category', (req, res, next) => {
 router.put('/update-section', (req, res, next) => {
   id = req.body.id;
   name = req.body.name;
-  sql = "UPDATE section SET name = ? WHERE id = ?";
+  sql = "UPDATE section SET name = ? WHERE id = ?;";
   connection.query(sql, [id, name], (err, rows, fields) => {
     if(err) {
       res.send(err);
@@ -177,7 +229,7 @@ router.put('/update-section', (req, res, next) => {
 //check for name in subcategory
 router.post('/subcategory-name', (req, res, next) => {
   name = req.body.name;
-  sql = "SELECT * FROM subcategory WHERE name = ?";
+  sql = "SELECT * FROM subcategory WHERE name = ?;";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -190,7 +242,7 @@ router.post('/subcategory-name', (req, res, next) => {
 //check for name in category
 router.post('/category-name', (req, res, next) => {
   name = req.body.name;
-  sql = "SELECT * FROM category WHERE name = ?";
+  sql = "SELECT * FROM category WHERE name = ?;";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -203,7 +255,7 @@ router.post('/category-name', (req, res, next) => {
 //check for name in section
 router.post('/section-name', (req, res, next) => {
   name = req.body.name;
-  sql = "SELECT * FROM section WHERE name = ?";
+  sql = "SELECT * FROM section WHERE name = ?;";
   connection.query(sql, [name], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -216,7 +268,7 @@ router.post('/section-name', (req, res, next) => {
 //delete subcategory based on id
 router.delete('/delete-subcategory', (req, res, next) => {
   id = req.body.id;
-  sql = "DELETE FROM subcategory WHERE id = ?";
+  sql = "DELETE FROM subcategory WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -229,7 +281,7 @@ router.delete('/delete-subcategory', (req, res, next) => {
 //delete category based on id
 router.delete('/delete-category', (req, res, next) => {
   id = req.body.id;
-  sql = "DELETE FROM category WHERE id = ?";
+  sql = "DELETE FROM category WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);
@@ -242,7 +294,7 @@ router.delete('/delete-category', (req, res, next) => {
 //delete section based on id
 router.delete('/section-name', (req, res, next) => {
   id = req.body.id;
-  sql = "DELETE FROM section WHERE id = ?";
+  sql = "DELETE FROM section WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if(err) {
       console.log(err);

@@ -1,43 +1,90 @@
-"use strict"
+//"use strict"
 
 import * as check from './login_register_handler.js';
 
+var included_content_div = $("#includedContent");
+//login field
 var login_div = $( ".login_div" );
-var register_div = $(".register_div");
 var login_input_div = $(".login_input_div");
-var register_input_div = $(".register_input_div");
-var button_div = $(".button_div");
+var login_email_txt = $("#login_email");
+var login_password_txt = $("#login_password");
 var login_button = $(".login_button");
-var register_button = $(".register_button");
+var transit_login_button = $(".transit_login_button");
+var transit_login_button_div = $(".transit_login_button_div");
 
+//registration field
+var register_div = $(".register_div");
+var register_input_div = $(".register_input_div");
 var first_name_txt = $("#first_name");
 var last_name_txt = $("#last_name");
 var email_txt = $("#email");
 var confirm_email_txt = $("#confirm_email");
 var password_txt = $("#password");
 var confirm_password_txt = $("#confirm_password");
+var register_button = $(".register_button");
+var transit_register_button = $(".transit_register_button");
+var transit_register_button_div = $(".transit_register_button_div");
 
 var text_fields = [];
-var text_values = [];
 
 
+included_content_div.load("/public/html/header.html", function() {
+  $.getScript("/public/js/header.js", function() {
+    console.log('loaded');
+    start();
+  });
+});
 
 
 $(document).ready(function() {
 
-  //logininput
-  login_div.css("width", "30%");
-  register_div.css("width", "50%");
-  login_input_div.css("opacity", "1");
-  register_input_div.css("opacity", "1");
-  register_input_div.css("display", "block");
-  button_div.css("opacity", "1");
-  button_div.css("display", "");
+  transit_login_button.css("opacity", "0");
+  transit_login_button.css("display", "none");
 
+  transit_register_button.click(function() {
+    console.log("SLUT");
+    login_div.css("width", "8%");
+    register_div.css("width", "60%");
+    login_input_div.css("opacity", "0");
+    register_input_div.css("display", "block");
+    register_input_div.css("opacity", "1");
+    transit_register_button_div.css("opacity", "0");
+    transit_register_button_div.css("display", "none");
+    login_button.css("opacity", "0");
+    login_button.css("display", "none");
+    transit_login_button.css("opacity", "1");
+    transit_login_button.css("display", "block");
+  });
+
+  transit_login_button.click(function() {
+    console.log("SLUT");
+    login_div.css("width", "48%");
+    register_div.css("width", "30%");
+    login_input_div.css("opacity", "1");
+    register_input_div.css("opacity", "0");
+    register_input_div.css("display", "none");
+    transit_register_button_div.css("opacity", "1");
+    transit_register_button_div.css("display", "");
+    login_button.css("opacity", "1");
+    login_button.css("display", "block");
+    transit_login_button.css("opacity", "0");
+    transit_login_button.css("display", "none");
+  });
 
   login_button.click(function() {
+    var login_email = login_email_txt.val();
+    var login_password = login_password_txt.val();
 
+    text_fields.push(login_email_txt, login_password_txt);
+    var checker = check.fields(text_fields);
 
+    if(checker == true) {
+      console.log(login_email);
+      console.log(login_password);
+      loginUser(login_email, login_password);
+      login_email_txt.val("");
+      login_password_txt.val("");
+    }
 
   });
 
@@ -53,19 +100,137 @@ $(document).ready(function() {
       confirm_email_txt, password_txt, confirm_password_txt);
 
 
-    var cheker = check.verificator(first_name_txt, last_name_txt, email_txt,
+    var checker = check.validator(first_name_txt, last_name_txt, email_txt,
       confirm_email_txt, password_txt, confirm_password_txt, text_fields);
 
     if(checker == true) {
-      var data = {
-        'first_name': first_name,
-        'last_name': last_name,
-        'email': email,
-        'password': password
-      }
+      registerUser(first_name, last_name, email, password);
+      first_name_txt.val("");
+      last_name_txt.val("");
+      email_txt.val("");
+      confirm_email_txt.val("");
+      password_txt.val("");
+      confirm_password_txt.val("");
     }
-
 
   });
 
 });
+
+function loginUser(login_email, login_password) {
+
+  checkAccount(login_email, login_password)
+  .then((result) => {
+    if (result == 0) {
+      console.log("account doesn't exist!!");
+    } else {
+      var role = result[0].role;
+      console.log(role);
+      if (role === "admin") {
+        location.href = "/public/admin/home.html";
+      } else {
+        createCookie(result[0].id);
+        location.href = "/public";
+      }
+
+    }
+  }).catch(error => console.error(error));
+
+}
+
+function registerUser(first_name, last_name, email, password) {
+
+  checkEmail(email)
+  .then((result) => {
+
+    console.log(result);
+    if(result == true) {
+      console.log(result);
+      console.log("email matches");
+    } else {
+
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const data = {
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email,
+        'password': password
+      };
+      var raw = JSON.stringify(data);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("http://localhost:3000/users/register-customer", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          console.log(result);
+          location.href = "/public";
+        })
+        .catch(error => console.log('error', error));
+
+    }
+  }).catch(error => console.error(error));
+
+
+}
+
+async function checkEmail(email) {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const data = {
+    'email': email
+  };
+
+  var raw = JSON.stringify(data);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  let response = await fetch("http://localhost:3000/users/check-email", requestOptions);
+  let message = await response.json();
+  return message;
+}
+
+
+async function checkAccount(email, password) {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const data = {
+    'email': email,
+    'password': password
+  };
+  var raw = JSON.stringify(data);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  let response = await fetch("http://localhost:3000/users/login-user", requestOptions);
+  let message = await response.json();
+  console.log(message);
+
+  return message;
+}
+
+function createCookie(id) {
+  var now = new Date();
+  now.setFullYear(now.getFullYear() + 2);
+  document.cookie = "loggedin=1; expires=" + now.toUTCString() + "; " + "path=/";
+  document.cookie = "customer=" + id + "; expires=" + now.toUTCString() + "; " + "path=/";
+  document.location.href = '/public/path/profile.html';
+}

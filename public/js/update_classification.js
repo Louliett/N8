@@ -98,7 +98,7 @@ function updateClass(classification, id, name) {
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
   classification_name_txt.value = "";
-  location.href = "http://127.0.0.1:3000/public/admin/view_classifications.html";
+  location.href = "/public/admin/view_classifications.html";
 }
 
 function deleteClass(classification, id) {
@@ -119,5 +119,5 @@ function deleteClass(classification, id) {
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
-  location.href = "http://127.0.0.1:3000/public/admin/view_classifications.html";
+  location.href = "/public/admin/view_classifications.html";
 }
