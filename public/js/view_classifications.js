@@ -23,7 +23,7 @@ function populateTable(name, table) {
     headers: myHeaders,
     redirect: 'follow'
   };
-  fetch('http://localhost:3000/classifications/' + name, requestOptions)
+  fetch('http://192.168.0.105:3000/classifications/' + name, requestOptions)
     .then(response => response.json())
     .then(data => {
 

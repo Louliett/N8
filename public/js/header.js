@@ -63,7 +63,7 @@ function start() {
     redirect: 'follow'
   };
 
-  fetch("http://localhost:3000/products/products-images", requestOptions)
+  fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(product_ids);
@@ -101,7 +101,7 @@ function start() {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/users/get-customer-by-id", requestOptions)
+    fetch("http://192.168.0.105:3000/users/get-customer-by-id", requestOptions)
       .then(response => response.json())
       .then((result) => {
         loadProfile(result[0]);
@@ -109,7 +109,7 @@ function start() {
       .catch(error => console.log('error', error));
 
 
-  fetch('http://localhost:3000/classifications/section')
+  fetch('http://192.168.0.105:3000/classifications/section')
     .then(response => response.json())
     .then(data => {
       categoriesFile[0].push("section");
@@ -118,7 +118,7 @@ function start() {
       }
     }).catch(error => console.error(error));
 
-  fetch('http://localhost:3000/classifications/category')
+  fetch('http://192.168.0.105:3000/classifications/category')
     .then(response => response.json())
     .then(data => {
       categoriesFile[1].push("category");
@@ -127,7 +127,7 @@ function start() {
       }
     }).catch(error => console.error(error));
 
-  fetch('http://localhost:3000/classifications/subcategory')
+  fetch('http://192.168.0.105:3000/classifications/subcategory')
     .then(response => response.json())
     .then(data => {
       categoriesFile[2].push("subcategory");
@@ -276,7 +276,9 @@ function start() {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "image");
-      cardDiv.setAttribute("src", "/public/images/" + products[i].image_name);
+      var path = products[i].image_path;
+      path = path.replace(".", "");
+      cardDiv.setAttribute("src", path + products[i].image_name);
       document.getElementById("basketimage" + product_id).appendChild(cardDiv);
 
 
@@ -290,10 +292,10 @@ function start() {
       cardDiv.innerHTML = products[i].name;
       document.getElementById("basketinfo" + product_id).appendChild(cardDiv);
 
-      for (var i = 0; i < objectArray.length; i++) {
-        if (objectArray[i][0] == product_id) {
+      for (var j = 0; j < objectArray.length; j++) {
+        if (objectArray[j][0] == product_id) {
           cardDiv = document.createElement("p");
-          cardDiv.innerHTML = "quantity: " + objectArray[i][1];
+          cardDiv.innerHTML = "quantity: " + objectArray[j][1];
           cardDiv.setAttribute('id', 'quantity' + product_id);
           document.getElementById("basketinfo" + product_id).appendChild(cardDiv);
         }

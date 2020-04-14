@@ -70,7 +70,7 @@ function registerUser(first_name, last_name, email, password) {
         redirect: 'follow'
       };
 
-      fetch("http://localhost:3000/users/register-admin", requestOptions)
+      fetch("http://192.168.0.105:3000/users/register-admin", requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
@@ -96,7 +96,7 @@ async function checkEmail(email) {
     redirect: 'follow'
   };
 
-  let response = await fetch("http://localhost:3000/users/check-email", requestOptions);
+  let response = await fetch("http://192.168.0.105:3000/users/check-email", requestOptions);
   let message = await response.json();
   return message;
 }

@@ -39,7 +39,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     redirect: 'follow'
   };
 
-  fetch("http://localhost:3000/products/search-product", requestOptions)
+  fetch("http://192.168.0.105:3000/products/search-product", requestOptions)
     .then(response => response.json())
     .then(result => {
 
@@ -111,7 +111,9 @@ function loadItems(products) {
 
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
-    cardImg.setAttribute("src", "/public/images/" + products[ii].image_name);
+    var path = products[ii].image_path;
+    path = path.replace(".", "");
+    cardImg.setAttribute("src", path + products[ii].image_name);
     //cardImg.setAttribute("src", "img/loading.gif");
     document.getElementById(containerName).appendChild(cardImg);
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;

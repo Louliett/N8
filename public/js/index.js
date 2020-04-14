@@ -15,7 +15,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
 
-  fetch('http://localhost:3000/products/')
+  fetch('http://192.168.0.105:3000/products/')
     .then(response => response.json())
     .then(data => {
       product_list = data
@@ -42,12 +42,14 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://localhost:3000/products/ean-img', requestOptions)
+    fetch('http://192.168.0.105:3000/products/ean-img', requestOptions)
       .then(response => response.json())
       .then(data => {
         var images = [];
         data.forEach((element, index, array) => {
-          images.push("/public/images/" + element.name);
+          var path = element.path;
+          path = path.replace(".", "");
+          images.push(path + element.name);
         });
         displayProducts(images, index);
       }).catch(error => console.error(error));

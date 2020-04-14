@@ -221,12 +221,12 @@ svg.closecard{
 svg.closecard:hover{
         fill:#dd403a88;
 }
-svg.addcard{
+svg#create_button{
         fill:#00000088;
         cursor: pointer;
 
 }
-svg.addcard:hover{
+svg#create_button:hover{
         fill:#8ddbe088;
 }
 .carddelete{
@@ -268,6 +268,17 @@ position:absolute;
     margin-top:14px;
     position:relative;
 }
+
+.delete_address_div {
+    position:absolute;
+    right: 0.4%;
+    bottom: 0;
+}
+
+.delete_address_div svg {
+    fill:#dd403a88;
+}
+
 .shippingdiv{
     background-color: #f49d37;
     position:relative;

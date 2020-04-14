@@ -125,6 +125,24 @@ router.post('/check-email', (req, res) => {
   });
 });
 
+//update customer
+router.put('/update-customer', (req, res) => {
+  var user = req.body;
+  console.log(user);
+  var role = "customer";
+  sql = "UPDATE user " +
+        "SET first_name = ?, last_name = ? " +
+        "WHERE user.id = ? AND user.role = ?";
+  connection.query(sql, [user.first_name, user.last_name,
+    user.id, role], (err, rows, fields) => {
+    if(err) {
+      res.send(err);
+    } else {
+      res.send("customer updated!");
+    }
+  });
+});
+
 //deletes an user based on email
 router.delete('/delete-user', (req, res) => {
   var email = req.body.email;
@@ -142,6 +160,7 @@ router.delete('/delete-user', (req, res) => {
     }
   });
 });
+
 
 
 module.exports = router;

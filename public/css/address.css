@@ -29,7 +29,7 @@
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
-  from {top:-400px; opacity:0} 
+  from {top:-400px; opacity:0}
   to {top:0; opacity:1}
 }
 
@@ -57,21 +57,27 @@
   background-color: #ffffff;
 }
 
-.modal-body {padding: 80px 16px;}
+.modal-body {
+  padding: 80px 16px;
+}
 
 .modal-footer {
   padding: 2px 16px;
   background-color: #ffffff;
 }
-.addcard{
+
+.addcard {
     width:100%;
 }
-.expdatediv{
+
+.expdatediv {
     display:inline-block;
 }
-.securitycodediv{
+
+.securitycodediv {
     display:inline-block;
 }
+
 .newcardtitle{
     margin-bottom:0px;
     padding-bottom:0px;

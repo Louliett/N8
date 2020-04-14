@@ -55,7 +55,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     redirect: 'follow'
   };
 
-  fetch('http://localhost:3000/products/id', requestOptions)
+  fetch('http://192.168.0.105:3000/products/id', requestOptions)
     .then(response => response.json())
     .then(data => {
       product = data[0];
@@ -82,13 +82,15 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://localhost:3000/products/ean-img', requestOptions)
+    fetch('http://192.168.0.105:3000/products/ean-img', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data);
         var images = [];
         data.forEach((element, index, array) => {
-          images.push("/public/images/" + element.name);
+          var path = element.path;
+          path = path.replace(".", "");
+          images.push(path + element.name);
         });
         basket_image = images[0];
         fetchProduct(images);

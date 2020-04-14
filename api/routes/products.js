@@ -6,12 +6,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
+//repeating variables
 var sql;
 var id;
 var name;
 
 const storage = multer.diskStorage({
-  destination: './public/images/',
+  destination: './public/product_images/',
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
@@ -81,7 +82,7 @@ router.delete('/delete-product', (req, res, next) => {
       console.log(err);
       res.send(err);
     } else {
-      //res.send(rows);
+      res.send("deleted!");
       try {
         for (var i = 0; i < path.length; i++) {
           fs.unlinkSync("." + path[i])
@@ -89,7 +90,6 @@ router.delete('/delete-product', (req, res, next) => {
         console.log(path + " deleted from server");
       } catch(err) {
         console.error(err);
-        res.send(err);
       }
     }
   });
@@ -290,9 +290,10 @@ router.post('/ean-text', (req, res, next) => {
   });
 });
 
+//select all images based on product ean
 router.post('/ean-img', (req, res, next) => {
   var ean = req.body.ean;
-  sql = "SELECT image.name " +
+  sql = "SELECT image.path, image.name " +
         "FROM product_image " +
         "JOIN product on product_id = product.id " +
         "JOIN image on image_id = image.id " +
@@ -308,6 +309,7 @@ router.post('/ean-img', (req, res, next) => {
   });
 });
 
+//updates a product and its classifications
 router.put('/update-product', (req, res, next) => {
   let product = req.body;
   sql = "UPDATE product " +
@@ -387,7 +389,7 @@ router.post('/subcategory', (req, res) => {
   });
 });
 
-//get product based on subcategory
+//get product based on category
 router.post('/category', (req, res) => {
   name = req.body.name;
   sql = "SELECT product.* " +
@@ -404,7 +406,7 @@ router.post('/category', (req, res) => {
   });
 });
 
-//get product based on subcategory
+//get product based on section
 router.post('/section', (req, res) => {
   name = req.body.name;
   sql = "SELECT product.* " +
@@ -422,7 +424,7 @@ router.post('/section', (req, res) => {
 });
 
 
-//method for card
+//method for card !!!! to be reviewved it complains
 router.post("/products-images", (req, res) => {
   var ids = req.body.ids;
   var first = "WHERE pro.id = ? ";
@@ -437,10 +439,10 @@ router.post("/products-images", (req, res) => {
   for (var i = 0; i < ids.length-1; i++) {
 
     if(i !== ids.length-2) {
-      first = first + "OR pro.id = ? ";
+      first = first + "OR pro.id =? ";
 
     } else {
-        first = first + "OR pro.id = ?; ";
+        first = first + "OR pro.id =?; ";
     }
   }
 

@@ -53,7 +53,7 @@ function fetchClassifications(table, array) {
     method: 'GET',
     redirect: 'follow'
   };
-  fetch('http://localhost:3000/classifications/' + table, requestOptions)
+  fetch('http://192.168.0.105:3000/classifications/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {
       for(var i=0; i<data.length; i++) {
@@ -68,15 +68,22 @@ function createClass(class_name, txtarea, array, create_class) {
   class_name = txtarea.value;
   fields.push(class_name);
 
-  console.log(class_name, txtarea, array, create_class, fields);
+
   if(isItEmpty(fields) == true) {
     console.log("field is empty!");
     txtarea.value = "";
   } else {
-      flag = doesItMatch(class_name, array);
+
+      if(array.length > 0) {
+        flag = doesItMatch(class_name, array);
+      } else {
+        flag = false;
+      }
+
       if(flag == true) {
         console.log("This section already exists!");
       } else {
+
           var myHeaders = new Headers();
           const data = {
             'name': class_name
@@ -89,12 +96,15 @@ function createClass(class_name, txtarea, array, create_class) {
             body: raw,
             redirect: 'follow'
           };
-          fetch("http://localhost:3000/classifications/" + create_class, requestOptions)
+          console.log(data);
+          console.log("dddddddddddddddddddddddddddd");
+          fetch("http://192.168.0.105:3000/classifications/" + create_class, requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
-            txtarea.value = "";
-            window.location.reload();  
+            .then((result) => {
+              txtarea.value = "";
+              window.location.reload();
+            }).catch(error => console.log('error', error));
+
       }
     }
 

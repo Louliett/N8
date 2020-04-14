@@ -71,7 +71,7 @@ function fetchClass(classification, id) {
     body: raw,
     redirect: 'follow'
   };
-  fetch('http://localhost:3000/classifications/' + classification, requestOptions)
+  fetch('http://192.168.0.105:3000/classifications/' + classification, requestOptions)
     .then(response => response.json())
     .then(data => {
     classification_name_txt.value = data[0].name;
@@ -93,7 +93,7 @@ function updateClass(classification, id, name) {
     redirect: 'follow'
   }
 
-  fetch("http://localhost:3000/classifications/" + classification, requestOptions)
+  fetch("http://192.168.0.105:3000/classifications/" + classification, requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
@@ -115,7 +115,7 @@ function deleteClass(classification, id) {
     redirect: 'follow'
   };
   console.log(requestOptions);
-  fetch("http://localhost:3000/classifications/" + classification, requestOptions)
+  fetch("http://192.168.0.105:3000/classifications/" + classification, requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));

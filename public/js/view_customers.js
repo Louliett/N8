@@ -7,7 +7,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://localhost:3000/users/get-customers", requestOptions)
+fetch("http://192.168.0.105:3000/users/get-customers", requestOptions)
   .then(response => response.json())
   .then(data => {
     if(data.length > 0) {
@@ -56,7 +56,7 @@ function deleteCustomer(email) {
     redirect: 'follow'
   };
 
-  fetch("http://localhost:3000/users/delete-user", requestOptions)
+  fetch("http://192.168.0.105:3000/users/delete-user", requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));

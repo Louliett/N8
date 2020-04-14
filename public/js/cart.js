@@ -55,7 +55,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     redirect: 'follow'
   };
 
-  fetch("http://localhost:3000/products/products-images", requestOptions)
+  fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(product_ids);
@@ -78,55 +78,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
 
-function createBasket() {
 
-
-  for (var i = 0; i < objectArray.length; i++) {
-
-
-
-    for (var ii = 0; ii < jsonFile.length; ii++) {
-
-      if (objectArray[i][0] === jsonFile[ii].productid) {
-        jsonItem = jsonFile[ii];
-        break;
-      }
-    }
-
-
-    var cardDiv = document.createElement("div");
-    cardDiv.setAttribute("class", "basketitem");
-    cardDiv.setAttribute("id", objectArray[i][0]);
-    document.getElementById("itemsdropdown").appendChild(cardDiv);
-
-    cardDiv = document.createElement("div");
-    cardDiv.setAttribute("class", "basketimage");
-    cardDiv.setAttribute("id", "basketimage" + objectArray[i][0]);
-    document.getElementById(objectArray[i][0]).appendChild(cardDiv);
-
-    cardDiv = document.createElement("img");
-    cardDiv.setAttribute("class", "image");
-    cardDiv.setAttribute("src", "/projectfolder/img/" + jsonItem.url[0]);
-    document.getElementById("basketimage" + objectArray[i][0]).appendChild(cardDiv);
-
-    cardDiv = document.createElement("div");
-    cardDiv.setAttribute("class", "basketinfo");
-    cardDiv.setAttribute("id", "basketinfo" + objectArray[i][0]);
-    document.getElementById(objectArray[i][0]).appendChild(cardDiv);
-
-    cardDiv = document.createElement("p");
-    cardDiv.innerHTML = jsonItem.name;
-    document.getElementById("basketinfo" + objectArray[i][0]).appendChild(cardDiv);
-
-    cardDiv = document.createElement("p");
-    cardDiv.innerHTML = "quantity: " + objectArray[i][1];
-    document.getElementById("basketinfo" + objectArray[i][0]).appendChild(cardDiv);
-
-    cardDiv = document.createElement("p");
-    cardDiv.innerHTML = jsonItem.price;
-    document.getElementById("basketinfo" + objectArray[i][0]).appendChild(cardDiv);
-  }
-}
 
 
 function createCart(products) {
@@ -149,7 +101,9 @@ function createCart(products) {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "productimage");
-      cardDiv.setAttribute("src", "/public/images/" + products[i].image_name);
+      var path = products[i].image_path;
+      path = path.replace(".", "");
+      cardDiv.setAttribute("src", path + products[i].image_name);
       document.getElementById("left" + product_id).appendChild(cardDiv);
 
       cardDiv = document.createElement("div");
