@@ -148,7 +148,7 @@ function writeAddress(customer) {
       .then((result) => {
         cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
         closeAddressModal();
-        location.reload();
+        address(customer);
       }).catch(error => console.log('error', error));
 
   });
@@ -189,7 +189,7 @@ fetch("http://localhost:3000/addresses/update-shipping-address", requestOptions)
   .then(response => response.text())
   .then((result) => {
     console.log(result);
-    location.reload();
+    address(customer);
   }).catch(error => console.log('error', error));
 }
 

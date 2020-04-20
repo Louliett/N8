@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>View Customers</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" href="../images/site/n8.ico">
-  </head>
 
-  <body>
-    <nav>
-        <a href="home.html">Home</a> |
-        <a href="create_product.html">Create Product</a> |
-        <a href="view_products.html">View Products</a> |
-        <a href="create_classification.html">Create Classification</a> |
-        <a href="view_classifications.html">View Classifications</a> |
-        <a href="create_admin.html">Create Admin</a> |
-        <a href="view_admins.html">View Admins</a> |
-        <a href="view_customers.html">View Customers</a> |
-        <a href="logout.html">Logout</a>
-    </nav>
+<head>
+  <meta charset="utf-8">
+  <title>View Customers</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../images/site/n8.ico">
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
 
-    <p></p>
+</head>
+
+<body>
+  <p class='bigtitle' id='bigtitle'>VIEW CUSTOMERS</p>
+
+  <nav>
+    <a href="home.html">Home</a> |
+    <a href="create_product.html">Create Product</a> |
+    <a href="view_products.html">View Products</a> |
+    <a href="create_classification.html">Create Classification</a> |
+    <a href="view_classifications.html">View Classifications</a> |
+    <a href="create_admin.html">Create Admin</a> |
+    <a href="view_admins.html">View Admins</a> |
+    <a href="view_customers.html">View Customers</a> |
+    <a href="logout.html">Logout</a>
+  </nav>
+  <br>
+  <div class='content'>
     <div class="container">
       <table>
         <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Street</th>
-            <th>City</th>
-            <th>Postal Code</th>
-            <th>Country</th>
+            <th> First Name </th>
+            <th> Last Name </th>
+            <th> Email </th>
+            <th> Addresses </th>
+            <th> Delete Customer </th>
           </tr>
         </thead>
         <tbody id="customers_table"></tbody>
@@ -40,6 +42,23 @@
     </div>
 
 
-    <script src="../js/view_customers.js"></script>
-  </body>
+    <div class="container" style="padding-left: 50%;">
+      <table>
+        <thead>
+          <tr>
+            <th> Phone Number </th>
+            <th> Address Line 1 </th>
+            <th> Address Line 2 </th>
+            <th> City </th>
+            <th> Postal Code </th>
+          </tr>
+        </thead>
+        <tbody id="addresses_table"></tbody>
+      </table>
+    </div>
+
+  </div>
+  <script src="../js/view_customers.js"></script>
+</body>
+
 </html>

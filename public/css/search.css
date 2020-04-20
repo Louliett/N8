@@ -9,8 +9,8 @@
 
 
 #itemrow{
-    margin-top: 20px;
-    width: 100%;
+    text-align: center;
+    margin: 20px 20px;
 }
 .productimg{
     
@@ -23,7 +23,6 @@
 
 /*-webkit-clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%); 
     clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%);*/
-
 }
 .productimg:hover{
     transform: scale(1.1);
@@ -68,12 +67,11 @@
 }
 .searchnotification{
     width:100%;
-    background-color: #ccc5b9;
+    background-color: #ccc5b988;
     text-align: center;
-    margin-top: 26px;
-    padding-top: 20px;
     word-wrap: break-word;
-    height:200px;
+    height:auto;
+    padding:20px;
 }
 
 

@@ -5,9 +5,12 @@
     <title>View Admins</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" href="../images/site/n8.ico">
+      <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
   </head>
 
   <body>
+            <p class='bigtitle' id='bigtitle'>VIEW ADMINS</p>
+
     <nav>
         <a href="home.html">Home</a> |
         <a href="create_product.html">Create Product</a> |
@@ -19,26 +22,22 @@
         <a href="view_customers.html">View Customers</a> |
         <a href="logout.html">Logout</a>
     </nav>
-
+<div class='content'>
     <p></p>
     <div class="container">
       <table>
         <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Street</th>
-            <th>City</th>
-            <th>Postal Code</th>
-            <th>Country</th>
+            <th> First Name </th>
+            <th> Last Name </th>
+            <th> Email </th>
+            <th> Delete Admin </th>
           </tr>
         </thead>
         <tbody id="admins_table"></tbody>
       </table>
     </div>
-
+      </div>
 
     <script src="../js/view_admins.js"></script>
   </body>

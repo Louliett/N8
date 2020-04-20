@@ -10,12 +10,7 @@ var sql;
 //get all the admins
 router.get('/get-admins', (req, res) => {
   var role = "admin";
-  sql = "SELECT user.first_name, user.last_name, user.email, address.phone_number, " +
-        "address.name, address.city, address.postcode, address.country " +
-        "FROM user " +
-        "LEFT JOIN user_address ON user.id = user_address.user_id " +
-        "left join address on user_address.address_id = address.id " +
-        "WHERE user.role = ?; ";
+  sql = "SELECT * FROM user WHERE user.role = ?; ";
   connection.query(sql, [role], (err, rows, fields) => {
     if(err) {
       res.send(err);
@@ -28,12 +23,7 @@ router.get('/get-admins', (req, res) => {
 //get all the customers
 router.get('/get-customers', (req, res) => {
   var role = "customer";
-  sql = "SELECT user.first_name, user.last_name, user.email, address.phone_number, " +
-        "address.name, address.city, address.postcode, address.country " +
-        "FROM user " +
-        "LEFT JOIN user_address ON user.id = user_address.user_id " +
-        "left join address on user_address.address_id = address.id " +
-        "WHERE user.role = ?; ";
+  sql = "SELECT * FROM user WHERE user.role = ?;";
   connection.query(sql, [role], (err, rows, fields) => {
     if(err) {
       res.send(err);
@@ -143,24 +133,39 @@ router.put('/update-customer', (req, res) => {
   });
 });
 
-//deletes an user based on email
-router.delete('/delete-user', (req, res) => {
-  var email = req.body.email;
-  sql = "DELETE address, user_address " +
-        "FROM address " +
-        "INNER JOIN user_address ON address.id = user_address.address_id " +
-        "WHERE user_id = (Select id from user where email=?); " +
-        "DELETE FROM user " +
-        "WHERE user.email=?; ";
-  connection.query(sql, [email, email], (err, rows, fields) => {
+//deletes a customer based on id
+router.delete('/delete-customer', (req, res) => {
+  var id = req.body.id;
+  var role = "customer";
+  sql = "DELETE transaction, user_address, address, card, user " +
+        "FROM user " +
+        "LEFT JOIN user_address ON user.id = user_address.user_id " +
+        "LEFT JOIN address ON user_address.address_id = address.id " +
+        "LEFT JOIN card ON user.id = card.user_id " +
+        "LEFT JOIN transaction ON card.id = transaction.card_id " +
+        "WHERE user.id = ? AND user.role = ?;";
+  connection.query(sql, [id, role], (err, rows, fields) => {
     if(err) {
       res.send(err);
     } else {
-      res.send(email + " was deleted!");
+      res.send("customer deleted!");
     }
   });
 });
 
+//deletes an user based on email
+router.delete('/delete-admin', (req, res) => {
+  var id = req.body.id;
+  var role = "admin";
+  sql = "DELETE FROM user WHERE id = ? AND role = ?;";
+  connection.query(sql, [id, role], (err, rows, fields) => {
+    if(err) {
+      res.send(err);
+    } else {
+      res.send("admin deleted!");
+    }
+  });
+});
 
 
 module.exports = router;

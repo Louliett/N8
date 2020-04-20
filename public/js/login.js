@@ -104,6 +104,7 @@ $(document).ready(function() {
       confirm_email_txt, password_txt, confirm_password_txt, text_fields);
 
     if(checker == true) {
+      console.log("eugh");
       registerUser(first_name, last_name, email, password);
       first_name_txt.val("");
       last_name_txt.val("");

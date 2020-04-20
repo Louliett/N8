@@ -57,6 +57,15 @@ function createCard(customer) {
     fetch("http://192.168.0.105:3000/cards/create-card", requestOptions)
       .then(response => response.text())
       .then((result) => {
+        //resets the fields
+        type_slc.textContent = "";
+        currency_slc.textContent = "";
+        card_number_txt.value = "";
+        card_holder_txt.value = "";
+        month_slc.textContent = "";
+        year_slc.textContent = "";
+        card_cvv_txt.value = "";
+
         closeCardModal();
         cards(customer);
       }).catch(error => console.log('error', error));

@@ -1,3 +1,4 @@
+var final=[];
 var itemsFile;
 var usersFile;
 var categoriesFile = [[], [], []];
@@ -12,16 +13,17 @@ function start() {
   var objectArray = [];
   var product_ids = [];
   var unique_products = [];
+    getClassifications();
 
   if (stringArray != null) {
     stringArray = stringArray.split(",");
-    //console.log(stringArray);
+
     for (var iii = 0; iii < stringArray.length; iii++) {
       var smallArray = stringArray[iii].split(':');
-      //console.log(smallArray);
+
 
       objectArray.push(smallArray);
-      //console.log(objectArray);
+
 
     }
 
@@ -66,11 +68,10 @@ function start() {
   fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log(product_ids);
-      console.log(result);
+
       for (var i = 0; i < product_ids.length; i++) {
         for (var j = 0; j < result.length; j++) {
-          console.log(typeof(result[j].id), typeof(product_ids[i]));
+
 
 
           if (result[j].id === product_ids[i]) {
@@ -109,7 +110,7 @@ function start() {
       .catch(error => console.log('error', error));
 
 
-  fetch('http://192.168.0.105:3000/classifications/section')
+  /*fetch('http://192.168.0.105:3000/classifications/section')
     .then(response => response.json())
     .then(data => {
       categoriesFile[0].push("section");
@@ -136,7 +137,7 @@ function start() {
       }
 
       loadCategories();
-    }).catch(error => console.error(error));
+    }).catch(error => console.error(error));*/
 
 
   addSearch();
@@ -257,7 +258,6 @@ function start() {
   }
 
   function loadBasket(products) {
-
     var cardDiv;
     var product_id;
 
@@ -276,9 +276,19 @@ function start() {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "image");
-      var path = products[i].image_path;
-      path = path.replace(".", "");
-      cardDiv.setAttribute("src", path + products[i].image_name);
+       if(products[i].image_name!==null){
+    cardDiv.setAttribute("src", 'http://192.168.0.105:3000/public/product_images/'+products[i].image_name);
+
+
+        }else{
+
+                cardDiv.setAttribute("src", undefined);
+
+        }
+
+    $(cardDiv).on("error", function(){
+        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+    });
       document.getElementById("basketimage" + product_id).appendChild(cardDiv);
 
 
@@ -292,14 +302,15 @@ function start() {
       cardDiv.innerHTML = products[i].name;
       document.getElementById("basketinfo" + product_id).appendChild(cardDiv);
 
-      for (var j = 0; j < objectArray.length; j++) {
-        if (objectArray[j][0] == product_id) {
+      for (var o = 0; o < objectArray.length; o++) {
+        if (objectArray[o][0] == product_id) {
           cardDiv = document.createElement("p");
-          cardDiv.innerHTML = "quantity: " + objectArray[j][1];
+          cardDiv.innerHTML = "quantity: " + objectArray[o][1];
           cardDiv.setAttribute('id', 'quantity' + product_id);
           document.getElementById("basketinfo" + product_id).appendChild(cardDiv);
         }
       }
+
 
       cardDiv = document.createElement("p");
       cardDiv.innerHTML = products[i].price;
@@ -310,9 +321,9 @@ function start() {
 
 
 
-  function loadCategories() {
+  function loadCategories(final) {
 
-    for (var i = 1; i < categoriesFile[0].length; i++) {
+    /*for (var i = 1; i < categoriesFile[0].length; i++) {
 
 
 
@@ -373,8 +384,89 @@ function start() {
 
     var titles = []
     titles = titles.concat(document.getElementsByClassName('title'), document.getElementsByClassName('dropbtn-subcategory'), document.getElementsByClassName('sub'));
-    //console.log(titles);
-    //console.log(titles[0]);
+
+
+
+    for (var o = 0; o < titles.length; o++) {
+      for (var m = 0; m < titles[o].length; m++) {
+
+        titles[o][m].addEventListener('click', () => {
+
+          document.location.href = '/public/path/category.html?' + event.target.dataset.class + '&' + event.target.innerHTML.toLowerCase();
+
+
+
+
+
+
+        });
+
+
+      }
+    }*/
+      console.log(final)
+      console.log('öööööööööööööööööööööööööööööööööööööö');
+      for (var i = 0; i < final.length; i++) {
+
+
+
+      var cardDiv = document.createElement("div");
+      cardDiv.setAttribute("class", "dropdown-subcategory");
+      cardDiv.setAttribute("id", "dropdown-subcategory" + final[i].name);
+      document.getElementById("navmenu").appendChild(cardDiv);
+
+      cardDiv = document.createElement("a");
+      cardDiv.setAttribute("class", "dropbtn-subcategory");
+      cardDiv.setAttribute("id", "dropbtn-subcategory" + final[i].name);
+      cardDiv.setAttribute("data-class", 'section');
+      cardDiv.innerHTML = final[i].name;
+      document.getElementById("dropdown-subcategory" + final[i].name).appendChild(cardDiv);
+
+      cardDiv = document.createElement("div");
+      cardDiv.setAttribute("class", "dropdown-content-subcategory");
+      cardDiv.setAttribute("id", "dropdown-content-subcategory" + final[i].name);
+      document.getElementById("dropdown-subcategory" + final[i].name).appendChild(cardDiv);
+
+      for (var ii = 0; ii < final[i].uniqueCategories.length; ii++) {
+
+
+        cardDiv = document.createElement("div");
+        cardDiv.setAttribute("class", "category");
+        cardDiv.setAttribute("id", "category" + final[i].uniqueCategories[ii].name + final[i].name);
+        document.getElementById("dropdown-content-subcategory" + final[i].name).appendChild(cardDiv);
+
+
+        cardDiv = document.createElement("ul");
+        cardDiv.setAttribute("id", "ul" + final[i].uniqueCategories[ii].name + final[i].name);
+        document.getElementById("category" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+
+        cardDiv = document.createElement("li");
+        cardDiv.setAttribute('class', 'title');
+        cardDiv.setAttribute("id", final[i].uniqueCategories[ii].name);
+        cardDiv.setAttribute("data-class", 'category');
+        cardDiv.innerHTML = final[i].uniqueCategories[ii].name;
+        document.getElementById("ul" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+
+        for (var iii = 0; iii < final[i].uniqueCategories[ii].uniqueSubcategory.length; iii++) {
+
+          cardDiv = document.createElement("li");
+          cardDiv.setAttribute('class', 'sub');
+          cardDiv.setAttribute("id", final[i].uniqueCategories[ii].uniqueSubcategory[iii]);
+          cardDiv.setAttribute("data-class", 'subcategory');
+          cardDiv.innerHTML = final[i].uniqueCategories[ii].uniqueSubcategory[iii];
+
+          document.getElementById("ul" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+
+        }
+
+      }
+
+
+}
+
+    var titles = []
+    titles = titles.concat(document.getElementsByClassName('title'), document.getElementsByClassName('dropbtn-subcategory'), document.getElementsByClassName('sub'));
+
 
 
     for (var o = 0; o < titles.length; o++) {
@@ -394,6 +486,7 @@ function start() {
 
       }
     }
+
   }
 
   function read_cookie(key) {
@@ -435,8 +528,7 @@ function start() {
           now.setFullYear(now.getFullYear() + 2);
           document.cookie = "query=" + $(".inputsearch").val() + ":" + $(".inputsearch").val() + "; expires=" + now.toUTCString() + "; " + "path=path/search.html";
           document.location.href = '/public/path/search.html?' + $(".inputsearch").val();
-          console.log(now);
-          //console.log($(".inputsearch").val());
+
         }
       }
     });
@@ -446,4 +538,110 @@ function start() {
   }
 
 
+
+var shit=[];
+var uniqueSections=[];
+function getClassifications(){
+    fetch('http://192.168.0.105:3000/products/')
+    .then(response => response.json())
+    .then(data => {
+      sort(data);
+    }).catch(error => console.error(error));
 }
+var classification={section:'',category:'',subcategory:''};
+function sort(products){
+   for(var i=0; i<products.length;i++){
+       var newClassification=Object.create(classification);
+       if(!uniqueSections.includes(products[i].section)){
+           uniqueSections.push(products[i].section);
+       }
+       newClassification.section=products[i].section;
+
+              newClassification.category=products[i].category;
+              newClassification.subcategory=products[i].subcategory;
+
+       shit.push(newClassification);
+   }
+    console.log(shit);
+    shit=shit.sort(function(a, b){
+    if(a.section < b.section) { return -1; }
+    if(a.section > b.section) { return 1; }
+    return 0;
+})
+
+    sortAgain();
+}
+
+function sortAgain(){
+    for(var i=0; i<uniqueSections.length;i++){
+                                            var uniqueCategories=[];
+
+        for(var o=0; o<shit.length;o++){
+
+            if(shit[o].section===uniqueSections[i]){
+                if(!uniqueCategories.includes(shit[o].category)){
+                uniqueCategories.push({name:shit[o].category,uniqueSubcategory:[]});
+                }
+
+            }
+        }
+        final.push({name:uniqueSections[i],uniqueCategories})
+
+
+
+    }
+    sortAgainAndAgain();
+
+}
+function sortAgainAndAgain(){
+    for(var i=0; i<final.length;i++){
+
+        console.log(final[i]);
+        for(var q=0; q<final[i].uniqueCategories.length;q++){
+                    console.log(final[i].uniqueCategories[q]);
+            console.log('')
+            console.log('')
+            console.log('')
+
+
+            for(var o=0; o<shit.length;o++){
+                                                                    var uniqueSubcategories=[];
+
+
+                if(shit[o].section===final[i].name){
+                    if(shit[o].category===final[i].uniqueCategories[q].name){
+                       if(!final[i].uniqueCategories[q].uniqueSubcategory.includes(shit[o].subcategory)){
+                           final[i].uniqueCategories[q].uniqueSubcategory.push(shit[o].subcategory);
+                        }
+                    }
+                }
+
+
+
+
+
+                }
+            }
+
+
+
+
+
+    }
+
+
+loadCategories(final);
+}
+    sessionStorage.setItem('sections', final);
+
+}//WHAT
+
+function setTitle(a){
+    $(".bigtitle").text(a);
+}
+
+
+$(document).ready(function()
+{
+
+});

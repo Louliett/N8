@@ -24,10 +24,156 @@
 
 
   </div>
+  <div class='checkoutsequence'>
+    <div class='sequence'>
+      <svg id="svg">
+        <line id="line1" class='line' />
+      </svg>
+      <div class='partcart' id='sequencepointactive'>
+        <p class='sequenceText'>Cart</p>
+      </div>
 
-  <div class="checkoutmenu">
-    <div class="items" id="items">
+      <div class='partaddress' id='sequencepoint'>
+        <p class='sequenceText'>2</p>
+      </div>
+
+      <div class='partcard' id='sequencepoint'>
+        <p class='sequenceText'>3</p>
+      </div>
+
+      <div class='partfinal' id='sequencepoint'>
+        <p class='sequenceText'>4</p>
+      </div>
     </div>
+  </div>
+
+  <div class='inositol'>
+    <div class="scene">
+      <div class="carousel">
+        <div class="carousel__cell">
+
+
+          <div class="checkoutmenu">
+            <h2>YOUR ITEMS</h2>
+            <div class="items" id="items">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="carousel__cell">
+          <h2>SHIPPING ADDRESS</h2>
+
+
+
+          <div class='shippingaddress'>
+            <p>This is also my billing address <input type="checkbox" id="billing"></p>
+            <br>
+            <p class='newcardtitle'>City</p>
+            <select id="bulgarian_cities" class="required card_expirationYear" style="width: 90px;" name="card_expirationYear" data-field-name='shippingcity'>
+              <option id="default_city"></option>
+            </select>
+            <p class='newcardtitle'>Phone Number</p>
+            <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='shippingphone'>
+            <p class='newcardtitle'>Address</p>
+            <input id='address1' type='text' placeholder="Address Line 1" data-field-name='shippingaddress1'>
+            <p class='newcardtitle'>Address</p>
+            <input id='address2' type='text' placeholder="Address Line 2" data-field-name='shippingaddress2'>
+            <p class='newcardtitle'>Post code</p>
+            <input id='shippingpostcode' type='text' placeholder="Post Code">
+          </div>
+          <h2>SHIPPING OPTIONS</h2>
+
+
+
+
+          <div class='shippingoptions'>
+
+
+            <p> Normal delivery (5-8 business days): <input type="radio" name="type" value="normal" checked style='width:auto;' />+4$</p>
+
+            <p> Fast delivery (1-3 business days): <input type="radio" name="type" value="fast" style='width:auto;' />+20$</p>
+
+
+          </div>
+        </div>
+        <div class="carousel__cell">
+          <h2>ORDER DETAILS</h2>
+
+          <div class='cardinfo'>
+            <div class='cardnumberdiv'>
+              <p class='newcardtitle'>Card Number</p>
+              <input id="number" type='text' placeholder="#### #### #### ####">
+            </div>
+            <div class='cardnamediv'>
+              <p class='newcardtitle'>Card holder</p>
+              <input id="holder" type='text' placeholder="Owner name">
+            </div>
+
+            <p class='newcardtitle'>Expiration Date</p>
+            <p>
+
+              Month
+              <select id="expiration_month" title="" class="required card_expirationMonth" style="width: 90px;"></select>
+              Year
+              <select id="expiration_year" class="required card_expirationYear" style="width: 90px;"></select></p>
+            <div class='securitycodediv'>
+              <p class='newcardtitle'> Security Code </p>
+              <input id="cvv" type='text' placeholder="CVV" maxLength='3'>
+            </div>
+          </div>
+          <h2>BILLING ADDRESS</h2>
+
+
+
+
+          <div class='billingaddressdefault'>
+
+
+            <p class='newcardtitle'>City</p>
+            <select id="bulgarian_cities" class="required card_expirationYear" style="width: 90px;" name="card_expirationYear" data-field-name='billingcity'>
+              <option id="default_city"></option>
+            </select>
+            <p class='newcardtitle'>Phone Number</p>
+            <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='billingphone'>
+            <p class='newcardtitle'>Address</p>
+            <input id='address1' type='text' placeholder="Address Line 1" data-field-name='billingaddress1'>
+            <p class='newcardtitle'>Address</p>
+            <input id='address2' type='text' placeholder="Address Line 2" data-field-name='billingaddress2'>
+            <p class='newcardtitle'>Post code</p>
+            <input id='billingpostcode' type='text' placeholder="Post Code">
+
+
+          </div>
+
+          <div hidden class='billingaddressold'>
+
+
+            <p class='newcardtitle'>City</p>
+            <p>Sofia</p>
+            <p class='newcardtitle'>Phone Number</p>
+            <p>00359876508054</p>
+            <p class='newcardtitle'>Address</p>
+            <p>Östra Boulevarden 34</p>
+            <p class='newcardtitle'>Address</p>
+            <p>legenhetsnummer 1017</p>
+            <p class='newcardtitle'>Post code</p>
+            <p>291 31</p>
+
+
+          </div>
+
+
+        </div>
+        <div class="carousel__cell">
+          <h2>SOMETHING FINAL</h2>
+          <div class="finalize">
+            <p style="color:white;">Checkout</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="sum">
       <div class="info">
         <p style="font-size:20px; border-width: 0px 0px 1px 0px; border-style:solid; border-color:darkgrey;">Order summary</p>
@@ -36,11 +182,19 @@
         <p class='vat'>VAT: 0$</p>
         <p class='total' style="border-width: 1px 0px 0px 0px; border-style:solid; border-color:darkgrey; font-weight: bold;">Total: 0$</p>
       </div>
-      <div class="finalize">
-        <p style="color:white;">Checkout</p>
+      <div class="carousel-options">
+
+        <p>
+          <button class="previous-button">Previous</button>
+          <button class="next-button">Next</button>
+        </p>
       </div>
     </div>
   </div>
+
+
+  <div id="includedFooter"></div>
+
 
 
   <script src="/public/js/cart.js"></script>

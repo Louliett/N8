@@ -96,8 +96,6 @@ function createClass(class_name, txtarea, array, create_class) {
             body: raw,
             redirect: 'follow'
           };
-          console.log(data);
-          console.log("dddddddddddddddddddddddddddd");
           fetch("http://192.168.0.105:3000/classifications/" + create_class, requestOptions)
             .then(response => response.text())
             .then((result) => {

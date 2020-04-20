@@ -1,11 +1,28 @@
+var loaded_products=[];
+ var x = $("#main").width();
+    var xx = window.innerWidth;
+    var y = screen.height;
+    var ratio = window.devicePixelRatio || 1;
+    var w = screen.width * ratio;
+    var h = screen.height * ratio;
+
 $("#includedContent").load("/public/html/header.html", () => {
 
 
   $.getScript("/public/js/header.js", function() {
-    console.log('loaded');
     start();
 
   });
+
+    $("#includedFooter").load("/public/html/footer.html", () => {
+
+
+  $.getScript("/public/js/footer.js", function() {
+    startFooter();
+
+  });
+    });
+
 
   var items = read_cookie('items');
   var product_list;
@@ -20,15 +37,15 @@ $("#includedContent").load("/public/html/header.html", () => {
     .then(data => {
       product_list = data
       for (var i = 0; i <product_list.length; i++) {
-        fetchImages(product_list[i].ean, i);
+        fetchImages(product_list[i].id, i);
       }
     }).catch(error => console.error(error));
 
 
 
-  function fetchImages(ean, index) {
+  function fetchImages(product_id, index) {
     const data = {
-      ean: ean
+      id: product_id
     };
 
     var raw = JSON.stringify(data);
@@ -42,16 +59,31 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3000/products/ean-img', requestOptions)
+    fetch('http://192.168.0.105:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         var images = [];
         data.forEach((element, index, array) => {
-          var path = element.path;
-          path = path.replace(".", "");
-          images.push(path + element.name);
+            var path=element.path;
+            path=path.replace('.','');
+          images.push(path+element.name);
         });
         displayProducts(images, index);
+        if(window.matchMedia("(max-width: 767px)").matches){
+            for(var i=0; i<loaded_products.length;i++){
+            var height=$('#itemrow').innerHeight();
+            var width=$('#itemrow').innerWidth();
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
+            }
+        }else{
+        for(var i=0; i<loaded_products.length;i++){
+            var height=$('#itemrow').innerHeight();
+            var width=$('#itemrow').innerWidth();
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+            }
+            }
+
+
       }).catch(error => console.error(error));
 
 
@@ -59,9 +91,6 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 function displayProducts(images, index) {
     ii = index;
-
-    var x = $(document).width();
-    var y = screen.height;
 
     var navbar = document.getElementById("navbar");
     navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
@@ -81,64 +110,18 @@ function displayProducts(images, index) {
 
 
 
-  // $(window).resize(function() {
-  //
-  //
-  //     var rows = document.getElementById("itemrow");
-  //
-  //     var elements = rows.childNodes;
-  //
-  //     var x = $(document).width();
-  //     var xx = window.innerWidth;
-  //     var y = screen.height;
-  //     var ratio = window.devicePixelRatio || 1;
-  //     var w = screen.width * ratio;
-  //     var h = screen.height * ratio;
-  //
-  //     for (var i = 0; i < elements.length; i++) {
-  //
-  //       var item = document.getElementById(elements[i].getAttribute("id"));
-  //
-  //       if (w > 740) {
-  //
-  //
-  //         item.setAttribute("style", "width: " + Math.floor(x / 4) + "px; height: " + Math.floor(y * 0.8) + "px;");
-  //       } else {
-  //         item.setAttribute("style", "width: " + Math.floor(x / 2) + "px; height: " + Math.floor(h * 1.1) + "px; padding:4px;");
-  //
-  //       }
-  //     }
-  //
-  //
-  //   });
-
-
-
-    startValue++;
-    var x = $("#main").width();
-    var xx = window.innerWidth;
-    var y = screen.height;
-    var ratio = window.devicePixelRatio || 1;
-    var w = screen.width * ratio;
-    var h = screen.height * ratio;
     var cardDiv = document.createElement("div");
-    //var random = Math.floor(Math.random() * 1000000000);
     var containerName = product_list[ii].id;
 
-    if (w > 740) {
+
       cardDiv.setAttribute("class", "productcontainer");
       cardDiv.setAttribute("id", containerName);
       cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
       document.getElementById("itemrow").appendChild(cardDiv);
-    } else {
 
-      cardDiv.setAttribute("class", "productcontainer");
-      cardDiv.setAttribute("id", containerName);
-      cardDiv.setAttribute("style", "width: " + Math.floor(x / 2) + "px; height: " + Math.floor(h * 1.1) + "px; padding:4px;");
-      document.getElementById("itemrow").appendChild(cardDiv);
-    }
     console.log(cardDiv);
     console.log(containerName);
+    loaded_products.push(cardDiv);
 
     $(cardDiv).click(function() {
       document.location.href = "/public/path/item.html?" + $(this).attr('id');
@@ -147,12 +130,22 @@ function displayProducts(images, index) {
 
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
-    cardImg.setAttribute("src", images[0]);
+    if(images[0]!==undefined){
+    cardImg.setAttribute("src", 'http://192.168.0.105:3000'+images[0]);
+    console.log('http://192.168.0.105:3000'+images[0]);
+        }else{
+                cardImg.setAttribute("src", undefined);
+
+        }
 
     //cardImg.setAttribute("src", "public/img/loading.gif");
     document.getElementById(containerName).appendChild(cardImg);
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;
     var x = $(document).width();
+    $(".productimg").on("error", function(){
+        console.log('shit');
+        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+    });
 
 
     var cardDivInner = document.createElement("div");

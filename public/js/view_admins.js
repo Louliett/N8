@@ -10,29 +10,29 @@ var requestOptions = {
 fetch("http://192.168.0.105:3000/users/get-admins", requestOptions)
   .then(response => response.json())
   .then(data => {
+    console.log(data);
     if(data.length > 0) {
         var tempp = "";
+        var customer_id;
 
         data.forEach((u) => {
             tempp += "<tr class = 'admin_row'>"
             tempp += "<td>" + u.first_name + "</td>";
             tempp += "<td>" + u.last_name + "</td>";
-            tempp += "<td>" + u.email + "</td>";
-            tempp += "<td>" + u.phone_number + "</td>";
-            tempp += "<td>" + u.name + "</td>";
-            tempp += "<td>" + u.city + "</td>";
-            tempp += "<td>" + u.postcode + "</td>";
-            tempp += "<td>" + u.country + "</td>";
+            tempp += "<td data-admin-id= " + u.id + ">" + u.email + "</td>";
+            tempp += "<td>" + "<button type='button' class='del_table_button' data-admin-id= " + u.id + "> Delete </button>" + "</td>";
             tempp += "<tr>"
         });
         admins_table.innerHTML = tempp;
-        var row = document.getElementsByClassName('admin_row');
-        for (var i = 0; i < row.length; i++) {
-          row[i].addEventListener("click", () => {
-            var email = event.target.parentNode.childNodes[2].innerHTML;
-            console.log("works");
-            deleteAdmin(email);
-            location.reload();
+
+        var delete_admin_btn = document.getElementsByClassName("del_table_button");
+
+        //delete user button
+        for (var i = 0; i < delete_admin_btn.length; i++) {
+          delete_admin_btn[i].addEventListener("click", () => {
+            customer_id = event.target.dataset.adminId;
+            console.log(customer_id);
+            deleteAdmin(customer_id);
           });
         }
     }
@@ -41,13 +41,13 @@ fetch("http://192.168.0.105:3000/users/get-admins", requestOptions)
 
 
 
-function deleteAdmin(email) {
+function deleteAdmin(id) {
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const data = {
-      'email': email
+      'id': id
     };
 
     var raw = JSON.stringify(data);
@@ -59,8 +59,10 @@ function deleteAdmin(email) {
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.105:3000/users/delete-user", requestOptions)
+    fetch("http://192.168.0.105:3000/users/delete-admin", requestOptions)
       .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+      .then((result) => {
+        console.log(result);
+        location.reload();
+      }).catch(error => console.log('error', error));
 }

@@ -1,13 +1,123 @@
 var stringArray = [];
 
+var carousel = document.querySelector('.carousel');
+var cells = carousel.querySelectorAll('.carousel__cell');
+var cellCount=4; // cellCount set from cells-range input value
+var selectedIndex = 0;
+var cellWidth = carousel.offsetWidth;
+var cellHeight = carousel.offsetHeight;
+var isHorizontal = false;
+var rotateFn = 'rotateX';
+var radius, theta;
+var checkoutSequenceCounter=0;
+function rotateCarousel() {
+  var angle = theta * selectedIndex * -1;
+  carousel.style.transform = 'translateZ(' + -radius + 'px) ' +
+    rotateFn + '(' + angle + 'deg)';
+}
+
+var prevButton = document.querySelector('.previous-button');
+prevButton.addEventListener( 'click', function() {
+    if(checkoutSequenceCounter>0){
+  selectedIndex--;
+  rotateCarousel();
+
+            checkoutSequenceCounter=(Math.abs(checkoutSequenceCounter-1))%4;
+moveSequence();
+        }else{
+            prevButton.style.display='none';
+        }
+
+});
+
+var nextButton = document.querySelector('.next-button');
+nextButton.addEventListener( 'click', function() {
+    if(checkoutSequenceCounter<3){
+                            nextButton.style.display='';
+
+  selectedIndex++;
+  rotateCarousel();
+            checkoutSequenceCounter=(checkoutSequenceCounter+1)%4;
+
+        moveSequence();
+}else{
+                nextButton.style.display='none';
+
+}
+
+});
+
+
+
+function changeCarousel() {
+  theta = 360 / cellCount;
+  var cellSize = isHorizontal ? cellWidth : cellHeight;
+  radius = Math.round( ( cellSize / 2) / Math.tan( Math.PI / cellCount ) );
+  for ( var i=0; i < cells.length; i++ ) {
+    var cell = cells[i];
+    if ( i < cellCount ) {
+      // visible cell
+      cell.style.opacity = 1;
+      var cellAngle = theta * i;
+      cell.style.transform = rotateFn + '(' + cellAngle + 'deg) translateZ(' + radius + 'px)';
+    } else {
+      // hidden cell
+      cell.style.opacity = 0;
+      cell.style.transform = 'none';
+    }
+  }
+
+  rotateCarousel();
+}
+
+function onOrientationChange() {
+  changeCarousel();
+}
+
+// set initials
+onOrientationChange();
+
+
+var div1 = $('.partcart');
+var div2 = $('.partaddress');
+var div3 = $('.partcard');
+var div4 = $('.partfinal');
+
+
+$('#billing').change(function(){
+    var c = this.checked;
+    if(c===true){
+        $('.billingaddressold').removeAttr('hidden');
+        $('.billingaddressdefault').attr('hidden');
+    }else{
+        $('.billingaddressold').attr('hidden');
+        $('.billingaddressdefault').removeAttr('hidden');
+    }
+});
+
+
+
+
+
+
 $("#includedContent").load("/public/html/header.html", () => {
 
 
   $.getScript("/public/js/header.js", function() {
     console.log('loaded');
     start();
+      setTitle('YOUR CART');
 
   });
+    $("#includedFooter").load("/public/html/footer.html", () => {
+
+
+  $.getScript("/public/js/footer.js", function() {
+    console.log('loaded');
+    startFooter();
+
+  });
+    });
 
 
   var searches = document.cookie;
@@ -16,6 +126,8 @@ $("#includedContent").load("/public/html/header.html", () => {
   var objectArray = [];
   var product_ids = [];
   var unique_products = [];
+
+
 
 
   if (stringArray != null) {
@@ -54,6 +166,45 @@ $("#includedContent").load("/public/html/header.html", () => {
     body: raw,
     redirect: 'follow'
   };
+    var cartShit=$('.checkoutmenu');
+    var cover=$('.cover');
+    var addrestab=$('.addresstab');
+    var addresscover=$('.addresscover');
+    $('.finalize').click( function(event) {
+  if (cartShit.css('width') =='80px') {
+    cartShit.css('width','900');
+      cover.css('opacity','0');
+  }else{
+      /*
+    cartShit.css('width','80px');
+            cover.css('opacity','1');
+
+      addrestab.css('width','900');
+      addresscover.css('opacity','0');*/
+
+
+      var div1 = $('.partcart');
+var div2 = $('.partaddress');
+        div2.attr('id','sequencepointactive');
+        div2.children().text('address');
+        div1.attr('id','sequencepoint');
+        div1.children().text('1');
+
+
+       var card = document.querySelector('.card');
+        card.classList.toggle('is-flipped');
+
+
+
+
+
+
+
+
+
+  }
+}
+                         );
 
   fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
     .then(response => response.json())
@@ -72,13 +223,9 @@ $("#includedContent").load("/public/html/header.html", () => {
       }
       console.log(unique_products);
       createCart(unique_products);
+      initializeCheckoutSequence();
 
     }).catch(error => console.log('error', error));
-
-
-
-
-
 
 
 function createCart(products) {
@@ -101,9 +248,16 @@ function createCart(products) {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "productimage");
-      var path = products[i].image_path;
-      path = path.replace(".", "");
-      cardDiv.setAttribute("src", path + products[i].image_name);
+      if(products[i].image_name!==null){
+    cardDiv.setAttribute("src", 'http://192.168.0.105:3000/'+products[i].image_name);
+
+        }else{
+
+        }
+
+    $(cardDiv).on("error", function(){
+        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+    });
       document.getElementById("left" + product_id).appendChild(cardDiv);
 
       cardDiv = document.createElement("div");
@@ -184,6 +338,7 @@ function calculatePrice() {
   for (var i = 0; i < objectArray.length; i++) {
 
     quantity = document.getElementById('quantity' + objectArray[i][0]).value;
+      console.log(document.getElementById('quantity' + objectArray[i][0]))
 
     price = $('#price' + objectArray[i][0]).html();
 
@@ -280,4 +435,177 @@ function price_manipulator() {
 }
 
 
+
+
+
+
 });
+
+
+function initializeCheckoutSequence(){
+
+
+    var line = $('#line1');
+     div1.click(()=>{
+        div1.attr('id','sequencepointactive');
+        div1.children().text('cart');
+        div2.attr('id','sequencepoint');
+                 div2.children().text('2');
+
+        div3.attr('id','sequencepoint');
+                          div3.children().text('3');
+
+        div4.attr('id','sequencepoint');
+                          div4.children().text('4');
+         selectedIndex=checkoutSequenceCounter=0;
+           rotateCarousel();
+         if(checkoutSequenceCounter<=0){
+                    prevButton.style.display='none';
+
+    }
+    if(checkoutSequenceCounter>=3){
+                    nextButton.style.display='none';
+
+    }
+
+
+    })
+    div2.click(()=>{
+            if(checkoutSequenceCounter<=0){
+                    prevButton.style.display='none';
+
+    }
+    if(checkoutSequenceCounter>=3){
+                    nextButton.style.display='none';
+
+    }
+        div2.attr('id','sequencepointactive');
+        div2.children().text('address and shipping');
+        div1.attr('id','sequencepoint');
+        div1.children().text('1');
+
+        div3.attr('id','sequencepoint');
+                div3.children().text('3');
+
+        div4.attr('id','sequencepoint');
+                div4.children().text('4');
+         selectedIndex=checkoutSequenceCounter=1;
+           rotateCarousel();
+
+    })
+     div3.click(()=>{
+             if(checkoutSequenceCounter<=0){
+                    prevButton.style.display='none';
+
+    }
+    if(checkoutSequenceCounter>=3){
+                    nextButton.style.display='none';
+
+    }
+        div3.attr('id','sequencepointactive');
+                 div3.children().text('card details');
+
+        div1.attr('id','sequencepoint');
+                 div1.children().text('1');
+
+        div2.attr('id','sequencepoint');
+                 div2.children().text('2');
+
+        div4.attr('id','sequencepoint');
+                 div4.children().text('4');
+         selectedIndex=checkoutSequenceCounter=2;
+           rotateCarousel();
+
+    })
+    div4.click(()=>{
+            if(checkoutSequenceCounter<=0){
+                    prevButton.style.display='none';
+
+    }
+    if(checkoutSequenceCounter>=3){
+                    nextButton.style.display='none';
+
+    }
+        div4.attr('id','sequencepointactive');
+                div4.children().text('finalize');
+
+        div1.attr('id','sequencepoint');
+                div1.children().text('1');
+
+        div2.attr('id','sequencepoint');
+                div2.children().text('2');
+
+        div3.attr('id','sequencepoint');
+                         div3.children().text('3');
+         selectedIndex=checkoutSequenceCounter=3;
+           rotateCarousel();
+
+    })
+
+var x1 = div1.offset().left + (0);
+var y1 = div1.offset().top + (div1.outerHeight()/2);
+var x2 = div4.offset().left + (0);
+var y2 = div4.offset().top + (div4.outerHeight()/2);
+
+line.attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2);
+};
+
+
+function moveSequence(){
+    if(checkoutSequenceCounter>0){
+                    prevButton.style.display='';
+
+    }
+    if(checkoutSequenceCounter<3){
+                    nextButton.style.display='';
+
+    }
+    if(checkoutSequenceCounter===0){
+        div1.attr('id','sequencepointactive');
+        div1.children().text('cart');
+        div2.attr('id','sequencepoint');
+                 div2.children().text('2');
+
+        div3.attr('id','sequencepoint');
+                          div3.children().text('3');
+
+        div4.attr('id','sequencepoint');
+                          div4.children().text('4');
+    }else if(checkoutSequenceCounter===1){
+        div2.attr('id','sequencepointactive');
+        div2.children().text('address and shipping');
+        div1.attr('id','sequencepoint');
+        div1.children().text('1');
+
+        div3.attr('id','sequencepoint');
+                div3.children().text('3');
+
+        div4.attr('id','sequencepoint');
+                div4.children().text('4');
+    }else if(checkoutSequenceCounter===2){
+        div3.attr('id','sequencepointactive');
+                 div3.children().text('payment details');
+
+        div1.attr('id','sequencepoint');
+                 div1.children().text('1');
+
+        div2.attr('id','sequencepoint');
+                 div2.children().text('2');
+
+        div4.attr('id','sequencepoint');
+                 div4.children().text('4');
+
+    }else if(checkoutSequenceCounter===3){
+        div4.attr('id','sequencepointactive');
+                div4.children().text('finalize');
+
+        div1.attr('id','sequencepoint');
+                div1.children().text('1');
+
+        div2.attr('id','sequencepoint');
+                div2.children().text('2');
+
+        div3.attr('id','sequencepoint');
+                         div3.children().text('3');
+    }
+}

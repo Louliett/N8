@@ -15,8 +15,8 @@
 
 
 #itemrow{
-    margin-top: 20px;
-    width: 100%;
+    text-align: center;
+    margin: 20px 20px;
 }
 .productimg{
     
@@ -195,7 +195,6 @@ a{
     padding: 14px;
 }
 *{
-    line-height: 18px;
     font-family: 'Inconsolata', monospace;
 }
 .searchbar{

@@ -7,6 +7,15 @@ $("#includedContent").load("/public/html/header.html", () => {
     start();
 
   });
+    $("#includedFooter").load("/public/html/footer.html", () => {
+
+
+  $.getScript("/public/js/footer.js", function() {
+    console.log('loaded');
+    startFooter();
+
+  });
+    });
 
 
   var searches = document.cookie;
@@ -60,15 +69,14 @@ $("#includedContent").load("/public/html/header.html", () => {
     .then(data => {
       product = data[0];
       console.log(product);
-      fetchImages(product.ean);
+      fetchImages(product.id);
     }).catch(error => console.error(error));
 
 
 
-  function fetchImages(ean) {
-    console.log(ean + " from images");
+  function fetchImages(product_id) {
     const data = {
-      ean: ean
+      id: product_id
     };
 
     var raw = JSON.stringify(data);
@@ -82,15 +90,13 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3000/products/ean-img', requestOptions)
+    fetch('http://192.168.0.105:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data);
         var images = [];
         data.forEach((element, index, array) => {
-          var path = element.path;
-          path = path.replace(".", "");
-          images.push(path + element.name);
+          images.push("http://192.168.0.105:3000s/public/product_images/" + element.name);
         });
         basket_image = images[0];
         fetchProduct(images);
@@ -145,10 +151,10 @@ $("#includedContent").load("/public/html/header.html", () => {
       var slides = document.getElementsByClassName("mySlides");
       var dots = document.getElementsByClassName("dot");
       if (n > slides.length) {
-        slideIndex = 1
+        slideIndex = 1;
       }
       if (n < 1) {
-        slideIndex = slides.length
+        slideIndex = slides.length;
       }
       for (i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
@@ -201,16 +207,16 @@ $("#includedContent").load("/public/html/header.html", () => {
         $('.displaymore').html('Dislay More');
         $('.displaymore').attr('id', 'open');
       }
-    })
+    });
 
 
 
     console.log(product.height);
     $(".prev").click(function() {
-      plusSlides(-1)
+      plusSlides(-1);
     });
     $(".next").click(function() {
-      plusSlides(1)
+      plusSlides(1);
     });
 
 

@@ -27,30 +27,13 @@ router.post('/customer-address-id', (req, res) => {
   });
 });
 
-//create address
-// router.post('/create-address', (req, res) => {
-//   var adr = req.body;
-//   sql = "INSERT INTO address(name, second_name, city, postcode, phone_number, shipping) " +
-//         "VALUES (?, ?, ?, ?, ?, ?); " +
-//         "INSERT INTO user_address (user_id, address_id) " +
-//         "VALUES (?, (SELECT id FROM address WHERE name=? AND second_name=? AND city =? AND postcode =?)); ";
-//   connection.query(sql, [adr.name, adr.second_name, adr.city, adr.postcode,
-//     adr.phone_number, adr.shipping, adr.id, adr.name, adr.second_name,
-//     adr.city, adr.postcode], (err, rows, fields) => {
-//        if(err) {
-//          res.send(err);
-//        } else {
-//          res.send("created!");
-//        }
-//      });
-// });
 
 //create address
 router.post('/create-address', (req, res) => {
   var adr = req.body;
   var customer_id = req.body.id;
   sql = "INSERT INTO address(name, second_name, city, postcode, phone_number, shipping) " +
-        "VALUES (?, ?, ?, ?, ?, ?); " + 
+        "VALUES (?, ?, ?, ?, ?, ?); " +
         "SET @addressID = LAST_INSERT_ID(); " +
         "INSERT INTO user_address (user_id, address_id) " +
         "VALUES (?, @addressID); ";

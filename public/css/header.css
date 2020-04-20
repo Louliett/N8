@@ -8,7 +8,7 @@
 #navbar{
     background-color: #3f4045;
   position: fixed; /* Set the navbar to fixed position */
-  top: 0;
+  top: 0; 
     z-index: 2;
     width:100%;
 }
@@ -20,7 +20,7 @@
     width:100%;
     background-color: crimson;
   position: fixed;
-  top: 83px;
+  top: 83px; 
     z-index: 1;
     background-color: #ffffff;
     width:100%;
@@ -33,7 +33,7 @@
 
 .navbar2{
   position: fixed;
-  top: 32px;
+  top: 32px; 
     z-index: 1;
     background-color: #ffffff;
     width:100%;
@@ -46,7 +46,7 @@
         object-fit: cover;
     height:44px;
     transition: 0.4s;
-
+    
 }
 
 
@@ -130,7 +130,7 @@ svg.closesearch:hover {
 .dropdown:hover .dropdown-content {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3f4045; color: white;}
+.dropdown:hover .dropbtn {background-color: #3f4045; color: white;} 
 
 #searchIcon{
     fill: #000000;
@@ -139,7 +139,6 @@ a{
     padding: 14px;
 }
 *{
-    line-height: 18px;
     font-family: 'Inconsolata', monospace;
 }
 .searchbar{
@@ -159,13 +158,13 @@ text-align: left;
 .searchclose{
     display:inline-block;
     position:relative;
-
-
+    
+    
     width: 5%;
     height:74%;
 }
 input.inputsearch{
-
+    
     color: #3f4045;
     background-color: #ffffff;
     border-width: 1px;
@@ -198,7 +197,7 @@ input.inputsearch{
 .dropdown-subcategory {
   display: inline-block;
       z-index: 1;
-    text-align: left;
+    text-align: center;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -208,14 +207,14 @@ input.inputsearch{
     left:0px;
     top:18px;
     width:100%;
-    height:440px;
+    height:300px;
   background-color: #ffffff;
     border-top-width: 0px;
     border-top-style: solid;
     border-top-color: #3f4045;
-
+    
   z-index: 1;
-
+    
 }
 
 /* Links inside the dropdown */
@@ -234,7 +233,7 @@ input.inputsearch{
 .dropdown-subcategory:hover .dropdown-content-subcategory {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown-subcategory:hover .dropbtn-subcategory {background-color: #3f4045; color: #ffffff;}
+.dropdown-subcategory:hover .dropbtn-subcategory {background-color: #3f4045; color: #ffffff;} 
 
 ul {
   list-style-type: none;
@@ -247,7 +246,7 @@ li a {
   display: block;
   color: white;
   text-decoration: none;
-
+    
 }
 .subcategory{
     vertical-align: top;
@@ -273,7 +272,7 @@ li a {
 
 /* Dropdown Button */
 .dropbtn-cart {
-
+  
         transition:0.4s;
 
 
@@ -299,9 +298,9 @@ li a {
     border-style: solid;
     border-color: #fcdebe;
     padding-top: 20px;
-
+    
   z-index: 3;
-
+    
 }
 
 /* Links inside the dropdown */
@@ -347,10 +346,10 @@ li a {
 .basketitem{
     margin:12px;
     background-color:#ffffff;
-
-
-
-
+    
+    
+    
+    
 }
 .itemsdropdown{
     height: 70%;
@@ -358,7 +357,7 @@ li a {
 
 }
 .checkout{
-
+    
 }
 .checkoutbtn{
     width:100%;
@@ -381,7 +380,7 @@ li a {
 
 /* Dropdown Button */
 .dropbtn-profile {
-
+  
         transition:0.4s;
 
 
@@ -407,9 +406,9 @@ li a {
     border-style: solid;
     border-color: #fcdebe;
     padding-top: 8px;
-
+    
   z-index: 3;
-
+    
 }
 
 /* Links inside the dropdown */
@@ -449,7 +448,7 @@ li a {
     color: #ffffff;
 }
 *{
-
+    
 }
 .sub{
     margin: 8px 4px;
@@ -496,13 +495,13 @@ text-align: left;
 .searchclose{
     display:inline-block;
     position:relative;
-
-
+    
+    
     width: 5%;
     height:74%;
 }
 input.inputsearch{
-
+    
     color: #3f4045;
     background-color: #ffffff;
     border-width: 1px;
@@ -513,3 +512,38 @@ input.inputsearch{
 path{
     pointer-events: none;
 }
+
+
+.pagetitle{
+    position:relative;
+}
+.actualtitle{
+    font-size:30px;
+    position:absolute;
+    top:30px;
+    left:1px;
+    color:#00000033;
+}
+
+
+.bigtitle{
+    font-size:80vh;
+    color:#00000011;
+    position:absolute;
+    left:-18px;
+    pointer-events: none;
+    z-index: -1;
+    padding:0;
+    margin:0;
+}
+
+
+
+
+
+
+
+
+
+
+

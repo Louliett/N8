@@ -1,5 +1,9 @@
 "use strict"
 
+
+
+var image_table = '<table class="images_table"id="images_table">  <thead id="images_table_head"><tr id="image_titles"><th> Colour </th><th> Add </th></tr></thead><tbody id="images_table_body"></tbody></table>';
+
 //non-strict field checker
 function isItEmpty(myArray) {
   var checker = 0;

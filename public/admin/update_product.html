@@ -1,135 +1,154 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Update Product</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" href="../images/site/n8.ico">
-  </head>
 
-  <body>
-    <nav>
-      <a href="home.html">Home</a> |
-      <a href="create_product.html">Create Product</a> |
-      <a href="view_products.html">View Products</a> |
-      <a href="create_classification.html">Create Classification</a> |
-      <a href="view_classifications.html">View Classifications</a> |
-      <a href="create_admin.html">Create Admin</a> |
-      <a href="view_admins.html">View Admins</a> |
-      <a href="view_customers.html">View Customers</a> |
-      <a href="logout.html">Logout</a>
-    </nav>
+<head>
+  <meta charset="utf-8">
+  <title>Update Product</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../images/site/n8.ico">
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+</head>
 
-    <p></p>
-    <label> Product Name </label>
-    <br>
-    <textarea id="product_name"></textarea>
+<body>
+  <p class='bigtitle' id='bigtitle'>UPDATE PRODUCT</p>
 
-    <p></p>
-    <label> Product price </label>
-    <br>
-    <textarea id="product_price"></textarea>
+  <nav>
+    <a href="home.html">Home</a> |
+    <a href="create_product.html">Create Product</a> |
+    <a href="view_products.html">View Products</a> |
+    <a href="create_classification.html">Create Classification</a> |
+    <a href="view_classifications.html">View Classifications</a> |
+    <a href="create_admin.html">Create Admin</a> |
+    <a href="view_admins.html">View Admins</a> |
+    <a href="view_customers.html">View Customers</a> |
+    <a href="logout.html">Logout</a>
+  </nav>
 
-    <p></p>
-    <label> New Price </label>
-    <br>
-    <textarea id="product_new_price"></textarea>
+  <div class='content'>
 
-    <p></p>
-    <label> EAN </label>
-    <br>
-    <textarea id="product_ean"></textarea>
+    <div class="text_fields_div">
+      <p></p>
+      <label> Product Name </label>
+      <br>
+      <textarea id="product_name"></textarea>
 
-    <p></p>
-    <label> Quantity </label>
-    <br>
-    <textarea id="product_quantity"></textarea>
+      <p></p>
+      <label> Product price </label>
+      <br>
+      <textarea id="product_price"></textarea>
 
-    <p></p>
-    <label> Brand </label>
-    <br>
-    <textarea id="product_brand"></textarea>
+      <p></p>
+      <label> New Price </label>
+      <br>
+      <textarea id="product_new_price"></textarea>
 
-    <p></p>
-    <label> Design </label>
-    <br>
-    <textarea id="product_design"></textarea>
+      <p></p>
+      <label> EAN </label>
+      <br>
+      <textarea id="product_ean"></textarea>
 
-    <p></p>
-    <label> Description </label>
-    <br>
-    <textarea id="product_description"></textarea>
+      <p></p>
+      <label> Quantity </label>
+      <br>
+      <textarea id="product_quantity"></textarea>
 
-    <p></p>
-    <label> Material </label>
-    <br>
-    <textarea id="product_material"></textarea>
+      <p></p>
+      <label> Brand </label>
+      <br>
+      <textarea id="product_brand"></textarea>
 
-    <p></p>
-    <label> Colour </label>
-    <br>
-    <textarea id="product_colour"></textarea>
+      <p></p>
+      <label> Design </label>
+      <br>
+      <textarea id="product_design"></textarea>
 
-    <p></p>
-    <label> Length </label>
-    <br>
-    <textarea id="product_length"></textarea>
+      <p></p>
+      <label> Description </label>
+      <br>
+      <textarea id="product_description"></textarea>
 
-    <p></p>
-    <label> Width </label>
-    <br>
-    <textarea id="product_width"></textarea>
+      <p></p>
+      <label> Material </label>
+      <br>
+      <textarea id="product_material"></textarea>
 
-    <p></p>
-    <label> Height </label>
-    <br>
-    <textarea id="product_height"></textarea>
+      <p></p>
+      <label> Diameter </label>
+      <br>
+      <textarea id="product_diameter"></textarea>
 
-    <p></p>
-    <label> Volume</label>
-    <br>
-    <textarea id="product_volume"></textarea>
+      <p></p>
+      <label> Length </label>
+      <br>
+      <textarea id="product_length"></textarea>
 
-    <p></p>
-    <label> Weight </label>
-    <br>
-    <textarea id="product_weight"></textarea>
+      <p></p>
+      <label> Width </label>
+      <br>
+      <textarea id="product_width"></textarea>
 
-    <p></p>
-    <label> Size </label>
-    <br>
-    <textarea id="product_size"></textarea>
+      <p></p>
+      <label> Height </label>
+      <br>
+      <textarea id="product_height"></textarea>
 
-    <p></p>
-    <label> Subcategory </label>
-    <br>
-    <select id="product_subcategory">
-      <option id="default_subcategory"></option>
-    </select>
+      <p></p>
+      <label> Volume</label>
+      <br>
+      <textarea id="product_volume"></textarea>
 
-    <p></p>
-    <label> Category </label>
-    <br>
-    <select id="product_category">
-      <option id="default_category"></option>
-    </select>
+      <p></p>
+      <label> Weight </label>
+      <br>
+      <textarea id="product_weight"></textarea>
 
-    <p></p>
-    <label> Section </label>
-    <br>
-    <select id="product_section">
-      <option id="default_section"></option>
-    </select>
+      <p></p>
+      <label> Size </label>
+      <br>
+      <textarea id="product_size"></textarea>
+    </div>
 
-    <p></p>
 
-    <div class="container" id="image_div"> </div>
+    <div class="classification_table_div" >
+      <table class="classification_table">
+        <thead>
+          <tr>
+            <th> Subcategory </th>
+            <th> Category </th>
+            <th> Section </th>
+          </tr>
+        </thead>
+        <tbody id="classification_table">
+          <tr>
+            <td>
+              <select id="product_subcategory">
+                  <option id="default_subcategory"></option>
+              </select>
+            </td>
+            <td>
+              <select id="product_category">
+                <option id="default_category"></option>
+              </select>
+            </td>
+            <td>
+              <select id="product_section">
+                <option id="default_section"></option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <p></p>
+    <div id="upload_images_div" >
+    </div>
 
-    <label> Upload Product Image(s) </label>
-    <br>
-    <input type="file" name="myImage" id="product_image" multiple/>
+    <div class="add_colour_div">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" id="add_colour">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+      </svg>
+    </div>
 
     <p></p>
 
@@ -137,8 +156,9 @@
     <button type="button" style="transform: translate(50vw, 0);" id="delete_product"> Delete </button>
 
     <p></p>
+  </div>
 
-    <script type="module" src="../js/update_product.js"></script>
-  </body>
+  <script type="module" src="../js/update_product.js"></script>
+</body>
 
 </html>
