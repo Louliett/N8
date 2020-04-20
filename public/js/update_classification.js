@@ -95,10 +95,11 @@ function updateClass(classification, id, name) {
 
   fetch("http://192.168.0.105:3000/classifications/" + classification, requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-  classification_name_txt.value = "";
-  location.href = "/public/admin/view_classifications.html";
+    .then((result) => {
+      classification_name_txt.value = "";
+      location.href = "/public/admin/view_classifications.html";
+    }).catch(error => console.log('error', error));
+
 }
 
 function deleteClass(classification, id) {
@@ -117,7 +118,9 @@ function deleteClass(classification, id) {
   console.log(requestOptions);
   fetch("http://192.168.0.105:3000/classifications/" + classification, requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then((result) => {
+      location.href = "/public/admin/view_classifications.html";
+    })
     .catch(error => console.log('error', error));
-  location.href = "/public/admin/view_classifications.html";
+
 }

@@ -25,6 +25,8 @@ var register_button = $(".register_button");
 var transit_register_button = $(".transit_register_button");
 var transit_register_button_div = $(".transit_register_button_div");
 
+
+
 var text_fields = [];
 
 
@@ -75,17 +77,37 @@ $(document).ready(function() {
     var login_email = login_email_txt.val();
     var login_password = login_password_txt.val();
 
-    text_fields.push(login_email_txt, login_password_txt);
-    var checker = check.fields(text_fields);
-
-    if(checker == true) {
+    //text_fields.push(login_email_txt, login_password_txt);
+    //var checker = check.fields(text_fields);
+    var error = false;
+    if(login_email === ''){
+      error = true;
+      login_email_txt.addClass('error');
+    } else {
+      login_email_txt.removeClass('error');
+    }
+    if(login_password === ''){
+      error = true;
+      login_password_txt.addClass('error');
+    } else {
+      login_password_txt.removeClass('error');
+    }
+    if(!error) {
       console.log(login_email);
       console.log(login_password);
       loginUser(login_email, login_password);
       login_email_txt.val("");
       login_password_txt.val("");
     }
-
+    //if(checker == true) {
+      // console.log(login_email);
+      // console.log(login_password);
+      // loginUser(login_email, login_password);
+      // login_email_txt.val("");
+      // login_password_txt.val("");
+    //}
+    login_email_txt.val("");
+    login_password_txt.val("");
   });
 
   register_button.click(function() {
@@ -104,7 +126,6 @@ $(document).ready(function() {
       confirm_email_txt, password_txt, confirm_password_txt, text_fields);
 
     if(checker == true) {
-      console.log("eugh");
       registerUser(first_name, last_name, email, password);
       first_name_txt.val("");
       last_name_txt.val("");
@@ -128,7 +149,7 @@ function loginUser(login_email, login_password) {
       var role = result[0].role;
       console.log(role);
       if (role === "admin") {
-        location.href = "/public/admin/home.html";
+          createCookieAdmin(-1);
       } else {
         createCookie(result[0].id);
         location.href = "/public";
@@ -234,4 +255,11 @@ function createCookie(id) {
   document.cookie = "loggedin=1; expires=" + now.toUTCString() + "; " + "path=/";
   document.cookie = "customer=" + id + "; expires=" + now.toUTCString() + "; " + "path=/";
   document.location.href = '/public/path/profile.html';
+}
+
+
+function createCookieAdmin(id) {
+  Cookies.set('admin', '-1', { expires: 1, path: '/public/admin' });
+  Cookies.set('sessionId', 'ask75934jri', {expires: 1, path: '/public/admin' });
+  document.location.href = '/public/admin/home.html';
 }

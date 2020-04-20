@@ -133,16 +133,15 @@ router.put('/update-customer', (req, res) => {
   });
 });
 
-//deletes a customer based on id
+//deletes a customer based on id (to be added transaction)
 router.delete('/delete-customer', (req, res) => {
   var id = req.body.id;
   var role = "customer";
-  sql = "DELETE transaction, user_address, address, card, user " +
+  sql = "DELETE user_address, address, card, user " +
         "FROM user " +
         "LEFT JOIN user_address ON user.id = user_address.user_id " +
         "LEFT JOIN address ON user_address.address_id = address.id " +
         "LEFT JOIN card ON user.id = card.user_id " +
-        "LEFT JOIN transaction ON card.id = transaction.card_id " +
         "WHERE user.id = ? AND user.role = ?;";
   connection.query(sql, [id, role], (err, rows, fields) => {
     if(err) {

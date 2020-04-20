@@ -18,32 +18,33 @@ function rotateCarousel() {
 
 var prevButton = document.querySelector('.previous-button');
 prevButton.addEventListener( 'click', function() {
-    if(checkoutSequenceCounter>0){
-  selectedIndex--;
-  rotateCarousel();
-
-            checkoutSequenceCounter=(Math.abs(checkoutSequenceCounter-1))%4;
-moveSequence();
-        }else{
-            prevButton.style.display='none';
-        }
+    previousMenu();
 
 });
 
 var nextButton = document.querySelector('.next-button');
 nextButton.addEventListener( 'click', function() {
-    if(checkoutSequenceCounter<3){
-                            nextButton.style.display='';
+    console.log(checkoutSequenceCounter);
 
-  selectedIndex++;
-  rotateCarousel();
-            checkoutSequenceCounter=(checkoutSequenceCounter+1)%4;
+    if(checkoutSequenceCounter===0){
+        if(cartCheck()){
+                nextMenu();
+        }
+    } else if(checkoutSequenceCounter===1){
 
-        moveSequence();
-}else{
-                nextButton.style.display='none';
+        if(addressCheck()){
+                nextMenu();
+        }
+     }else if(checkoutSequenceCounter===2){
+         console.log(cardCheck())
+    if(cardCheck()){
+    nextMenu();
+            populateList();
 
-}
+        }
+     }else if(checkoutSequenceCounter===3){
+
+     }
 
 });
 
@@ -88,9 +89,9 @@ $('#billing').change(function(){
     var c = this.checked;
     if(c===true){
         $('.billingaddressold').removeAttr('hidden');
-        $('.billingaddressdefault').attr('hidden');
+        $('.billingaddressdefault').attr('hidden','hidden');
     }else{
-        $('.billingaddressold').attr('hidden');
+        $('.billingaddressold').attr('hidden','hidden');
         $('.billingaddressdefault').removeAttr('hidden');
     }
 });
@@ -166,45 +167,8 @@ $("#includedContent").load("/public/html/header.html", () => {
     body: raw,
     redirect: 'follow'
   };
-    var cartShit=$('.checkoutmenu');
-    var cover=$('.cover');
-    var addrestab=$('.addresstab');
-    var addresscover=$('.addresscover');
-    $('.finalize').click( function(event) {
-  if (cartShit.css('width') =='80px') {
-    cartShit.css('width','900');
-      cover.css('opacity','0');
-  }else{
-      /*
-    cartShit.css('width','80px');
-            cover.css('opacity','1');
-
-      addrestab.css('width','900');
-      addresscover.css('opacity','0');*/
 
 
-      var div1 = $('.partcart');
-var div2 = $('.partaddress');
-        div2.attr('id','sequencepointactive');
-        div2.children().text('address');
-        div1.attr('id','sequencepoint');
-        div1.children().text('1');
-
-
-       var card = document.querySelector('.card');
-        card.classList.toggle('is-flipped');
-
-
-
-
-
-
-
-
-
-  }
-}
-                         );
 
   fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
     .then(response => response.json())
@@ -238,6 +202,10 @@ function createCart(products) {
 
       cardDiv = document.createElement("div");
       cardDiv.setAttribute("class", "item");
+        cardDiv.classList.add('cart_item');
+        cardDiv.setAttribute('data-item-name',products[i].name);
+        cardDiv.setAttribute('data-item-quantity',objectArray[i][1]);
+        cardDiv.setAttribute('data-item-price',products[i].price);
       cardDiv.setAttribute("id", "item" + product_id);
       document.getElementById("items").appendChild(cardDiv);
 
@@ -248,8 +216,9 @@ function createCart(products) {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "productimage");
+      console.log(products[i].image_name, "imagename");
       if(products[i].image_name!==null){
-    cardDiv.setAttribute("src", 'http://192.168.0.105:3000/'+products[i].image_name);
+        cardDiv.setAttribute("src", 'http://192.168.0.105:3000/public/product_images/' + products[i].image_name);
 
         }else{
 
@@ -422,6 +391,7 @@ function update(a, b) {
 function price_manipulator() {
 
 
+
   var $select = $(".quantity");
 
   for (i = 1; i <= 100; i++) {
@@ -459,26 +429,28 @@ function initializeCheckoutSequence(){
                           div4.children().text('4');
          selectedIndex=checkoutSequenceCounter=0;
            rotateCarousel();
+         if(checkoutSequenceCounter>0 && checkoutSequenceCounter<3){
+                                              nextButton.style.display='';
+                                         prevButton.style.display='';
+
+
+         }
          if(checkoutSequenceCounter<=0){
                     prevButton.style.display='none';
+                                 nextButton.style.display='';
+
 
     }
     if(checkoutSequenceCounter>=3){
                     nextButton.style.display='none';
+                            prevButton.style.display='';
+
 
     }
 
 
     })
     div2.click(()=>{
-            if(checkoutSequenceCounter<=0){
-                    prevButton.style.display='none';
-
-    }
-    if(checkoutSequenceCounter>=3){
-                    nextButton.style.display='none';
-
-    }
         div2.attr('id','sequencepointactive');
         div2.children().text('address and shipping');
         div1.attr('id','sequencepoint');
@@ -491,17 +463,27 @@ function initializeCheckoutSequence(){
                 div4.children().text('4');
          selectedIndex=checkoutSequenceCounter=1;
            rotateCarousel();
+        if(checkoutSequenceCounter>0 && checkoutSequenceCounter<3){
+                                              nextButton.style.display='';
+                                         prevButton.style.display='';
 
-    })
-     div3.click(()=>{
-             if(checkoutSequenceCounter<=0){
+
+         }
+        if(checkoutSequenceCounter<=0){
                     prevButton.style.display='none';
+                                 nextButton.style.display='';
+
 
     }
     if(checkoutSequenceCounter>=3){
                     nextButton.style.display='none';
+                            prevButton.style.display='';
+
 
     }
+
+    })
+     div3.click(()=>{
         div3.attr('id','sequencepointactive');
                  div3.children().text('card details');
 
@@ -515,17 +497,27 @@ function initializeCheckoutSequence(){
                  div4.children().text('4');
          selectedIndex=checkoutSequenceCounter=2;
            rotateCarousel();
+         if(checkoutSequenceCounter>0 && checkoutSequenceCounter<3){
+                                              nextButton.style.display='';
+                                         prevButton.style.display='';
 
-    })
-    div4.click(()=>{
-            if(checkoutSequenceCounter<=0){
+
+         }
+         if(checkoutSequenceCounter<=0){
                     prevButton.style.display='none';
+                                 nextButton.style.display='';
+
 
     }
     if(checkoutSequenceCounter>=3){
                     nextButton.style.display='none';
+                            prevButton.style.display='';
+
 
     }
+
+    })
+    div4.click(()=>{
         div4.attr('id','sequencepointactive');
                 div4.children().text('finalize');
 
@@ -539,6 +531,24 @@ function initializeCheckoutSequence(){
                          div3.children().text('3');
          selectedIndex=checkoutSequenceCounter=3;
            rotateCarousel();
+        if(checkoutSequenceCounter>0 && checkoutSequenceCounter<3){
+                                              nextButton.style.display='';
+                                         prevButton.style.display='';
+
+
+         }
+        if(checkoutSequenceCounter<=0){
+                    prevButton.style.display='none';
+                                 nextButton.style.display='';
+
+
+    }
+    if(checkoutSequenceCounter>=3){
+                    nextButton.style.display='none';
+                            prevButton.style.display='';
+
+
+    }
 
     })
 
@@ -608,4 +618,410 @@ function moveSequence(){
         div3.attr('id','sequencepoint');
                          div3.children().text('3');
     }
+}
+    var requiredFields=$('.shipping_address');
+
+
+function cartCheck(){
+    var cartDoneIcon=$('#partCartDone');
+    cartDoneIcon.removeAttr('hidden');
+    return true;
+}
+function addressCheck(){
+    var error=false;
+    for(var i=0; i<requiredFields.length;i++){
+        if(requiredFields[i].value===''){
+            error=true;
+                        requiredFields[i].classList.add('error');
+
+        }
+    }
+           var addressErrorIcon=$('#partAddressError');
+        var addressDoneIcon=$('#partAddressDone');
+
+
+    if(error){
+    addressErrorIcon.removeAttr('hidden');
+            addressDoneIcon.attr('hidden', 'hidden');
+
+    return false;
+    }else if(!error){
+    addressDoneIcon.removeAttr('hidden');
+    addressErrorIcon.attr('hidden', 'hidden');
+        populateOld();
+    return true;
+        }
+    else{
+    addressErrorIcon.removeAttr('hidden');
+                    addressDoneIcon.attr('hidden', 'hidden');
+
+    return false;
+    }
+
+}
+function cardCheck(){
+    var card_details=$('.card_details');
+    var isBilling=document.getElementById('billing');
+    var c = isBilling.checked;
+    var requiredFieldsBilling;
+    var error=false;
+
+    if(c){
+             requiredFieldsBilling=$('.auto.billing_address');
+        console.log(requiredFieldsBilling);
+        }else{
+                         requiredFieldsBilling=$('.required.billing_address');
+
+        }
+    for(var i=0; i<requiredFieldsBilling.length;i++){
+        if(requiredFieldsBilling[i].value===''){
+            console.log(requiredFieldsBilling[i]);
+            error=true;
+            requiredFieldsBilling[i].classList.add('error');
+        }
+    }
+    for(var i=0; i<card_details.length;i++){
+        if(card_details[i].value===''){
+                        console.log(card_details[i]);
+
+            error=true;
+                        card_details[i].classList.add('error');
+
+        }
+    }
+        var cardDoneIcon=$('#partCardDone');
+           var cardErrorIcon=$('#partCardError');
+
+    if(error){
+        cardDoneIcon.removeAttr('hidden');
+    cardDoneIcon.attr('hidden', 'hidden');
+    cardErrorIcon.removeAttr('hidden');
+    return false;
+    }else if(!error){
+    cardDoneIcon.removeAttr('hidden');
+
+
+    cardErrorIcon.attr('hidden', 'hidden');
+    return true;
+        }
+    else{
+            cardDoneIcon.removeAttr('hidden');
+    cardDoneIcon.attr('hidden', 'hidden');
+
+    cardErrorIcon.removeAttr('hidden');
+    return false;
+    }
+
+}
+function nextMenu(){
+     if(checkoutSequenceCounter<3){
+                            nextButton.style.display='';
+
+         selectedIndex++;
+  rotateCarousel();
+        prevButton.removeAttribute('hidden');
+      console.log(checkoutSequenceCounter);
+
+            checkoutSequenceCounter=(checkoutSequenceCounter+1)%4;
+               console.log(checkoutSequenceCounter);
+
+
+        moveSequence();
+}else{
+                nextButton.style.display='none';
+
+}
+
+
+}
+function previousMenu(){
+    if(checkoutSequenceCounter>0){
+  selectedIndex--;
+  rotateCarousel();
+
+            checkoutSequenceCounter=(Math.abs(checkoutSequenceCounter-1))%4;
+moveSequence();
+        }else{
+            prevButton.style.display='none';
+        }
+
+
+}
+function populateOld(){
+    var isBilling=document.getElementById('billing');
+    var c = isBilling.checked;
+    if(c===true){
+        $('.billingaddressold').removeAttr('hidden');
+        $('.billingaddressdefault').attr('hidden','hidden');
+         var requiredFieldsBilling=$('.auto.billing_address');
+        console.log(requiredFieldsBilling)
+for(var i=0; i<requiredFieldsBilling.length; i++){
+    requiredFieldsBilling[i].innerHTML=requiredFields[i].value;
+
+}
+    }else{
+        $('.billingaddressold').attr('hidden','hidden');
+        $('.billingaddressdefault').removeAttr('hidden');
+    }
+}
+
+
+var required=$('.required');
+var errorScript=function(event){
+        var e=event.target;
+        if(e.value===''){
+            e.classList.add('error');
+        }else{
+            e.classList.remove('error');
+        }
+    }
+for(var i=0;i<required.length; i++){
+    required[i].addEventListener('input',errorScript)
+     required[i].addEventListener("focusout", errorScript);
+
+
+
+
+}
+
+
+function  populateList(){
+    var table=document.getElementById('simple_body');
+    var itemsList=$('.cart_item');
+    console.log(itemsList)
+    for(var i=0;i<itemsList.length;i++){
+
+        var row=table.insertRow(0);
+        var cell=row.insertCell(0);
+        cell.innerHTML='<p>'+itemsList[i].dataset.itemName+'</p>';
+        cell=row.insertCell(1);
+        cell.innerHTML='<p>'+itemsList[i].dataset.itemPrice+'</p>';
+        cell=row.insertCell(2);
+        cell.innerHTML='<p>'+itemsList[i].dataset.itemQuantity+'</p>';
+        cell=row.insertCell(3);
+        cell.innerHTML='<p>20%</p>';
+
+
+    }
+    var row=table.insertRow(table.rows.length);
+    var cell=row.insertCell(0);
+    cell=row.insertCell(1);
+    cell=row.insertCell(2);
+    cell=row.insertCell(3);
+    cell=row.insertCell(4);
+    cell.innerHTML='<p>'+$('.total').text()+'</p>';
+
+
+    var table=$('.shipping_address_checkout');
+    var relevant=table.children('.auto')
+    var old=$('.required.shipping_address');
+    for(var i=0; i<relevant.length;i++){
+        relevant[i].innerHTML=old[i].value;
+    }
+
+
+    var table=$('.billing_address_checkout');
+    var relevant=table.children('.auto')
+
+    var old;
+var isBilling=document.getElementById('billing');
+    var c = isBilling.checked;
+    if(c===true){
+           old=$('.auto.billing_address');
+        for(var i=0; i<relevant.length;i++){
+        relevant[i].innerHTML=old[i].innerHTML;
+    }
+
+    }
+    else{
+            old=$('.required.billing_address');
+        for(var i=0; i<relevant.length;i++){
+        relevant[i].innerHTML=old[i].value;
+    }
+
+    }
+
+
+    var table=$('.card_checkout');
+    var relevant=table.children('.auto')
+    var old=$('.card_details');
+    for(var i=0; i<relevant.length;i++){
+        relevant[i].innerHTML=old[i].value;
+    }
+
+
+
+}
+var month_slc = document.getElementById('expiration_month');
+var year_slc = document.getElementById('expiration_year');
+
+
+  var months = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  for (var i = 0; i < months.length; i++) {
+    var opt = months[i];
+    var el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    month_slc.appendChild(el);
+  }
+
+
+  for (var i = 20; i < 51; i++) {
+    var opt = i;
+    var el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    year_slc.appendChild(el);
+  }
+
+
+var cities_slc = document.querySelectorAll('#bulgarian_cities');
+console.log(cities_slc)
+
+var array=[];
+  fetch('/public/db/bg.json')
+    .then(response => response.json())
+    .then((data) => {
+      for (var i = 0; i < data.length; i++) {
+        array.push(data[i].city);
+      }
+      for (var j = 0; j < array.length; j++) {
+        var opt = array[j];
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        cities_slc[0].appendChild(el);
+          var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        cities_slc[1].appendChild(el);
+      }
+    });
+
+
+
+$('.finalize').click(()=>{
+
+    var email=$('.email_checkout')
+
+    if(email.val()===''){
+        email.addClass('error');
+    }else{
+sendShit();    }
+
+
+})
+/*setInterval(function(){ sendShit()
+                      console.log('works');
+                      }, 80);*/
+function sendShit(){
+
+    var table=$('.shipping_address_checkout');
+    var relevant=table.children('.auto')
+    var contentsShipping=[];
+    for(var i=0; i<relevant.length;i++){
+        contentsShipping.push(relevant[i].innerHTML);
+    }
+
+
+    var table=$('.billing_address_checkout');
+    var relevant=table.children('.auto')
+    var contentsBilling=[];
+    for(var i=0; i<relevant.length;i++){
+        contentsBilling.push(relevant[i].innerHTML);
+    }
+
+    var table=$('.card_checkout');
+    var relevant=table.children('.auto')
+    var contentCard=[];
+    for(var i=0; i<relevant.length;i++){
+        contentCard.push(relevant[i].innerHTML);
+    }
+
+    var contentItems=[];
+
+
+     var itemsList=$('.cart_item');
+    for(var i=0;i<itemsList.length;i++){
+
+        contentItems.push(i);
+        contentItems.push(itemsList[i].dataset.itemName);
+        contentItems.push(itemsList[i].dataset.itemPrice);
+        contentItems.push(itemsList[i].dataset.itemQuantity);
+
+
+    var time= new Date();
+var randHex = function(len) {
+  var maxlen = 8,
+      min = Math.pow(16,Math.min(len,maxlen)-1)
+      max = Math.pow(16,Math.min(len,maxlen)) - 1,
+      n   = Math.floor( Math.random() * (max-min+1) ) + min,
+      r   = n.toString(16);
+  while ( r.length < len ) {
+     r = r + randHex( len - maxlen );
+  }
+  return r;
+};
+
+//  demo code
+function write(i) {
+ $("<li />").text(i).appendTo("#x");
+}
+
+for(var j = 1;j<50;j++) {
+}
+
+    /*const data = {
+    'code': randHex(99) ,
+    'first_name': contentsShipping[0],
+    'last_name': contentsShipping[1],
+    'shipping_address': contentsShipping,
+    'billing_address': contentsBilling,
+    'card_details': contentCard,
+    'total_amount': $('.total').text(),
+    'items': contentItems,
+    'email': $('.email_checkout').val(),
+    'timestamp': time.getTime(),
+    'type': 'purchase'*/
+        const data = {
+    'code': randHex(99) ,
+    'first_name': contentsShipping[0],
+    'last_name': contentsShipping[1],
+    'shipping_address': contentsShipping.join(),
+    'billing_address': contentsBilling.join(),
+    'card_details': contentCard.join(),
+    'total_amount': $('.total').text(),
+    'items': contentItems.join(),
+    'email': 'louliett@gmail.com',//$('.email_checkout').val(),
+    'timestamp': time.getTime(),
+    'type': 'purchase'
+  }
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  var raw = JSON.stringify(data);
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  }
+
+  fetch("http://192.168.0.105:3000/transactions/create-unregistered", requestOptions)
+    .then(response => response.text())
+    .then(result => setPage(result))
+    .catch(error => console.log('error', error));
+
+}
+
+
+}
+
+function setPage(result){
+
+
+    var shit=window.open('about:blank', '','_blank');
+
+    shit.document.write(result);
+    location.href = "/public";
+
 }

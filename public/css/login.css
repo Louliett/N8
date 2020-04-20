@@ -106,3 +106,9 @@ input:focus{
     border-bottom: 1px solid #3f4045;
 
 }
+
+.error{
+    background-color:#ff5964cc;
+    color:#ffffff;
+
+}

@@ -15,14 +15,10 @@
 .fa {
   padding: 14px;
   font-size: 24px;
-  width: 24px;
   text-align: center;
   text-decoration: none;
   margin: 5px 2px;
   border-radius: 50%;
-    border-color: #ffffff;
-    border-style:solid;
-    border-width:4px;
     transform-origin: center;
     transition: 0.3s;
 }
@@ -32,32 +28,27 @@
 }
 
 .fa-facebook {
-  background: #3B599888;
   color: white;
 }
 
 .fa-twitter {
-  background: #55ACEE88;
   color: white;
 }
 
 .fa-google {
-  background: #dd4b3988;
   color: white;
 }
 
 .fa-linkedin {
-  background: #007bb588;
   color: white;
 }
 
 .fa-youtube {
-  background: #bb000088;
   color: white;
 }
 
 .fa-instagram {
-  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+  
   color: white;
 }
 h3{

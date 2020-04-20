@@ -363,7 +363,7 @@ router.post('/search-product', (req, res) => {
         "OR pro.design LIKE ? " +
         "OR pro.description LIKE ? " +
         "OR pro.material LIKE ? " +
-        "OR pro.colour LIKE ? " +
+        "OR img.colour LIKE ? " +
         "OR sub.name LIKE ? " +
         "OR cat.name LIKE ? " +
         "OR sec.name LIKE ?; "

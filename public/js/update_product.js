@@ -339,15 +339,16 @@ update_product_button.addEventListener("click", () => {
   } else {
 
       //updates the text
+      //updateProduct(data);
       updateProduct(data);
       // //updates the colour for existing images
-      // updateColours();
+       updateColours();
       // //uploads new images for existing colours
-      // updatedNewImages();
+       updatedNewImages();
       // //upload new images for new colours
-      // uploadImages();
+       uploadImages();
       // //clean fields
-      // cleanFields();
+       cleanFields();
 
   }
 
@@ -478,7 +479,7 @@ function uploadImages() {
         formdata.append("colour", colour);
       }
     }
-
+    formdata.append("id", product_id);
     // for (var pair of formdata.entries()) {
     //   console.log(pair[0] + ', ' + pair[1]);
     // }

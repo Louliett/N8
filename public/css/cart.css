@@ -95,10 +95,6 @@ select:hover{
     cursor: pointer;
     width:58%;
     height: 44px;
-    position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, +150%);
     background-color: #3f4045;
     text-align: center;
 vertical-align: middle;
@@ -106,6 +102,11 @@ line-height: 8px;
     transition:0.3s;
 
 
+
+}
+.inalize:hover{
+        background-color: #cccccc;
+    color:#ffffff;
 
 }
 .info{
@@ -307,14 +308,95 @@ p{
     padding:0;
 
 }*/
-h2{
-            color:#3f4045;
+h2,h3{
+            color:#3f4045 !important;
 
     
     
     
 }
+td{
+padding: 1px 19px 1px 19px;}
 .securitycodediv{
     padding-top:15px;
     padding-bottom:15px;
+}
+button{
+     cursor: pointer;
+    color: #ffffff;
+    width:30%;
+    height: 44px;
+    background-color: #3f4045;
+    text-align: center;
+    transition:0.3s;
+    border: 1px solid #3f404588;
+}
+.sequencePointDone{
+    fill: #56e39fcc;
+    position:absolute;
+    top:-100%;
+    left: 50%;
+transform: translate(-50%, -100%);    
+}
+.sequencePointParent{
+    display:inline-block;
+    width:auto;
+}
+.sequencePointWarning{
+       fill: #ff5964cc;
+        position:absolute;
+  top:-100%;
+    left: 50%;
+transform: translate(-50%, -100%);    
+
+
+}
+.hoverInfo{
+    position: relative;
+    width:auto;
+    height: auto;
+ 
+
+}
+.hoverInfo .hoverInfoText{
+    visibility: hidden;
+    background-color: #3f4045;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  position: absolute;
+  z-index: 1;
+    width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+    
+}
+.hoverInfo:hover .hoverInfoText{
+    visibility: visible;
+}
+.hoverInfo .hoverInfoText::after{
+content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #3f4045 transparent;
+}
+.error{
+    background-color:#ff5964cc;
+    color:#ffffff;
+
+}
+.simple_cart{
+    border-left: 1px solid #00000088;
+    border-top: 1px solid #00000088;
+    border-right: 1px solid #00000088;
+}
+.simple_cart td{
+    border-bottom: 1px solid #00000088;
 }
