@@ -1,30 +1,96 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>View Classifications</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" href="../images/site/n8.ico">
-      <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
-      <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>View Classifications</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../images/site/n8.ico">
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
   <script src="/public/js/adminCancel.js"></script>
-  </head>
+  <style>
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
 
-  <body>
-            <p class='bigtitle' id='bigtitle'>VIEW CLASSIFICATIONS</p>
+    /* Modal Content */
+    .modal-content {
+      position: relative;
+      background-color: #ffffff;
+      margin: auto;
+      padding: 0;
+      border: 1px solid #888;
+      width: 200px;
+      height: 150px;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+      -webkit-animation-name: animatetop;
+      -webkit-animation-duration: 0.4s;
+      animation-name: animatetop;
+      animation-duration: 0.4s
+    }
 
-    <nav>
-        <a href="home.html">Home</a> |
-        <a href="create_product.html">Create Product</a> |
-        <a href="view_products.html">View Products</a> |
-        <a href="create_classification.html">Create Classification</a> |
-        <a href="view_classifications.html">View Classifications</a> |
-        <a href="create_admin.html">Create Admin</a> |
-        <a href="view_admins.html">View Admins</a> |
-        <a href="view_customers.html">View Customers</a> |
-        <a href='' id='logout' onclick="return false;">Logout</a>
-    </nav>
-<div class='content'>
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+      from {top:-400px; opacity:0}
+      to {top:0; opacity:1}
+    }
+
+    @keyframes animatetop {
+      from {top:-400px; opacity:0}
+      to {top:0; opacity:1}
+    }
+
+    .modal-header {
+      background-color: #ffffff;
+    }
+
+    .modal-body {
+
+    }
+
+    .modal-footer {
+      background-color: #ffffff;
+    }
+
+    .addcard {
+        width:100%;
+    }
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='popup_message'></div>
+  <p class='bigtitle' id='bigtitle'>VIEW CLASSIFICATIONS</p>
+
+  <nav>
+    <a href="home.html">Home</a> |
+    <a href="create_product.html">Create Product</a> |
+    <a href="view_products.html">View Products</a> |
+    <a href="create_classification.html">Create Classification</a> |
+    <a href="view_classifications.html">View Classifications</a> |
+    <a href="create_admin.html">Create Admin</a> |
+    <a href="view_admins.html">View Admins</a> |
+    <a href="view_customers.html">View Customers</a> |
+    <a href='' id='logout' onclick="return false;">Logout</a>
+  </nav>
+  <div class='content'>
 
     <p></p>
 
@@ -32,8 +98,10 @@
       <table>
         <thead>
           <tr>
-            <th>Id</th>
             <th>Subcategory</th>
+            <th>Image</th>
+            <th>Update</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody id="subcategory_table"></tbody>
@@ -44,8 +112,10 @@
       <table>
         <thead>
           <tr>
-            <th>Id</th>
             <th>Category</th>
+            <th>Image</th>
+            <th>Update</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody id="category_table"></tbody>
@@ -56,15 +126,18 @@
       <table>
         <thead>
           <tr>
-            <th>Id</th>
             <th>Section</th>
+            <th>Image</th>
+            <th>Update</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody id="section_table"></tbody>
       </table>
     </div>
-      </div>
+  </div>
 
-    <script src="../js/view_classifications.js"></script>
-  </body>
+  <script src="../js/view_classifications.js"></script>
+</body>
+
 </html>

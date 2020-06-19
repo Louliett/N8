@@ -1,10 +1,23 @@
-var final=[];
+"use strict";
+
+var final = [];
 var itemsFile;
 var usersFile;
-var categoriesFile = [[], [], []];
+var categoriesFile = [
+  [],
+  [],
+  []
+];
+var bigboss = [];
 
+var typeclassificationheader = '';
+var sectionclassificationheader = '';
+var categoryclassificationheader = '';
+var subcaegoryclassificationheader = '';
+var complextitle = '';
 
 function start() {
+
 
   var items = read_cookie('items');
   var loggedin = read_cookie('loggedin');
@@ -13,7 +26,7 @@ function start() {
   var objectArray = [];
   var product_ids = [];
   var unique_products = [];
-    getClassifications();
+  SectionsStuff();
 
   if (stringArray != null) {
     stringArray = stringArray.split(",");
@@ -65,7 +78,7 @@ function start() {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
+  fetch("http://192.168.0.107:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
 
@@ -86,58 +99,29 @@ function start() {
     }).catch(error => console.log('error', error));
 
 
-    myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+  myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
 
-    const cust_data = {
-      'id': customer
-    };
+  const cust_data = {
+    'id': customer
+  };
 
-    var raw = JSON.stringify(cust_data);
+  var raw = JSON.stringify(cust_data);
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
 
-    fetch("http://192.168.0.105:3000/users/get-customer-by-id", requestOptions)
-      .then(response => response.json())
-      .then((result) => {
-        loadProfile(result[0]);
-      })
-      .catch(error => console.log('error', error));
-
-
-  /*fetch('http://192.168.0.105:3000/classifications/section')
+  fetch("http://192.168.0.107:3000/users/get-customer-by-id", requestOptions)
     .then(response => response.json())
-    .then(data => {
-      categoriesFile[0].push("section");
-      for (var i = 0; i < data.length; i++) {
-        categoriesFile[0].push(data[i]);
-      }
-    }).catch(error => console.error(error));
+    .then((result) => {
+      loadProfile(result[0]);
+    })
+    .catch(error => console.log('error', error));
 
-  fetch('http://192.168.0.105:3000/classifications/category')
-    .then(response => response.json())
-    .then(data => {
-      categoriesFile[1].push("category");
-      for (var i = 0; i < data.length; i++) {
-        categoriesFile[1].push(data[i]);
-      }
-    }).catch(error => console.error(error));
-
-  fetch('http://192.168.0.105:3000/classifications/subcategory')
-    .then(response => response.json())
-    .then(data => {
-      categoriesFile[2].push("subcategory");
-      for (var i = 0; i < data.length; i++) {
-        categoriesFile[2].push(data[i]);
-      }
-
-      loadCategories();
-    }).catch(error => console.error(error));*/
 
 
   addSearch();
@@ -173,7 +157,7 @@ function start() {
       document.getElementById('signin').appendChild(cardDiv);
 
 
-      $(".dropbtn-profile, .profilebtn").click(function() {
+      $(".dropbtn-profile, .profilebtn").click(function () {
         document.location.href = '/public/path/login.html';
 
       });
@@ -207,7 +191,7 @@ function start() {
         cardDiv.setAttribute("id", "order");
         cardDiv.innerHTML = 'Order History';
         document.getElementById('signin').appendChild(cardDiv);
-        $('#order').click(function() {
+        $('#order').click(function () {
           document.location.href = '/public/path/profile.html?order';
 
         });
@@ -217,7 +201,7 @@ function start() {
         cardDiv.setAttribute("id", "view");
         cardDiv.innerHTML = 'View Profile';
         document.getElementById('signin').appendChild(cardDiv);
-        $('#view').click(function() {
+        $('#view').click(function () {
           document.location.href = '/public/path/profile.html';
 
         });
@@ -227,7 +211,7 @@ function start() {
         cardDiv.setAttribute("id", "edit");
         cardDiv.innerHTML = 'Edit Profile';
         document.getElementById('signin').appendChild(cardDiv);
-        $('#edit').click(function() {
+        $('#edit').click(function () {
           document.location.href = '/public/path/profile.html?edit';
 
         });
@@ -237,7 +221,7 @@ function start() {
         cardDiv.setAttribute("id", "wallet");
         cardDiv.innerHTML = 'Wallet';
         document.getElementById('signin').appendChild(cardDiv);
-        $('#wallet').click(function() {
+        $('#wallet').click(function () {
           document.location.href = '/public/path/profile.html?wallet';
 
         });
@@ -247,7 +231,7 @@ function start() {
         cardDiv.setAttribute("class", "profilebtn");
         cardDiv.setAttribute("id", "signout");
         cardDiv.innerHTML = 'Sign Out';
-        cardDiv.addEventListener('click', function() {
+        cardDiv.addEventListener('click', function () {
           signOut()
         });
         document.getElementById('signin').appendChild(cardDiv);
@@ -276,19 +260,19 @@ function start() {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "image");
-       if(products[i].image_name!==null){
-    cardDiv.setAttribute("src", 'http://192.168.0.105:3000/public/product_images/'+products[i].image_name);
+      if (products[i].image_url !== null) {
+        cardDiv.setAttribute("src", 'http://192.168.0.107:3000' + products[i].image_url);
 
 
-        }else{
+      } else {
 
-                cardDiv.setAttribute("src", undefined);
+        cardDiv.setAttribute("src", undefined);
 
-        }
+      }
 
-    $(cardDiv).on("error", function(){
-        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
-    });
+      $(cardDiv).on("error", function () {
+        $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
+      });
       document.getElementById("basketimage" + product_id).appendChild(cardDiv);
 
 
@@ -306,7 +290,6 @@ function start() {
         if (objectArray[o][0] == product_id) {
           cardDiv = document.createElement("p");
           cardDiv.innerHTML = "quantity: " + objectArray[o][1];
-          cardDiv.setAttribute('id', 'quantity' + product_id);
           document.getElementById("basketinfo" + product_id).appendChild(cardDiv);
         }
       }
@@ -323,171 +306,93 @@ function start() {
 
   function loadCategories(final) {
 
-    /*for (var i = 1; i < categoriesFile[0].length; i++) {
+    for (var key in final) {
 
 
 
       var cardDiv = document.createElement("div");
       cardDiv.setAttribute("class", "dropdown-subcategory");
-      cardDiv.setAttribute("id", "dropdown-subcategory" + categoriesFile[0][i]['name']);
+      cardDiv.setAttribute("id", "dropdown-subcategory" + key);
       document.getElementById("navmenu").appendChild(cardDiv);
 
       cardDiv = document.createElement("a");
       cardDiv.setAttribute("class", "dropbtn-subcategory");
-      cardDiv.setAttribute("id", "dropbtn-subcategory" + categoriesFile[0][i]['name']);
-      cardDiv.setAttribute("data-class", categoriesFile[0][0]);
-      cardDiv.innerHTML = categoriesFile[0][i]['name'];
-      document.getElementById("dropdown-subcategory" + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-      cardDiv = document.createElement("div");
-      cardDiv.setAttribute("class", "dropdown-content-subcategory");
-      cardDiv.setAttribute("id", "dropdown-content-subcategory" + categoriesFile[0][i]['name']);
-      document.getElementById("dropdown-subcategory" + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-      for (var ii = 1; ii < categoriesFile[1].length; ii++) {
-
-
-        cardDiv = document.createElement("div");
-        cardDiv.setAttribute("class", "category");
-        cardDiv.setAttribute("id", "category" + categoriesFile[1][ii]['name'] + categoriesFile[0][i]['name']);
-        document.getElementById("dropdown-content-subcategory" + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-
-        cardDiv = document.createElement("ul");
-        cardDiv.setAttribute("id", "ul" + categoriesFile[1][ii]['name'] + categoriesFile[0][i]['name']);
-        document.getElementById("category" + categoriesFile[1][ii]['name'] + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-        cardDiv = document.createElement("li");
-        cardDiv.setAttribute('class', 'title');
-        cardDiv.setAttribute("id", categoriesFile[1][ii]['name']);
-        cardDiv.setAttribute("data-class", categoriesFile[1][0]);
-        cardDiv.innerHTML = categoriesFile[1][ii]['name'];
-        document.getElementById("ul" + categoriesFile[1][ii]['name'] + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-        for (var iii = 1; iii < categoriesFile[(1 + 1)].length; iii++) {
-
-
-          cardDiv = document.createElement("li");
-          cardDiv.setAttribute('class', 'sub');
-          cardDiv.setAttribute("id", categoriesFile[(1 + 1)][iii]['name']);
-          cardDiv.setAttribute("data-class", categoriesFile[2][0]);
-          cardDiv.innerHTML = categoriesFile[(1 + 1)][iii]['name'];
-
-          document.getElementById("ul" + categoriesFile[1][ii]['name'] + categoriesFile[0][i]['name']).appendChild(cardDiv);
-
-        }
-
-      }
-
-
-}
-
-    var titles = []
-    titles = titles.concat(document.getElementsByClassName('title'), document.getElementsByClassName('dropbtn-subcategory'), document.getElementsByClassName('sub'));
-
-
-
-    for (var o = 0; o < titles.length; o++) {
-      for (var m = 0; m < titles[o].length; m++) {
-
-        titles[o][m].addEventListener('click', () => {
-
-          document.location.href = '/public/path/category.html?' + event.target.dataset.class + '&' + event.target.innerHTML.toLowerCase();
-
-
-
-
-
-
-        });
-
-
-      }
-    }*/
-      console.log(final)
-      console.log('öööööööööööööööööööööööööööööööööööööö');
-      for (var i = 0; i < final.length; i++) {
-
-
-
-      var cardDiv = document.createElement("div");
-      cardDiv.setAttribute("class", "dropdown-subcategory");
-      cardDiv.setAttribute("id", "dropdown-subcategory" + final[i].name);
-      document.getElementById("navmenu").appendChild(cardDiv);
-
-      cardDiv = document.createElement("a");
-      cardDiv.setAttribute("class", "dropbtn-subcategory");
-      cardDiv.setAttribute("id", "dropbtn-subcategory" + final[i].name);
+      cardDiv.setAttribute("id", "dropbtn-subcategory" + key);
       cardDiv.setAttribute("data-class", 'section');
-      cardDiv.innerHTML = final[i].name;
-      document.getElementById("dropdown-subcategory" + final[i].name).appendChild(cardDiv);
+      cardDiv.innerHTML = key;
+      document.getElementById("dropdown-subcategory" + key).appendChild(cardDiv);
 
       cardDiv = document.createElement("div");
       cardDiv.setAttribute("class", "dropdown-content-subcategory");
-      cardDiv.setAttribute("id", "dropdown-content-subcategory" + final[i].name);
-      document.getElementById("dropdown-subcategory" + final[i].name).appendChild(cardDiv);
+      cardDiv.setAttribute("id", "dropdown-content-subcategory" + key);
+      document.getElementById("dropdown-subcategory" + key).appendChild(cardDiv);
 
-      for (var ii = 0; ii < final[i].uniqueCategories.length; ii++) {
+      for (var secondKey in final[key]) {
 
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", "category");
-        cardDiv.setAttribute("id", "category" + final[i].uniqueCategories[ii].name + final[i].name);
-        document.getElementById("dropdown-content-subcategory" + final[i].name).appendChild(cardDiv);
+        cardDiv.setAttribute("id", "category" + secondKey + key);
+        document.getElementById("dropdown-content-subcategory" + key).appendChild(cardDiv);
 
 
         cardDiv = document.createElement("ul");
-        cardDiv.setAttribute("id", "ul" + final[i].uniqueCategories[ii].name + final[i].name);
-        document.getElementById("category" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+        cardDiv.setAttribute("id", "ul" + secondKey + key);
+        cardDiv.setAttribute("data-section", "" + key);
+        cardDiv.setAttribute("data-category", "" + secondKey);
+        document.getElementById("category" + secondKey + key).appendChild(cardDiv);
 
         cardDiv = document.createElement("li");
-        cardDiv.setAttribute('class', 'title');
-        cardDiv.setAttribute("id", final[i].uniqueCategories[ii].name);
+        cardDiv.setAttribute('class', 'categorytitle');
+        cardDiv.setAttribute("id", secondKey);
         cardDiv.setAttribute("data-class", 'category');
-        cardDiv.innerHTML = final[i].uniqueCategories[ii].name;
-        document.getElementById("ul" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+        cardDiv.innerHTML = secondKey;
+        document.getElementById("ul" + secondKey + key).appendChild(cardDiv);
 
-        for (var iii = 0; iii < final[i].uniqueCategories[ii].uniqueSubcategory.length; iii++) {
+        for (var thirdKey in final[key][secondKey]) {
 
           cardDiv = document.createElement("li");
-          cardDiv.setAttribute('class', 'sub');
-          cardDiv.setAttribute("id", final[i].uniqueCategories[ii].uniqueSubcategory[iii]);
+          cardDiv.setAttribute('class', 'subcategorytitle');
+          cardDiv.setAttribute("id", thirdKey);
           cardDiv.setAttribute("data-class", 'subcategory');
-          cardDiv.innerHTML = final[i].uniqueCategories[ii].uniqueSubcategory[iii];
+          cardDiv.innerHTML = thirdKey;
 
-          document.getElementById("ul" + final[i].uniqueCategories[ii].name + final[i].name).appendChild(cardDiv);
+          document.getElementById("ul" + secondKey + key).appendChild(cardDiv);
 
         }
 
       }
 
 
-}
+    }
 
-    var titles = []
-    titles = titles.concat(document.getElementsByClassName('title'), document.getElementsByClassName('dropbtn-subcategory'), document.getElementsByClassName('sub'));
+    var sectiontitles = []
+    var categorytitles = []
+    var subcategorytitles = []
+    sectiontitles = document.getElementsByClassName('dropbtn-subcategory');
+    categorytitles = document.getElementsByClassName('categorytitle');
+    subcategorytitles = document.getElementsByClassName('subcategorytitle');
 
-
-
-    for (var o = 0; o < titles.length; o++) {
-      for (var m = 0; m < titles[o].length; m++) {
-
-        titles[o][m].addEventListener('click', () => {
-
-          document.location.href = '/public/path/category.html?' + event.target.dataset.class + '&' + event.target.innerHTML.toLowerCase();
-
-
-
-
-
-
-        });
-
-
-      }
+    for (var i = 0; i < sectiontitles.length; i++) {
+      sectiontitles[i].addEventListener('click', function () {
+        document.location.href = '/public/path/selected.html?section&' + event.target.innerHTML.toLowerCase() + '&null&null'
+      })
+    }
+    for (var i = 0; i < categorytitles.length; i++) {
+      categorytitles[i].addEventListener('click', function () {
+        document.location.href = '/public/path/selected.html?category&' + event.target.parentNode.dataset.section + '&' + event.target.innerHTML.toLowerCase() + '&null'
+      })
+    }
+    for (var i = 0; i < subcategorytitles.length; i++) {
+      subcategorytitles[i].addEventListener('click', function () {
+        document.location.href = '/public/path/selected.html?subcategory&' + event.target.parentNode.dataset.section + '&' + event.target.parentNode.dataset.category + '&' + event.target.innerHTML.toLowerCase()
+      })
     }
 
   }
+
+
+
 
   function read_cookie(key) {
     var result;
@@ -505,23 +410,21 @@ function start() {
 
   function addSearch() {
 
-    $(".search").click(function() {
+    $(".search").click(function () {
+      $('.searchbar').attr('class', 'searchbaractive');
 
-      $(".searchbar").css("width", "100%");
-      $(".search").css("display", "none");
-      $(".closesearch").css("display", "block");
-
+      $('.inputsearch').attr('class', 'inputsearchactive');
 
     });
 
-    $(".closesearch").click(function() {
-      $(".searchbar").css("width", "0%");
-      $(".search").css("display", "block");
-      $(".closesearch").css("display", "none");
+    $(".closesearch").click(function () {
+      $('.searchbaractive').attr('class', 'searchbar');
+
+      $('.inputsearchactive').attr('class', 'inputsearch');
 
     });
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
       if (event.keyCode == 13) {
         if ($(".inputsearch").is(":focus")) {
           var now = new Date();
@@ -539,109 +442,154 @@ function start() {
 
 
 
-var shit=[];
-var uniqueSections=[];
-function getClassifications(){
-    fetch('http://192.168.0.105:3000/products/')
-    .then(response => response.json())
-    .then(data => {
-      sort(data);
-    }).catch(error => console.error(error));
-}
-var classification={section:'',category:'',subcategory:''};
-function sort(products){
-   for(var i=0; i<products.length;i++){
-       var newClassification=Object.create(classification);
-       if(!uniqueSections.includes(products[i].section)){
-           uniqueSections.push(products[i].section);
-       }
-       newClassification.section=products[i].section;
-
-              newClassification.category=products[i].category;
-              newClassification.subcategory=products[i].subcategory;
-
-       shit.push(newClassification);
-   }
-    console.log(shit);
-    shit=shit.sort(function(a, b){
-    if(a.section < b.section) { return -1; }
-    if(a.section > b.section) { return 1; }
-    return 0;
-})
-
-    sortAgain();
-}
-
-function sortAgain(){
-    for(var i=0; i<uniqueSections.length;i++){
-                                            var uniqueCategories=[];
-
-        for(var o=0; o<shit.length;o++){
-
-            if(shit[o].section===uniqueSections[i]){
-                if(!uniqueCategories.includes(shit[o].category)){
-                uniqueCategories.push({name:shit[o].category,uniqueSubcategory:[]});
-                }
-
-            }
-        }
-        final.push({name:uniqueSections[i],uniqueCategories})
 
 
 
+
+
+  function SectionsStuff() {
+
+    myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch("http://192.168.0.107:3000/classifications/class-groups", requestOptions)
+      .then(response => response.json())
+      .then((result) => {
+        Order(result)
+      })
+      .catch(error => console.log('error', error));
+  }
+
+  function Order(data) {
+
+    var unique_sections = [...new Set(data.map(x => x.section))];
+    var uniqueBoss = {};
+
+    for (var i = 0; i < data.length; i++) {
+      uniqueBoss[data[i]['section']] = {}
+      bigboss[data[i]['section']] = {
+        sec_img: data[i]['sec_img']
+      }
     }
-    sortAgainAndAgain();
-
-}
-function sortAgainAndAgain(){
-    for(var i=0; i<final.length;i++){
-
-        console.log(final[i]);
-        for(var q=0; q<final[i].uniqueCategories.length;q++){
-                    console.log(final[i].uniqueCategories[q]);
-            console.log('')
-            console.log('')
-            console.log('')
-
-
-            for(var o=0; o<shit.length;o++){
-                                                                    var uniqueSubcategories=[];
-
-
-                if(shit[o].section===final[i].name){
-                    if(shit[o].category===final[i].uniqueCategories[q].name){
-                       if(!final[i].uniqueCategories[q].uniqueSubcategory.includes(shit[o].subcategory)){
-                           final[i].uniqueCategories[q].uniqueSubcategory.push(shit[o].subcategory);
-                        }
-                    }
-                }
-
-
-
-
-
-                }
-            }
-
-
-
-
-
+    for (var i = 0; i < data.length; i++) {
+      uniqueBoss[data[i]['section']][data[i]['category']] = {};
+      bigboss[data[i]['section']][data[i]['category']] = {
+        cat_img: data[i]['cat_img']
+      };
+    }
+    for (var i = 0; i < data.length; i++) {
+      uniqueBoss[data[i]['section']][data[i]['category']][data[i]['subcategory']] = null;
+      bigboss[data[i]['section']][data[i]['category']][data[i]['subcategory']] = {
+        sub_img: data[i]['sub_img']
+      };
+    }
+    loadCategories(uniqueBoss);
+    if (typeclassificationheader === 'section') {
+      setCover1(sectionclassificationheader)
+    } else if (typeclassificationheader === 'category') {
+      setCover2(sectionclassificationheader, categoryclassificationheader)
+    } else if (typeclassificationheader === 'subcategory') {
+      setCover3(sectionclassificationheader, categoryclassificationheader, subcategoryclassificationheader)
+    } else if (typeclassificationheader === 'item') {
+      $('.bigimage').attr('hidden', 'hidden');
+      setHeaderStyle();
     }
 
+    setTitle2(complextitle)
 
-loadCategories(final);
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+} //WHAT
+
+function setTitle(a) {
+  $(".bigtitle").text(a);
 }
-    sessionStorage.setItem('sections', final);
 
-}//WHAT
+function setTitle2(a) {
+  $(".querytitle").text(a);
+}
 
-function setTitle(a){
-    $(".bigtitle").text(a);
+function setCover1(a) {
+  if (a in bigboss) {
+    $('.bigimageimage').attr('src', 'http://192.168.0.107:3000' + bigboss[a]['sec_img']);
+  }
+}
+
+function setCover2(a, b) {
+  if (a in bigboss) {
+    $('.bigimageimage').attr('src', 'http://192.168.0.107:3000' + bigboss[a][b]['cat_img']);
+  }
+}
+
+function setCover3(a, b, c) {
+  if (a in bigboss) {
+    $('.bigimageimage').attr('src', 'http://192.168.0.107:3000' + bigboss[a][b][c]['sub_img']);
+  }
 }
 
 
-$(document).ready(function()
-{
+$(document).ready(function () {
 
 });
+
+$(window).scroll(function () {
+
+  if ($(this).scrollTop() >= 12) {
+    $('#navbar').attr('class', 'navbar');
+    $('#categorySpace').attr('class', 'categorySpace');
+    $('.logoImgnew').attr('class', 'logoImg');
+    $('.dropbtn-subcategory').attr('class', 'dropbtn-subcategorynew');
+    var icon = $('.dropbtn-profile.noscroll');
+    icon.removeClass('noscroll');
+    icon.addClass('scrolled');
+    icon = $('.dropbtn-cart.noscroll');
+    icon.removeClass('noscroll');
+    icon.addClass('scrolled');
+
+  } else {
+    $('#navbar').attr('class', 'navbarnew');
+    $('#categorySpace').attr('class', 'categorySpacenew');
+    $('.logoImg').attr('class', 'logoImgnew');
+    $('.dropbtn-subcategorynew').attr('class', 'dropbtn-subcategory');
+    var icon = $('.dropbtn-profile.scrolled');
+    icon.removeClass('scrolled');
+    icon.addClass('noscroll');
+    icon = $('.dropbtn-cart.scrolled');
+    icon.removeClass('scrolled');
+    icon.addClass('noscroll');
+
+
+  }
+});
+
+
+
+function setHeaderStyle() {
+  $('#navbar').attr('class', 'navbaritem');
+  $('#navbar').attr('id', 'navbaritem');
+}

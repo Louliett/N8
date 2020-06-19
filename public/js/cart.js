@@ -10,9 +10,10 @@ var isHorizontal = false;
 var rotateFn = 'rotateX';
 var radius, theta;
 var checkoutSequenceCounter=0;
+var product_ids=[{Test1:'price_HLhvSREgp7XgDV'}, {Test2:'price_HM3NQJlxKNoMd4'}, {Test3:'price_HLhx2nQ0l8r0do'}, {Test4:'price_HM3OgGZyLcHtYS'}, {Test5:'price_HM3PiRwwN6OnU8'}];
 function rotateCarousel() {
   var angle = theta * selectedIndex * -1;
-  carousel.style.transform = 'translateZ(' + -radius + 'px) ' +
+  carousel.style.transform = 'translateZ(' + -radius + 'px) ' + 
     rotateFn + '(' + angle + 'deg)';
 }
 
@@ -25,13 +26,13 @@ prevButton.addEventListener( 'click', function() {
 var nextButton = document.querySelector('.next-button');
 nextButton.addEventListener( 'click', function() {
     console.log(checkoutSequenceCounter);
-
+    
     if(checkoutSequenceCounter===0){
         if(cartCheck()){
                 nextMenu();
         }
     } else if(checkoutSequenceCounter===1){
-
+        
         if(addressCheck()){
                 nextMenu();
         }
@@ -43,7 +44,7 @@ nextButton.addEventListener( 'click', function() {
 
         }
      }else if(checkoutSequenceCounter===3){
-
+        
      }
 
 });
@@ -127,8 +128,8 @@ $("#includedContent").load("/public/html/header.html", () => {
   var objectArray = [];
   var product_ids = [];
   var unique_products = [];
-
-
+    
+    
 
 
   if (stringArray != null) {
@@ -167,17 +168,16 @@ $("#includedContent").load("/public/html/header.html", () => {
     body: raw,
     redirect: 'follow'
   };
+    
 
 
-
-  fetch("http://192.168.0.105:3000/products/products-images", requestOptions)
+  fetch("http://192.168.0.107:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(product_ids);
       console.log(result);
       for (var i = 0; i < product_ids.length; i++) {
         for (var j = 0; j < result.length; j++) {
-          console.log(typeof(result[j].id), typeof(product_ids[i]));
 
           if(result[j].id === product_ids[i]) {
             unique_products.push(result[j]);
@@ -216,16 +216,15 @@ function createCart(products) {
 
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "productimage");
-      console.log(products[i].image_name, "imagename");
       if(products[i].image_name!==null){
-        cardDiv.setAttribute("src", 'http://192.168.0.105:3000/public/product_images/' + products[i].image_name);
-
+    cardDiv.setAttribute("src", 'http://192.168.0.107:3000'+products[i].image_url);
+           
         }else{
 
         }
 
     $(cardDiv).on("error", function(){
-        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+        $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
     });
       document.getElementById("left" + product_id).appendChild(cardDiv);
 
@@ -389,7 +388,7 @@ function update(a, b) {
 }
 
 function price_manipulator() {
-
+    
 
 
   var $select = $(".quantity");
@@ -403,18 +402,18 @@ function price_manipulator() {
   }
   calculatePrice();
 }
+    
 
-
-
-
+    
+    
 
 
 });
 
 
 function initializeCheckoutSequence(){
-
-
+    
+    
     var line = $('#line1');
      div1.click(()=>{
         div1.attr('id','sequencepointactive');
@@ -558,7 +557,7 @@ var x2 = div4.offset().left + (0);
 var y2 = div4.offset().top + (div4.outerHeight()/2);
 
 line.attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2);
-};
+};  
 
 
 function moveSequence(){
@@ -604,7 +603,7 @@ function moveSequence(){
 
         div4.attr('id','sequencepoint');
                  div4.children().text('4');
-
+        
     }else if(checkoutSequenceCounter===3){
         div4.attr('id','sequencepointactive');
                 div4.children().text('finalize');
@@ -644,7 +643,7 @@ function addressCheck(){
     addressErrorIcon.removeAttr('hidden');
             addressDoneIcon.attr('hidden', 'hidden');
 
-    return false;
+    return false; 
     }else if(!error){
     addressDoneIcon.removeAttr('hidden');
     addressErrorIcon.attr('hidden', 'hidden');
@@ -655,9 +654,9 @@ function addressCheck(){
     addressErrorIcon.removeAttr('hidden');
                     addressDoneIcon.attr('hidden', 'hidden');
 
-    return false;
+    return false; 
     }
-
+    
 }
 function cardCheck(){
     var card_details=$('.card_details');
@@ -699,8 +698,8 @@ function cardCheck(){
     return false;
     }else if(!error){
     cardDoneIcon.removeAttr('hidden');
-
-
+        
+        
     cardErrorIcon.attr('hidden', 'hidden');
     return true;
         }
@@ -711,7 +710,7 @@ function cardCheck(){
     cardErrorIcon.removeAttr('hidden');
     return false;
     }
-
+    
 }
 function nextMenu(){
      if(checkoutSequenceCounter<3){
@@ -731,8 +730,8 @@ function nextMenu(){
                 nextButton.style.display='none';
 
 }
-
-
+    
+    
 }
 function previousMenu(){
     if(checkoutSequenceCounter>0){
@@ -744,8 +743,8 @@ moveSequence();
         }else{
             prevButton.style.display='none';
         }
-
-
+    
+    
 }
 function populateOld(){
     var isBilling=document.getElementById('billing');
@@ -757,7 +756,7 @@ function populateOld(){
         console.log(requiredFieldsBilling)
 for(var i=0; i<requiredFieldsBilling.length; i++){
     requiredFieldsBilling[i].innerHTML=requiredFields[i].value;
-
+    
 }
     }else{
         $('.billingaddressold').attr('hidden','hidden');
@@ -777,20 +776,19 @@ var errorScript=function(event){
     }
 for(var i=0;i<required.length; i++){
     required[i].addEventListener('input',errorScript)
-     required[i].addEventListener("focusout", errorScript);
-
-
-
-
+     required[i].addEventListener("focusout", errorScript); 
+    
+    
+    
+    
 }
 
 
 function  populateList(){
-    var table=document.getElementById('simple_body');
+  /*  var table=document.getElementById('simple_body');
     var itemsList=$('.cart_item');
-    console.log(itemsList)
     for(var i=0;i<itemsList.length;i++){
-
+        
         var row=table.insertRow(0);
         var cell=row.insertCell(0);
         cell.innerHTML='<p>'+itemsList[i].dataset.itemName+'</p>';
@@ -800,8 +798,8 @@ function  populateList(){
         cell.innerHTML='<p>'+itemsList[i].dataset.itemQuantity+'</p>';
         cell=row.insertCell(3);
         cell.innerHTML='<p>20%</p>';
-
-
+        
+        
     }
     var row=table.insertRow(table.rows.length);
     var cell=row.insertCell(0);
@@ -810,19 +808,19 @@ function  populateList(){
     cell=row.insertCell(3);
     cell=row.insertCell(4);
     cell.innerHTML='<p>'+$('.total').text()+'</p>';
-
-
+    */
+    
     var table=$('.shipping_address_checkout');
     var relevant=table.children('.auto')
     var old=$('.required.shipping_address');
     for(var i=0; i<relevant.length;i++){
         relevant[i].innerHTML=old[i].value;
     }
-
-
+    
+     
     var table=$('.billing_address_checkout');
     var relevant=table.children('.auto')
-
+    
     var old;
 var isBilling=document.getElementById('billing');
     var c = isBilling.checked;
@@ -831,7 +829,7 @@ var isBilling=document.getElementById('billing');
         for(var i=0; i<relevant.length;i++){
         relevant[i].innerHTML=old[i].innerHTML;
     }
-
+ 
     }
     else{
             old=$('.required.billing_address');
@@ -840,19 +838,19 @@ var isBilling=document.getElementById('billing');
     }
 
     }
-
-
+    
+ /*   
     var table=$('.card_checkout');
     var relevant=table.children('.auto')
     var old=$('.card_details');
     for(var i=0; i<relevant.length;i++){
         relevant[i].innerHTML=old[i].value;
-    }
-
-
-
+    }*/
+    
+    
+    
 }
-var month_slc = document.getElementById('expiration_month');
+/*var month_slc = document.getElementById('expiration_month');
 var year_slc = document.getElementById('expiration_year');
 
 
@@ -872,7 +870,7 @@ var year_slc = document.getElementById('expiration_year');
     el.textContent = opt;
     el.value = opt;
     year_slc.appendChild(el);
-  }
+  }*/
 
 
 var cities_slc = document.querySelectorAll('#bulgarian_cities');
@@ -901,59 +899,98 @@ var array=[];
 
 
 $('.finalize').click(()=>{
+     var PUBLISHABLE_KEY = "pk_test_eJRfzu3ioOMkmqV5aue6PcGF00NIIx3yZ2";
+      // Replace with the domain you want your users to be redirected back to after payment
+      var DOMAIN = window.location.origin;
+
+        var stripe = Stripe(PUBLISHABLE_KEY);
+        var handleResult = function(result) {
+        if (result.error) {
+          var displayError = document.getElementById("error-message");
+          displayError.textContent = result.error.message;
+        }
+      };
+
 
     var email=$('.email_checkout')
-
+    
     if(email.val()===''){
         email.addClass('error');
     }else{
-sendShit();    }
+          var itemsList=$('.cart_item');
+        var objectsList=[];
+        
+    for(var i=0;i<itemsList.length;i++){
+        var iname=itemsList[i].dataset.itemName;
+        var iquantity=itemsList[i].dataset.itemQuantity;
+        for(var q=0; q<product_ids.length; q++){
+            if(iname in product_ids[q]){
+                objectsList.push({price:product_ids[q][iname], quantity:parseInt(iquantity)})
+            }
+        }
+      
+    }
 
-
+        // Make the call to Stripe.js to redirect to the checkout page
+        // with the current quantity
+        stripe
+          .redirectToCheckout({
+            mode: 'payment',
+            lineItems: objectsList,
+            successUrl:
+              DOMAIN + "/success.html?session_id={CHECKOUT_SESSION_ID}",
+            cancelUrl: DOMAIN + "/canceled.html"
+          })
+          .then(handleResult);
+    
+    
+    }
+    
+    
 })
 /*setInterval(function(){ sendShit()
                       console.log('works');
                       }, 80);*/
 function sendShit(){
-
+    
     var table=$('.shipping_address_checkout');
     var relevant=table.children('.auto')
     var contentsShipping=[];
     for(var i=0; i<relevant.length;i++){
         contentsShipping.push(relevant[i].innerHTML);
     }
-
-
+    
+    
     var table=$('.billing_address_checkout');
     var relevant=table.children('.auto')
     var contentsBilling=[];
     for(var i=0; i<relevant.length;i++){
         contentsBilling.push(relevant[i].innerHTML);
     }
-
+    
     var table=$('.card_checkout');
     var relevant=table.children('.auto')
     var contentCard=[];
     for(var i=0; i<relevant.length;i++){
         contentCard.push(relevant[i].innerHTML);
     }
-
+    
     var contentItems=[];
-
-
+    
+    
      var itemsList=$('.cart_item');
     for(var i=0;i<itemsList.length;i++){
-
+        
         contentItems.push(i);
         contentItems.push(itemsList[i].dataset.itemName);
         contentItems.push(itemsList[i].dataset.itemPrice);
         contentItems.push(itemsList[i].dataset.itemQuantity);
-
-
+    
+    
     var time= new Date();
 var randHex = function(len) {
   var maxlen = 8,
-      min = Math.pow(16,Math.min(len,maxlen)-1)
+      min = Math.pow(16,Math.min(len,maxlen)-1) 
       max = Math.pow(16,Math.min(len,maxlen)) - 1,
       n   = Math.floor( Math.random() * (max-min+1) ) + min,
       r   = n.toString(16);
@@ -965,12 +1002,12 @@ var randHex = function(len) {
 
 //  demo code
 function write(i) {
- $("<li />").text(i).appendTo("#x");
+ $("<li />").text(i).appendTo("#x"); 
 }
 
 for(var j = 1;j<50;j++) {
 }
-
+    
     /*const data = {
     'code': randHex(99) ,
     'first_name': contentsShipping[0],
@@ -1006,22 +1043,27 @@ for(var j = 1;j<50;j++) {
     redirect: 'follow'
   }
 
-  fetch("http://192.168.0.105:3000/transactions/create-unregistered", requestOptions)
+  fetch("http://192.168.0.107:3000/transactions/create-unregistered", requestOptions)
     .then(response => response.text())
     .then(result => setPage(result))
     .catch(error => console.log('error', error));
-
+  
 }
-
-
+    
+    
 }
 
 function setPage(result){
-
-
+    
+    console.log(result);
     var shit=window.open('about:blank', '','_blank');
-
+    
     shit.document.write(result);
-    location.href = "/public";
-
+    
+    
 }
+
+
+
+
+

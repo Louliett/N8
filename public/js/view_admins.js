@@ -7,7 +7,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://192.168.0.105:3000/users/get-admins", requestOptions)
+fetch("http://192.168.0.107:3000/users/get-admins", requestOptions)
   .then(response => response.json())
   .then(data => {
     console.log(data);
@@ -59,7 +59,7 @@ function deleteAdmin(id) {
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.105:3000/users/delete-admin", requestOptions)
+    fetch("http://192.168.0.107:3000/users/delete-admin", requestOptions)
       .then(response => response.text())
       .then((result) => {
         console.log(result);

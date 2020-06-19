@@ -4,11 +4,12 @@
 <head>
   <meta charset="utf-8">
   <title>Create Product</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/create_product.css">
   <link rel="icon" href="../images/site/n8.ico">
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-<script src="/public/js/adminCancel.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="/public/js/adminCancel.js"></script>
 </head>
 
 <body>
@@ -27,93 +28,106 @@
   </nav>
   <div class='content'>
 
-    <div class="text_fields_div">
-      <p></p>
-      <label> Product Name </label>
+    <div class="text_fields_container">
+      <h3>Fill in the product info!</h3>
+      <label id="text_error"></label>
       <br>
-      <textarea id="product_name"></textarea>
+      <div class="text_fields_div">
+        <p></p>
+        <label> Product Name </label>
+        <br>
+        <input type="text" id="product_name">
 
-      <p></p>
-      <label> Product price </label>
-      <br>
-      <textarea id="product_price"></textarea>
+        <p></p>
+        <label> Product price </label>
+        <br>
+        <input type="text" id="product_price">
 
-      <p></p>
-      <label> New Price </label>
-      <br>
-      <textarea id="product_new_price"></textarea>
+        <p></p>
+        <label> New Price </label>
+        <br>
+        <input type="text" id="product_new_price">
 
-      <p></p>
-      <label> EAN </label>
-      <br>
-      <textarea id="product_ean"></textarea>
+        <p></p>
+        <label> EAN </label>
+        <br>
+        <input type="text" id="product_ean">
 
-      <p></p>
-      <label> Quantity </label>
-      <br>
-      <textarea id="product_quantity"></textarea>
+        <p></p>
+        <label> Availability </label>
+        <br>
+        <input type="text" id="product_availability">
 
-      <p></p>
-      <label> Brand </label>
-      <br>
-      <textarea id="product_brand"></textarea>
+        <p></p>
+        <label> Quantity </label>
+        <br>
+        <input type="text" id="product_quantity">
 
-      <p></p>
-      <label> Design </label>
-      <br>
-      <textarea id="product_design"></textarea>
+        <p></p>
+        <label> Brand </label>
+        <br>
+        <input type="text" id="product_brand">
 
-      <p></p>
-      <label> Description </label>
-      <br>
-      <textarea id="product_description"></textarea>
+        <p></p>
+        <label> Design </label>
+        <br>
+        <input type="text" id="product_design">
+      </div>
 
-      <p></p>
-      <label> Material </label>
-      <br>
-      <textarea id="product_material"></textarea>
+      <div class="text_fields_div">
+        <p></p>
+        <label> Material </label>
+        <br>
+        <input type="text" id="product_material"></input>
 
-      <p></p>
-      <label> Radius </label>
-      <br>
-      <textarea id="product_diameter"></textarea>
+        <p></p>
+        <label> Diameter </label>
+        <br>
+        <input type="text" id="product_diameter"></input>
 
-      <p></p>
-      <label> Length </label>
-      <br>
-      <textarea id="product_length"></textarea>
+        <p></p>
+        <label> Length </label>
+        <br>
+        <input type="text" id="product_length"></input>
 
-      <p></p>
-      <label> Width </label>
-      <br>
-      <textarea id="product_width"></textarea>
+        <p></p>
+        <label> Width </label>
+        <br>
+        <input type="text" id="product_width"></input>
 
-      <p></p>
-      <label> Height </label>
-      <br>
-      <textarea id="product_height"></textarea>
+        <p></p>
+        <label> Height </label>
+        <br>
+        <input type="text" id="product_height"></input>
 
-      <p></p>
-      <label> Volume</label>
-      <br>
-      <textarea id="product_volume"></textarea>
+        <p></p>
+        <label> Volume</label>
+        <br>
+        <input type="text" id="product_volume"></input>
 
-      <p></p>
-      <label> Weight </label>
-      <br>
-      <textarea id="product_weight"></textarea>
+        <p></p>
+        <label> Weight </label>
+        <br>
+        <input type="text" id="product_weight"></input>
 
-      <p></p>
-      <label> Size </label>
-      <br>
-      <textarea id="product_size"></textarea>
+        <p></p>
+        <label> Size </label>
+        <br>
+        <input type="text" id="product_size"></input>
+      </div>
+
+      <div class="description_div">
+        <p></p>
+        <label> Description </label>
+        <br>
+        <textarea id="product_description"></textarea>
+      </div>
     </div>
 
 
-
-
-
-    <div class="classification_table_div" >
+    <div class="classification_table_div">
+      <h3>Pick classifications for the product!</h3>
+      <label id="class_error"></label>
       <table class="classification_table">
         <thead>
           <tr>
@@ -124,28 +138,64 @@
         </thead>
         <tbody id="classification_table">
           <tr>
-            <td>
+            <td id="tity">
               <select id="product_subcategory">
-                <option></option>
+                <option id="default_subcategory"></option>
               </select>
             </td>
             <td>
               <select id="product_category">
-                <option></option>
+                <option id="default_category"></option>
               </select>
             </td>
             <td>
               <select id="product_section">
-                <option></option>
+                <option id="default_section"></option>
               </select>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <div class="new_class_div">
+        <h3>Missing classification? Create one!</h3>
+        <p>
+          <label> Subcategory Name </label>
+          <br>
+          <label id="subcategory_err"> </label>
+          <br>
+          <input type="text" id="subcategory_name">
+          <br>
+          <input type="file" id="subcategory_image">
+          <button type="button" id="subcategory_button"> Create Subcategory </button>
+        </p>
+        <p>
+          <label> Category Name </label>
+          <br>
+          <label id="category_err"> </label>
+          <br>
+          <input type="text" id="category_name">
+          <br>
+          <input type="file" id="category_image">
+          <button type="button" id="category_button"> Create Category </button>
+        </p>
+        <p>
+          <label> Section Name </label>
+          <br>
+          <label id="section_err"> </label>
+          <br>
+          <input type="text" id="section_name">
+          <br>
+          <input type="file" id="section_image">
+          <button type="button" id="section_button"> Create Section </button>
+        </p>
+      </div>
     </div>
 
-    <div class="upload_images_div" >
-      <table class="images_table"id="images_table">
+    <div class="upload_images_div">
+      <h3>Upload images for specific colours!</h3>
+      <label id="image_error"></label>
+      <table class="images_table" id="images_table">
         <thead>
           <tr>
             <th> Colour </th>
@@ -159,7 +209,7 @@
               <input type="text" id="product_colour_1">
             </td>
             <td>
-              <input type="file" name="myImage" id="product_image_1" multiple/>
+              <input type="file" name="myImage" id="product_image_1" multiple />
             </td>
           </tr>
         </tbody>
@@ -167,17 +217,17 @@
 
       <div class="add_colour_div">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" id="add_colour">
-          <path d="M0 0h24v24H0z" fill="none"/>
-          <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
         </svg>
       </div>
     </div>
 
 
-
-    <button type="button" style="transform: translate(50vw, 0);" id="create_product"> Create </button>
-
     <p></p>
+
+
+    <button type="button" id="create_product"> Create </button>
   </div>
 
   <script type="module" src="../js/create_product.js"></script>

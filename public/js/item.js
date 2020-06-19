@@ -3,7 +3,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
   $.getScript("/public/js/header.js", function() {
-    console.log('loaded');
+      typeclassificationheader='item';
     start();
 
   });
@@ -36,10 +36,8 @@ $("#includedContent").load("/public/html/header.html", () => {
     console.log(stringArray);
     for (var iii = 0; iii < stringArray.length; iii++) {
       var smallArray = stringArray[iii].split(':');
-      console.log(smallArray);
 
       objectArray.push(smallArray);
-      console.log(objectArray);
 
     }
   } else {
@@ -64,19 +62,19 @@ $("#includedContent").load("/public/html/header.html", () => {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.105:3000/products/id', requestOptions)
+  fetch('http://192.168.0.107:3000/products/id', requestOptions)
     .then(response => response.json())
     .then(data => {
       product = data[0];
       console.log(product);
-      fetchImages(product.id);
+      fetchImages(product.ean);
     }).catch(error => console.error(error));
 
 
 
-  function fetchImages(product_id) {
+  function fetchImages() {
     const data = {
-      id: product_id
+      id: itemId
     };
 
     var raw = JSON.stringify(data);
@@ -90,13 +88,13 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3000/products/product-images-id', requestOptions)
+    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data);
         var images = [];
         data.forEach((element, index, array) => {
-          images.push("http://192.168.0.105:3000/public/product_images/" + element.name);
+          images.push("http://192.168.0.107:3000" + element.url);
         });
         basket_image = images[0];
         fetchProduct(images);
@@ -112,24 +110,10 @@ $("#includedContent").load("/public/html/header.html", () => {
   function fetchProduct(images) {
 
 
-    var x = $(document).width();
-    var y = screen.height;
-
-    var navbar = document.getElementById("navbar");
-    navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-
-    var height = navbar.offsetHeight;
-    console.log(x + " start");
 
 
-    $(window).resize(function() {
-      x = $(window).width();
-      y = screen.height;
-      navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-      var height = navbar.offsetHeight;
-      var wrapper = document.getElementById("categorySpace");
-      //wrapper.setAttribute("style", "margin-top:"+height+"px;");
-    });
+
+
     createSlides(images);
 
 
@@ -151,10 +135,10 @@ $("#includedContent").load("/public/html/header.html", () => {
       var slides = document.getElementsByClassName("mySlides");
       var dots = document.getElementsByClassName("dot");
       if (n > slides.length) {
-        slideIndex = 1;
+        slideIndex = 1
       }
       if (n < 1) {
-        slideIndex = slides.length;
+        slideIndex = slides.length
       }
       for (i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
@@ -207,16 +191,16 @@ $("#includedContent").load("/public/html/header.html", () => {
         $('.displaymore').html('Dislay More');
         $('.displaymore').attr('id', 'open');
       }
-    });
+    })
 
 
 
     console.log(product.height);
     $(".prev").click(function() {
-      plusSlides(-1);
+      plusSlides(-1)
     });
     $(".next").click(function() {
-      plusSlides(1);
+      plusSlides(1)
     });
 
 

@@ -8,7 +8,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://192.168.0.105:3000/users/get-customers", requestOptions)
+fetch("http://192.168.0.107:3000/users/get-customers", requestOptions)
   .then(response => response.json())
   .then(data => {
     if (data.length > 0) {
@@ -68,7 +68,7 @@ function displayAdresses(id) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.105:3000/addresses/customer-address-id", requestOptions)
+  fetch("http://192.168.0.107:3000/addresses/customer-address-id", requestOptions)
     .then(response => response.json())
     .then((data) => {
       if (data.length > 0) {
@@ -108,7 +108,7 @@ function deleteCustomer(id) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.105:3000/users/delete-customer", requestOptions)
+  fetch("http://192.168.0.107:3000/users/delete-customer", requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);

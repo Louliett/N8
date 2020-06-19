@@ -1,0 +1,99 @@
+nav {
+  position: fixed;
+  top: 0;
+  padding: 18px;
+  width: 100%;
+  background-color: #3f4045;
+  color: #ffffff;
+}
+
+textarea {
+  width: 50%;
+  height: 100px;
+}
+
+* {
+  font-family: 'Inconsolata', monospace;
+}
+
+a {
+  color: #ffffff;
+  font-size: 17px;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: #3f4045;
+  background-color: #ffffff;
+}
+
+.content {
+  margin-top: 70px;
+  margin-bottom: 40px;
+  padding-left: 10px;
+  width: auto;
+  background-color: yellow;
+  text-align: center;
+}
+
+/* .bigtitle {
+  font-size: 80vh;
+  color: #00000011;
+  position: absolute;
+  left: -18px;
+  pointer-events: none;
+  z-index: -1;
+  padding: 0;
+  margin: 0;
+} */
+.text_fields_container {
+  display:inline-block;
+  vertical-align: top;
+  padding-right: 2px;
+  background-color: azure;
+}
+
+.text_fields_div {
+  display:inline-block;
+  vertical-align: top;
+  padding-right: 2px;
+  background-color: beige;
+}
+
+.description_div {
+  width: 305px;
+  background-color: aquamarine;
+}
+
+#product_description {
+  width: inherit;
+}
+
+.classification_table_div {
+  display:inline-block;
+  vertical-align: top;
+  width: auto;
+  background-color: blanchedalmond
+}
+
+.upload_images_div {
+  display:inline-block;
+  padding-top: 20px;
+  width: auto;
+  overflow-y: visible;
+  background-color: chocolate;
+}
+
+.add_colour_div {
+  text-align: center;
+  padding-top: 4px;
+  width: 100%;
+}
+
+#add_colour {
+  fill: #00000011;
+}
+
+#add_colour:hover {
+  fill: #000000cc;
+}

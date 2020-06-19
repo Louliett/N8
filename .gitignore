@@ -1,1 +1,4 @@
-# Image Files #
+#Image Folders
+class_images/
+product_images/
+node_modules

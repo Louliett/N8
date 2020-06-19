@@ -54,7 +54,7 @@ function createCard(customer) {
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.105:3000/cards/create-card", requestOptions)
+    fetch("http://192.168.0.107:3000/cards/create-card", requestOptions)
       .then(response => response.text())
       .then((result) => {
         //resets the fields
@@ -91,7 +91,7 @@ function deleteCard(card_id, customer) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.105:3000/cards/delete-card", requestOptions)
+  fetch("http://192.168.0.107:3000/cards/delete-card", requestOptions)
     .then(response => response.text())
     .then((result) => {
       cards(customer);

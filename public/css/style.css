@@ -1,81 +1,85 @@
-th, td, p, input {
-}
-*{
-        font-family: 'Inconsolata', monospace;
+th, td, p, input {}
 
+* {
+  font-family: 'Inconsolata', monospace;
 }
-
 
 table, th, td {
-            border: solid 1px #DDD;
-            border-collapse: collapse;
-            padding: 2px 3px;
-            text-align: center;
+  border: solid 1px #DDD;
+  border-collapse: collapse;
+  padding: 2px 3px;
+  text-align: center;
 }
 
 th {
-    font-weight:bold;
+  font-weight: bold;
 }
-body{
-    margin:0;
-    padding:0;
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
 nav {
-    position:fixed;
-    top:0;
-    padding:18px;
-    width:100%;
+  position: fixed;
+  top: 0;
+  padding: 18px;
+  width: 100%;
   background-color: #3f4045;
-    color:#ffffff;
+  color: #ffffff;
 }
 
 textarea {
   width: 50%;
   height: 100px;
 }
-.productlinks{
-    font-size:49px;
-    color:#3c474bcc;
-    line-height: 40px;
-    transition: 0.3s;
-    margin: 0px 3px;
-}
-.active, .productlinks:hover{
-    font-size:68px;
-    color:#ffffff;
-    background-color: #3c474bcc;
-        padding: 0px 8px;
 
+.productlinks {
+  font-size: 49px;
+  color: #3c474bcc;
+  line-height: 40px;
+  transition: 0.3s;
+  margin: 0px 3px;
 }
 
-
-
-#letter_container{
-    margin:3px;
-    padding:15px 0px;
-}
-.bigtitle{
-    font-size:80vh;
-    color:#00000011;
-    position:absolute;
-    left:-18px;
-    pointer-events: none;
-    z-index: -1;
-    padding:0;
-    margin:0;
-}
-a{color:#ffffff;font-size: 17px;transition:0.3s;}
-a:hover{color:#3f4045;background-color: #ffffff;}
-
-.content{
-    margin-top:70px;
-    margin-bottom: 40px;
-    padding-left: 10px;
-    width: auto;
+.active, .productlinks:hover {
+  font-size: 68px;
+  color: #ffffff;
+  background-color: #3c474bcc;
+  padding: 0px 8px;
 }
 
-.text_fields_div {
+#letter_container {
+  margin: 3px;
+  padding: 15px 0px;
+}
+
+.bigtitle {
+  font-size: 80vh;
+  color: #00000011;
+  position: absolute;
+  left: -18px;
+  pointer-events: none;
+  z-index: -1;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: #ffffff;
+  font-size: 17px;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: #3f4045;
+  background-color: #ffffff;
+}
+
+.content {
+  margin-top: 70px;
+  margin-bottom: 40px;
+  padding-left: 10px;
   width: auto;
 }
 
@@ -110,8 +114,8 @@ a:hover{color:#3f4045;background-color: #ffffff;}
 
 .images_size {
   height: 70px;
-  width:70px;
-  object-fit:cover;
+  width: 70px;
+  object-fit: cover;
   display: inline-block;
   padding: 5px 5px;
 }

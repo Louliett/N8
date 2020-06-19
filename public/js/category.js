@@ -77,7 +77,7 @@ setTitle(query[1]);
   };
 
 
-  fetch('http://192.168.0.105:3000/products/' + table, requestOptions)
+  fetch('http://192.168.0.107:3000/products/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {
       product_list = data
@@ -105,7 +105,7 @@ setTitle(query[1]);
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3000/products/product-images-id', requestOptions)
+    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         var images = [];
@@ -194,8 +194,8 @@ console.log(divided);
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
 if(images[0]!==undefined){
-    cardImg.setAttribute("src", 'http://192.168.0.105:3000'+images[0]);
-    console.log('http://192.168.0.105:3000'+images[0]);
+    cardImg.setAttribute("src", 'http://192.168.0.107:3000'+images[0]);
+    console.log('http://192.168.0.107:3000'+images[0]);
         }else{
                 cardImg.setAttribute("src", undefined);
 
@@ -207,7 +207,7 @@ if(images[0]!==undefined){
     var x = $(document).width();
     $(".productimg").on("error", function(){
         console.log('shit');
-        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+        $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
     });    //cardImg.setAttribute("src", "img/loading.gif");
     document.getElementById(containerName).appendChild(cardImg);
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;

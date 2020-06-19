@@ -1,27 +1,54 @@
-var loaded_products=[];
- var x = $("#main").width();
-    var xx = window.innerWidth;
-    var y = screen.height;
-    var ratio = window.devicePixelRatio || 1;
-    var w = screen.width * ratio;
-    var h = screen.height * ratio;
+"use strict";
+
+var loaded_products = [];
+var x = $("#main").width();
+var xx = window.innerWidth;
+var y = screen.height;
+var ratio = window.devicePixelRatio || 1;
+var w = screen.width * ratio;
+var h = screen.height * ratio;
 
 $("#includedContent").load("/public/html/header.html", () => {
 
 
-  $.getScript("/public/js/header.js", function() {
-    start();
-
-  });
-
-    $("#includedFooter").load("/public/html/footer.html", () => {
+  $("#includedContent").load("/public/html/header.html", () => {
 
 
-  $.getScript("/public/js/footer.js", function() {
-    startFooter();
+    $.getScript("/public/js/header.js", function () {
 
-  });
+      var dfd = $.Deferred();
+
+      dfd.done(function () {
+
+
+        $('.navbar').attr('class', 'navbarnew');
+        $('.categorySpace').attr('class', 'categorySpacenew');
+        $('.navbar2').attr('class', 'navbar2new');
+        $('.logoImg').attr('class', 'logoImgnew');
+
+
+        var bigimage = $('.bigimage');
+        $('.gradient').width(bigimage.width());
+        $('.gradient').height(bigimage.height());
+
+      });
+
+
+      dfd.resolve(start());
+
+
+
     });
+  });
+
+  $("#includedFooter").load("/public/html/footer.html", () => {
+
+
+    $.getScript("/public/js/footer.js", function () {
+      startFooter();
+
+    });
+  });
 
 
   var items = read_cookie('items');
@@ -32,20 +59,20 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
 
-  fetch('http://192.168.0.105:3000/products/')
+  fetch('http://192.168.0.107:3000/products/')
     .then(response => response.json())
     .then(data => {
-      product_list = data
-      for (var i = 0; i <product_list.length; i++) {
+      product_list = data;
+      for (var i = 0; i < product_list.length; i++) {
         fetchImages(product_list[i].id, i);
       }
     }).catch(error => console.error(error));
 
 
 
-  function fetchImages(product_id, index) {
+  function fetchImages(id, index) {
     const data = {
-      id: product_id
+      id: id
     };
 
     var raw = JSON.stringify(data);
@@ -59,29 +86,30 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3000/products/product-images-id', requestOptions)
+
+    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
+        console.log(data, 'null');
         var images = [];
         data.forEach((element, index, array) => {
-            var path=element.path;
-            path=path.replace('.','');
-          images.push(path+element.name);
+
+          images.push(element.url);
         });
         displayProducts(images, index);
-        if(window.matchMedia("(max-width: 767px)").matches){
-            for(var i=0; i<loaded_products.length;i++){
-            var height=$('#itemrow').innerHeight();
-            var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
-            }
-        }else{
-        for(var i=0; i<loaded_products.length;i++){
-            var height=$('#itemrow').innerHeight();
-            var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
-            }
-            }
+        if (window.matchMedia("(max-width: 767px)").matches) {
+          for (var i = 0; i < loaded_products.length; i++) {
+            var height = $('#itemrow').innerHeight();
+            var width = $('#itemrow').innerWidth();
+            loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1 + 1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
+          }
+        } else {
+          for (var i = 0; i < loaded_products.length; i++) {
+            var height = $('#itemrow').innerHeight();
+            var width = $('#itemrow').innerWidth();
+            loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+          }
+        }
 
 
       }).catch(error => console.error(error));
@@ -89,24 +117,9 @@ $("#includedContent").load("/public/html/header.html", () => {
 
   }
 
-function displayProducts(images, index) {
+  function displayProducts(images, index) {
     ii = index;
 
-    var navbar = document.getElementById("navbar");
-    navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-
-    var height = navbar.offsetHeight;
-
-
-
-    $(window).resize(function() {
-      x = $(window).width();
-      y = screen.height;
-      navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-      var height = navbar.offsetHeight;
-      var wrapper = document.getElementById("categorySpace");
-      //wrapper.setAttribute("style", "margin-top:"+height+"px;");
-    });
 
 
 
@@ -114,37 +127,36 @@ function displayProducts(images, index) {
     var containerName = product_list[ii].id;
 
 
-      cardDiv.setAttribute("class", "productcontainer");
-      cardDiv.setAttribute("id", containerName);
-      cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
-      document.getElementById("itemrow").appendChild(cardDiv);
+    cardDiv.setAttribute("class", "productcontainer");
+    cardDiv.setAttribute("id", containerName);
+    cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+    document.getElementById("itemrow").appendChild(cardDiv);
 
     console.log(cardDiv);
     console.log(containerName);
     loaded_products.push(cardDiv);
 
-    $(cardDiv).click(function() {
+    $(cardDiv).click(function () {
       document.location.href = "/public/path/item.html?" + $(this).attr('id');
     });
 
-
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
-    if(images[0]!==undefined){
-    cardImg.setAttribute("src", 'http://192.168.0.105:3000'+images[0]);
-    console.log('http://192.168.0.105:3000'+images[0]);
-        }else{
-                cardImg.setAttribute("src", undefined);
+    if (images[0] !== undefined) {
+      cardImg.setAttribute("src", 'http://192.168.0.107:3000' + images[0]);
+      console.log('http://192.168.0.107:3000' + images[0]);
+    } else {
+      cardImg.setAttribute("src", undefined);
 
-        }
+    }
 
     //cardImg.setAttribute("src", "public/img/loading.gif");
     document.getElementById(containerName).appendChild(cardImg);
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;
     var x = $(document).width();
-    $(".productimg").on("error", function(){
-        console.log('shit');
-        $(this).attr('src', 'http://192.168.0.105:3000/public/product_images/default.png');
+    $(".productimg").on("error", function () {
+      console.log('shit');
+      $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
     });
 
 
@@ -229,7 +241,7 @@ function displayProducts(images, index) {
         document.getElementById("itemrow").appendChild(cardDiv);
 
       }
-      $(cardDiv).click(function() {
+      $(cardDiv).click(function () {
         var now = new Date();
         now.setFullYear(now.getFullYear() + 2);
         document.cookie = "id=" + $(this).attr('id') + "; expires=" + now.toUTCString() + "; " + "path=path/search.html";
@@ -287,7 +299,7 @@ function displayProducts(images, index) {
 
 
 
-      cardDiv.addEventListener("mouseover", function() {
+      cardDiv.addEventListener("mouseover", function () {
         console.log(this);
         //var image=this.childNodes[1].setAttribute("style", "width:60%; height:120%;");
       })
@@ -297,13 +309,3 @@ function displayProducts(images, index) {
   }
 
 });
-
-
-
-function createPage(title) {
-  var page = '<!doctype html><html lang="en"><head><!-- Required meta tags --><meta charset="utf-8"><!-- jQuery library --><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet"><link rel="stylesheet" href="/public/css/mainpage.css"><link rel="stylesheet" href="css/header.css"><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></head><body id="main"><div id="includedContent"></div><div id="wrapper"></div><div class="selectedCategory"><p>displaying itmes that match: </p><h1>' + title + '</h1></div><div id="itemrow"></div><div class="loadMore"> <div class="svg-wrapper"><svg height="60" width="320" xmlns="http://www.w3.org/2000/svg" class="parentshape"><rect class="shape" height="60" width="320" /></svg><div class="buttontext">load more</div></div></div><div class="footer"><h2 style="color:#ffffff;">Footer</h2><a>Link1</a><a>Link2</a></div><script src="/public/js/menuselection.js"></script></body></html>'
-
-
-  return page;
-
-}

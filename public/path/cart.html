@@ -13,6 +13,8 @@
 
   <link rel="stylesheet" href="/public/css/header.css">
   <link rel="stylesheet" href="/public/css/cart.css">
+    <script src="https://js.stripe.com/v3/"></script>
+
 
 </head>
 
@@ -20,10 +22,8 @@
 
   <div id="includedContent"></div>
 
-  <div id="wrapper">
 
-
-  </div>
+ 
 <div class='checkoutsequence'>
     <div class='sequence'>
         <svg id="svg">
@@ -130,6 +130,7 @@
       </div>
       </div>
          <div class="carousel__cell">
+             <!--
                    <h2>PAYMENT DETAILS</h2>
 
              <div class='cardinfo'>
@@ -157,14 +158,9 @@
           <p class='newcardtitle'> Security Code </p>
           <input id="cvv" type='text' placeholder="CVV" maxLength='3' class='required card_details security_code'>
         </div>
-             </div>
+             </div> -->
              <h2>BILLING ADDRESS</h2>
-            
-
-             
-
-
-            <div class='billingaddressdefault'>
+         <div class='billingaddressdefault'>
                 
 <p class='newcardtitle'>First name</p>
         <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone' class="required billing_address phone">
@@ -216,7 +212,7 @@
                 <tr>
                 <td><h3>Shipping address</h3></td>
                 <td><h3>Billing address</h3></td>
-                <td><h3>Card details</h3></td>
+              <!--  <td><h3>Card details</h3></td> -->
                 </tr>
             <tr>
                 <td class='shipping_address_checkout'>
@@ -250,7 +246,7 @@
         <p class='newcardtitle'>Post code</p>
         <p class="auto  postcode"></p>
                 </td>
-                <td class='card_checkout'>
+               <!-- <td class='card_checkout'>
                 <p class='newcardtitle'>Card number</p>
                  <p class="auto  city"></p>
         <p class='newcardtitle'>Expiration date</p>
@@ -260,14 +256,14 @@
         <p class="auto  address1"></p>
         <p class='newcardtitle'>Security code?</p>
         <p class="auto  address2"></p>
-                </td>
+                </td> -->
                 </tr>
             </thead>
             </table>
         
         </div>
         <div>
-        <table class='simple_cart'>
+    <!--    <table class='simple_cart'>
             <thead>
                 <tr>
                 <td><h3>Name</h3></td>
@@ -279,12 +275,12 @@
             </thead>
             <tbody id='simple_body'>
             </tbody>
-            </table>
+            </table> -->
         </div>
         
-        <p style='font-size:39px; color:crimson;line-height: 0;'><input id="email" type='text' placeholder="Email for sending order receipt" class='required email_checkout email' style='padding:18px 4px;'>!</p>
+       <!-- <p style='font-size:39px; color:crimson;line-height: 0;'><input id="email" type='text' placeholder="Email for sending order receipt" class='required email_checkout email' style='padding:18px 4px;'>!</p> -->
         
-        <button class='finalize' style='width:100%;'>CONFIRM AND PAY</button>
+        <button class='finalize' style='width:100%;'>GO TO PAYMENT</button>
 </div>
       </div>
         </div>
