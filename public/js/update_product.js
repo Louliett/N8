@@ -1,13 +1,13 @@
 "use strict";
 
-import {
-  isItEmpty
-} from './utils.js';
-import "./create_classification.js";
+import { isItEmpty, createClassification } from './utils.js';
 
 var product_id = decodeURIComponent(window.location.search).replace("?", "");
 //buttons
 var update_product_button = document.getElementById('update_product');
+var subcategory_button = document.getElementById('subcategory_button');
+var category_button = document.getElementById('category_button');
+var section_button = document.getElementById('section_button');
 //selectors
 var product_subcategory_slc = document.getElementById('product_subcategory');
 var product_category_slc = document.getElementById('product_category');
@@ -16,7 +16,7 @@ var product_section_slc = document.getElementById('product_section');
 var default_subcategory;
 var default_category;
 var default_section;
-//textfields
+//product textfields
 var product_name_txt = document.getElementById('product_name');
 var product_price_txt = document.getElementById('product_price');
 var product_new_price_txt = document.getElementById('product_new_price');
@@ -34,6 +34,10 @@ var product_height_txt = document.getElementById('product_height');
 var product_volume_txt = document.getElementById('product_volume');
 var product_weight_txt = document.getElementById('product_weight');
 var product_size_txt = document.getElementById('product_size');
+//classification textfields
+var subcategory_name_txt = document.getElementById('subcategory_name');
+var category_name_txt = document.getElementById('category_name');
+var section_name_txt = document.getElementById('section_name');
 //images table
 var image_table_head = document.getElementById('image_table_head');
 var images_table_body = document.getElementById('images_table_body');
@@ -50,6 +54,25 @@ var images_to_delete = [];
 var text_label = document.getElementById('text_error');
 var class_label = document.getElementById('class_error');
 var image_label = document.getElementById('image_error');
+//error labels
+var sub_err = document.getElementById('subcategory_err');
+var cat_err = document.getElementById('category_err');
+var sec_err = document.getElementById('section_err');
+//create classifications
+var create_sub = "create-subcategory";
+var create_cat = "create-category";
+var create_sec = "create-section";
+var create_sub_img = "create-subcategory-image";
+var create_cat_img = "create-category-image";
+var create_sec_img = "create-section-image";
+//file inputs
+var sub_input = document.getElementById('subcategory_image');
+var cat_input = document.getElementById('category_image');
+var sec_input = document.getElementById('section_image');
+// fileInput keys
+const sub_key = "subImage";
+const cat_key = "catImage";
+const sec_key = "secImage";
 //sql tables
 var sub_table = "subcategory";
 var cat_table = "category";
@@ -84,6 +107,23 @@ window.addEventListener("load", () => {
   displayProductImages();
 
 });
+
+
+//create subcategory
+subcategory_button.addEventListener("click", () => {
+  createClassification(subcategory_name_txt, sub_array, create_sub, create_sub_img, sub_err, sub_input, sub_key, "#product_subcategory");
+});
+//create category
+category_button.addEventListener("click", () => {
+  createClassification(category_name_txt, cat_array, create_cat, create_cat_img, cat_err, cat_input, cat_key, "#product_category");
+});
+//create section
+section_button.addEventListener("click", () => {
+  createClassification(section_name_txt, sec_array, create_sec, create_sec_img, sec_err, sec_input, sec_key, "#product_section");
+});
+
+
+
 
 
 //add new colour and new images button (plus sign)

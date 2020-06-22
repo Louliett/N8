@@ -24,8 +24,8 @@ $("#includedContent").load("/public/html/header.html", () => {
 setTitle(query[1]);
 
   });
-
-
+    
+    
     $("#includedFooter").load("/public/html/footer.html", () => {
 
 
@@ -35,7 +35,7 @@ setTitle(query[1]);
 
   });
     });
-
+    
 
   query = decodeURIComponent(window.location.search);
   query = query.replace('?', '').toLowerCase();
@@ -83,15 +83,16 @@ setTitle(query[1]);
       product_list = data
       divided=product_list.length%4;
       for (var i = 0; i < product_list.length; i++) {
-        fetchImages(product_list[i].id, i);
+        fetchImages(product_list[i].ean, i);
       }
     }).catch(error => console.error(error));
 
 
 
-  function fetchImages(product_id, index) {
+    
+  function fetchImages(ean, index) {
     const data = {
-      id: product_id
+      ean: ean
     };
 
     var raw = JSON.stringify(data);
@@ -104,17 +105,18 @@ setTitle(query[1]);
       body: raw,
       redirect: 'follow'
     };
+      
 
     fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
+        console.log(data,'null');
         var images = [];
         data.forEach((element, index, array) => {
-            var path=element.path;
-            path=path.replace('.','');
-          images.push(path + element.name);
+          
+          images.push(element.url);
         });
-        fetchClassification(images, index);
+        displayProducts(images, index);
         if(window.matchMedia("(max-width: 767px)").matches){
             for(var i=0; i<loaded_products.length;i++){
             var height=$('#itemrow').innerHeight();
@@ -128,6 +130,8 @@ setTitle(query[1]);
       loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
             }
             }
+     
+    
       }).catch(error => console.error(error));
 
 
@@ -136,28 +140,15 @@ setTitle(query[1]);
 
   function fetchClassification(images, index) {
 
-console.log(divided);
-
-
-    var navbar = document.getElementById("navbar");
-    navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-
-    var height = navbar.offsetHeight;
-
-
-
-    $(window).resize(function() {
-      x = $(window).width();
-      y = screen.height;
-      navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
-      var height = navbar.offsetHeight;
-      var wrapper = document.getElementById("categorySpace");
-      //wrapper.setAttribute("style", "margin-top:"+height+"px;");
-    });
+   
 
 
 
 
+
+
+
+    
     var x = $("#main").width();
     var xx = window.innerWidth;
     var y = screen.height;
@@ -186,9 +177,9 @@ console.log(divided);
       document.cookie = "id=" + $(this).attr('id') + "; expires=" + now.toUTCString() + "; " + "path=path/search.html";
       document.location.href = "/public/path/item.html?" + $(this).attr('id');
     });
-
+      
       loaded_products.push(cardDiv);
-
+      
 
 
     var cardImg = document.createElement("img");

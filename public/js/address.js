@@ -1,3 +1,5 @@
+"use strict";
+
 // Get the button that opens the modal_address_div
 var modal_address_div = document.getElementById("modal_address_div");
 var address_span_div = document.getElementsByClassName("address_span_div")[0];
@@ -19,7 +21,6 @@ var cities_array = [];
 
 
 function updateAddress(fields, customer, address_id) {
-  console.log("start update");
   var address_operation = $('#address_operation');
   var address_button = $('#address_button');
 
@@ -81,19 +82,17 @@ function updateAddress(fields, customer, address_id) {
     fetch("http://192.168.0.107:3000/addresses/update-address", requestOptions)
       .then(response => response.text())
       .then((result) => {
-        console.log(result);
         cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
         closeAddressModal();
         location.reload();
       }).catch(error => console.log('error', error));
   });
-console.log("finish update");
+
 }
 
 
 // When the user clicks the button, open the modal_address_div
 function writeAddress(customer) {
-  console.log("writing");
   var address_operation = $('#address_operation');
   var address_button = $('#address_button');
 
@@ -153,7 +152,6 @@ function writeAddress(customer) {
 
   });
 
-console.log("finish write");
 }
 
 

@@ -285,6 +285,7 @@ input{
 }
 .newcardtitle{
     color:#3f4045;
+    font-size:12px;
 }
 .cardinfo{
     padding:15px;
@@ -297,18 +298,8 @@ p{
         color:#3f4045;
 
 }
-/*h2{
-    position:absolute;
-    font-size:300px;
-            color:#3f404511;
-    z-index: -1;
-    top:0;
-    left:0;
-    margin:0;
-    padding:0;
 
-}*/
-h3{
+h3, h4{
             color:#3f4045 !important;
 
     
@@ -400,3 +391,57 @@ content: " ";
 .simple_cart td{
     border-bottom: 1px solid #00000088;
 }
+.oldinput{
+    width:auto;
+    display:inline-block;
+    margin-top:0;
+    padding-top:0;
+    font-size:18px;
+    
+    
+}
+.citycity{
+    
+    width:50%;
+    display:inline-block;
+}
+
+
+
+
+
+
+.oldaddress{
+    position:relative;
+    border: 1px solid #00000044;
+    margin: 14px 0px;
+    width: 100%;
+    height:300px;
+    overflow:auto;
+    padding: 8px 14px;
+    padding-top:40px;
+}
+
+
+
+.selection{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    background-color:#00000044;
+    color:#ffffff;
+    height:40px;
+}
+.selection p{
+
+    color:#ffffff;
+}
+
+.selected{
+        border: 1px solid #B7CE63;
+    background-color:#B7CE6322;
+
+}
+
+

@@ -1,35 +1,52 @@
-"use strict";
-
 var jsonInfo;
 var jsonFile;
 var selection;
+
+
+
+
+var customers = read_cookie('customer');
 var elements;
 var customer;
-var customers = read_cookie('customer');
+
 var query = decodeURIComponent(window.location.search);
 query = query.replace('?', '');
 
-document.addEventListener("click", () => {
-  console.log(event.target, event.target.getAttribute("id"));
-});
+
+
+
 
 $("#includedContent").load("/public/html/header.html", () => {
+  document.addEventListener('click', function() {
+    console.log(event.target);
+  })
 
-  $("#card").load("/public/html/card.html", () => {
-    $.getScript("/public/js/card.js");
-  });
-
+ 
   $("#address").load("/public/html/address.html", () => {
     $.getScript("/public/js/address.js", () => {});
   });
-
-  $.getScript("/public/js/header.js", function() {
-    start();
+    
+    $("#includedFooter").load("/public/html/footer.html", () => {
+  $.getScript("/public/js/footer.js", function() {
+    startFooter();
 
   });
+     });
 
+  $.getScript("/public/js/header.js", function() {
+      start();
+          $('.navbar').attr('class','navbarnew');
+    $('.categorySpace').attr('class','categorySpacenew');
+    $('.navbar2').attr('class','navbar2new');
+        $('.logoImg').attr('class','logoImgnew');
 
-  //to be transformed into a method call
+    
+var bigimage=$('.bigimage');
+      bigimage.css('height','280px')
+    $('.gradient').width(bigimage.width());
+    $('.gradient').height(bigimage.height());
+
+  });
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -52,12 +69,11 @@ $("#includedContent").load("/public/html/header.html", () => {
     .then((result) => {
       customer = result[0];
       createMenu(customer);
-
-    }).catch(error => console.log('error', error));
+    })
+    .catch(error => console.log('error', error));
 
 
 });
-
 
 function createMenu(customer) {
 
@@ -68,6 +84,7 @@ function createMenu(customer) {
     options[ii].addEventListener('click', function() {
       var optionString = event.target.dataset.option;
       elements.setAttribute('class', 'option');
+
       var selected = event.target;
       selected.setAttribute('class', 'selected');
       elements = (selected);
@@ -77,40 +94,44 @@ function createMenu(customer) {
         edit();
       } else if (optionString === 'orders') {
         orders();
-      } else if (optionString === 'cards') {
-        cards(customer);
-      } else if (optionString === 'address') {
-        address(customer);
+      }/* else if (optionString === 'cards') {
+        cards();
+      }*/ else if (optionString === 'address') {
+        address();
       }
     });
-
   }
-
   if (query === '') {
 
     elements = (options[0]);
+
+
     options[0].setAttribute('class', 'selected');
     info();
   } else if (query === 'edit') {
-
     elements = (options[1]);
+
+
     options[1].setAttribute('class', 'selected');
     edit();
   } else if (query === 'order') {
-
     elements = (options[2]);
+
+
     options[2].setAttribute('class', 'selected');
     orders();
-  } else if (query === 'wallet') {
-
+  } /*else if (query === 'wallet') {
     elements = (options[3]);
-    options[3].setAttribute('class', 'selected');
-    cards(customer);
-  } else if (query === 'address') {
 
-    elements = (options[4]);
-    options[4].setAttribute('class', 'selected');
-    address(customer);
+
+    options[3].setAttribute('class', 'selected');
+    cards();
+  }*/ else if (query === 'address') {
+    elements = (options[3]);
+
+
+    options[3].setAttribute('class', 'selected');
+    address();
   }
 }
 
@@ -125,6 +146,7 @@ var container = $('.content');
 
 
 function info() {
+  console.log(container);
   $('.content').empty();
 
   var cardDiv = document.createElement("div");
@@ -137,62 +159,31 @@ function info() {
   cardDiv.innerHTML = 'Account Information';
   document.getElementById('contentofcontent').appendChild(cardDiv);
 
-  //------------------------------------------------------------------
+  for (var name in customer) {
+    console.log(name);
+    if (name !== 'password' && name !== 'id') {
+      cardDiv = document.createElement("div");
+      cardDiv.setAttribute("class", 'titlediv');
+      cardDiv.setAttribute("id", 'titlediv');
+      document.getElementById('contentofcontent').appendChild(cardDiv);
 
-  cardDiv = document.createElement("div");
-  cardDiv.setAttribute("class", 'titlediv');
-  cardDiv.setAttribute("id", 'titlediv');
-  document.getElementById('contentofcontent').appendChild(cardDiv);
+      cardDiv = document.createElement("p");
+      cardDiv.setAttribute('class', 'notatitle');
+      cardDiv.setAttribute('align', 'left');
+      cardDiv.innerHTML = name;
+      document.getElementById('titlediv').appendChild(cardDiv);
 
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notatitle');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = "First name";
-  document.getElementById('titlediv').appendChild(cardDiv);
+      cardDiv = document.createElement("p");
+      cardDiv.setAttribute('class', 'notacontent');
+      cardDiv.setAttribute('align', 'left');
 
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notacontent');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = customer.first_name;
-  document.getElementById('titlediv').appendChild(cardDiv);
-
-  cardDiv = document.createElement("div");
-  cardDiv.setAttribute("class", 'titlediv');
-  cardDiv.setAttribute("id", 'titlediv');
-  document.getElementById('contentofcontent').appendChild(cardDiv);
-
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notatitle');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = "Last Name";
-  document.getElementById('titlediv').appendChild(cardDiv);
-
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notacontent');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = customer.last_name;
-  document.getElementById('titlediv').appendChild(cardDiv);
-
-  cardDiv = document.createElement("div");
-  cardDiv.setAttribute("class", 'titlediv');
-  cardDiv.setAttribute("id", 'titlediv');
-  document.getElementById('contentofcontent').appendChild(cardDiv);
-
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notatitle');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = "Email";
-  document.getElementById('titlediv').appendChild(cardDiv);
-
-  cardDiv = document.createElement("p");
-  cardDiv.setAttribute('class', 'notacontent');
-  cardDiv.setAttribute('align', 'left');
-  cardDiv.innerHTML = customer.email;
-  document.getElementById('titlediv').appendChild(cardDiv);
-
-
+      cardDiv.innerHTML = customer[name];
+      document.getElementById('titlediv').appendChild(cardDiv);
+    }
+  }
 
 }
+
 
 
 function edit() {
@@ -354,35 +345,21 @@ function orders() {
 }
 
 
-function cards(customer) {
 
-  var cards = [];
 
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+function cards() {
+     $('.content').empty();
+    /*
+  var cards;
+  fetch('/public/db/cards.json')
+    .then((response) => {
+      return response.json();
+    })
+    .then((myJson) => {
 
-  const data = {
-    'cus_id': customer.id
-  };
+      cards = myJson;
 
-  var raw = JSON.stringify(data);
-
-  var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
-
-  fetch("http://192.168.0.107:3000/cards/get-card", requestOptions)
-    .then(response => response.json())
-    .then((result) => {
-      for (var i = 0; i < result.length; i++) {
-        console.log(result);
-        cards.push(result[i]);
-      }
-
-      $('.content').empty();
+     
 
       var cardDiv = document.createElement("div");
       cardDiv.setAttribute("class", 'contentofcontent');
@@ -397,14 +374,14 @@ function cards(customer) {
       for (var i = 0; i < cards.length; i++) {
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'carddiv');
-        cardDiv.setAttribute("id", 'carddiv' + cards[i].id);
+        cardDiv.setAttribute("id", 'carddiv' + i);
         document.getElementById('contentofcontent').appendChild(cardDiv);
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'cardchip');
         cardDiv.setAttribute("id", 'cardchip' + i);
-        cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" class="cute"><circle cx="4.5" cy="9.5" r="2.5"/><circle cx="9" cy="5.5" r="2.5"/><circle cx="15" cy="5.5" r="2.5"/><circle cx="19.5" cy="9.5" r="2.5"/><path d="M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91-.46-.54-1.05-1.08-1.75-1.32-.11-.04-.22-.07-.33-.09-.25-.04-.52-.04-.78-.04s-.53 0-.79.05c-.11.02-.22.05-.33.09-.7.24-1.28.78-1.75 1.32-.87 1.02-1.6 1.89-2.48 2.91-1.31 1.31-2.92 2.76-2.62 4.79.29 1.02 1.02 2.03 2.33 2.32.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44 1.31-.29 2.04-1.31 2.33-2.32.31-2.04-1.3-3.49-2.61-4.8z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
+        cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" class="cute"><circle cx="4.5" cy="9.5" r="2.5"/><circle cx="9" cy="5.5" r="2.5"/><circle cx="15" cy="5.5" r="2.5"/><circle cx="19.5" cy="9.5" r="2.5"/><path d="M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91-.46-.54-1.05-1.08-1.75-1.32-.11-.04-.22-.07-.33-.09-.25-.04-.52-.04-.78-.04s-.53 0-.79.05c-.11.02-.22.05-.33.09-.7.24-1.28.78-1.75 1.32-.87 1.02-1.6 1.89-2.48 2.91-1.31 1.31-2.92 2.76-2.62 4.79.29 1.02 1.02 2.03 2.33 2.32.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44 1.31-.29 2.04-1.31 2.33-2.32.31-2.04-1.3-3.49-2.61-4.8z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
         $('.cute').click(() => {
           for (var i = 0; i < 200; i++) {
             create(i);
@@ -414,73 +391,79 @@ function cards(customer) {
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'carddelete');
         cardDiv.setAttribute("id", 'carddelete' + i);
-        cardDiv.setAttribute("data-card_id", cards[i].id);
-        cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 0 20 20" width="30" class="delete_card"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
-
-        $('.delete_card').click(function() {
-          var card_id = $(this).parent().attr('data-card_id');
-          console.log("delete card");
-          deleteCard(card_id, customer);
-        });
+        cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 0 20 20" width="30" class="closecard"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'cardnumber');
         cardDiv.setAttribute("id", 'cardnumber' + i);
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'cardexpdate');
         cardDiv.setAttribute("id", 'cardexpdate' + i);
-        cardDiv.innerHTML = '<p class="cardtitle">Exp Date</p>';
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
+        cardDiv.innerHTML = '<p class="cardtitle">Exp Date</p>'
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
 
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'cardholder');
         cardDiv.setAttribute("id", 'cardholder' + i);
-        cardDiv.innerHTML = '<p class="cardtitle">Name</p>';
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
+        cardDiv.innerHTML = '<p class="cardtitle">Name</p>'
+
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
 
 
         cardDiv = document.createElement("div");
         cardDiv.setAttribute("class", 'cardlogo');
         cardDiv.setAttribute("id", 'cardlogo' + i);
-        document.getElementById('carddiv' + cards[i].id).appendChild(cardDiv);
+        document.getElementById('carddiv' + i).appendChild(cardDiv);
+
+
+
+
 
 
         cardDiv = document.createElement("p");
         cardDiv.setAttribute('class', 'cardcontentnumber');
-        cardDiv.innerHTML = cards[i].number;
+        cardDiv.innerHTML = cards[i]['cardnumber'].substring(0, cards[i]['cardnumber'].length / 4) + ' ' + cards[i]['cardnumber'].substring(3, cards[i]['cardnumber'].length / 4 + 3) + ' ' + cards[i]['cardnumber'].substring(7, cards[i]['cardnumber'].length / 4 + 7) + ' ' + cards[i]['cardnumber'].substring(11, cards[i]['cardnumber'].length / 4 + 11);
         document.getElementById('cardnumber' + i).appendChild(cardDiv);
 
         cardDiv = document.createElement("p");
         cardDiv.setAttribute('class', 'cardinfo');
 
-        cardDiv.innerHTML = cards[i].month + " / " + cards[i].year;
+        cardDiv.innerHTML = cards[i]['expdate'];
         document.getElementById('cardexpdate' + i).appendChild(cardDiv);
 
         cardDiv = document.createElement("p");
         cardDiv.setAttribute('class', 'cardinfo');
 
-        cardDiv.innerHTML = cards[i].holder;
+        cardDiv.innerHTML = cards[i]['owner'];
         document.getElementById('cardholder' + i).appendChild(cardDiv);
       }
       cardDiv = document.createElement("div");
-      cardDiv.setAttribute("id", "test");
-      cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" class="create_card_class" id="create_card"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>';
+      cardDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" class="addcard"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>';
+      cardDiv.addEventListener('click', () => {
+        open();
+      })
       document.getElementById('contentofcontent').appendChild(cardDiv);
-      $('#create_card').click(() => {
-        createCard(customer);
-      });
 
-    }).catch(error => console.log('error', error));
+
+    })
+
+*/
+
+
+
+
 
 
 }
 
 
-function address(customer) {
+
+
+function address() {
 
   console.log("pressesd");
   var addresses = [];
@@ -626,7 +609,6 @@ function address(customer) {
 
 }
 
-
 function updateCustomer(first_name, last_name, id) {
   console.log(first_name, " ", last_name, " ", id);
   var myHeaders = new Headers();
@@ -656,6 +638,8 @@ function updateCustomer(first_name, last_name, id) {
 }
 
 
+
+
 function popup(a) {
 
 
@@ -665,6 +649,8 @@ function popup(a) {
   $('.profileinfo').css('filter', 'blur(4px)');
 
 }
+
+
 
 
 function create(i) {
@@ -694,7 +680,6 @@ function create(i) {
   drop(i);
 }
 
-
 function drop(x) {
   $('.confetti-' + x).animate({
     top: "200%",
@@ -702,7 +687,6 @@ function drop(x) {
     //reset(x);
   });
 }
-
 
 function reset(x) {
   $('.confetti-' + x).animate({

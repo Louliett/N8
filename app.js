@@ -2,7 +2,7 @@
 
 const express = require('express');
 const morgan = require('morgan');
-var cors = require('cors');
+const cors = require('cors');
 const path = require('path');
 const bodyparser = require('body-parser');
 const ejs = require('ejs');
@@ -13,7 +13,6 @@ const cards_route = require('./api/routes/cards');
 const transactions_route = require('./api/routes/transactions');
 const classifications_route = require('./api/routes/classifications');
 var app = express();
-
 
 
 app.use(cors());

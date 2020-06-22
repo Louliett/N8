@@ -61,7 +61,7 @@ setTitle(query);
   fetch("http://192.168.0.107:3000/products/search-product", requestOptions)
     .then(response => response.json())
     .then(result => {
-
+console.log(result, 'shit');
         for (var i = 0; i < result.length; i++) {
 
           if(product_ids <= 0) {
@@ -133,7 +133,6 @@ function loadItems(products) {
 
     startValue++;
     var cardDiv = document.createElement("div");
-    //var random = Math.floor(Math.random() * 1000000000);
     var containerName = products[ii].id;
 
    
@@ -150,8 +149,8 @@ function loadItems(products) {
 
     cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "productimg");
-       if(products[ii].image_name!==null){
-    cardDiv.setAttribute("src", 'http://192.168.0.107:3000/public/product_images/'+products[ii].image_name);
+       if(products[ii].image_url!==null){
+    cardDiv.setAttribute("src", 'http://192.168.0.107:3000'+products[ii].image_url);
            
            
         }else{

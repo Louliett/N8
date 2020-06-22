@@ -3,16 +3,14 @@
     margin: 0px;
     padding: 0px;
 }
-a{
-    padding: 14px;
-}
+
 * {box-sizing:border-box}
 
-*{
-    line-height: 18px;
-    font-family: 'Inconsolata', monospace;
-}
 
+.bigtitle{
+    
+    color:#ffffff88 !important;
+}
 
 .login_register_div{
     width:100%;
@@ -58,6 +56,8 @@ input{
     opacity: 0;
     display:none;
     transition:0.6s;
+    width:49%;
+    text-align: center;
 
 }
 button{
@@ -92,15 +92,17 @@ button{
 
 
 input.inputregister{
-   width: 34%;
+   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
     border: none;
   border-bottom: 1px solid #ccc5b9;
         transition: 0.2s;
+    display:block;
 
 }
+
 
 input:focus{
     border-bottom: 1px solid #3f4045;
@@ -108,7 +110,12 @@ input:focus{
 }
 
 .error{
-    background-color:#ff5964cc;
-    color:#ffffff;
-
+    
+    
+    
+    margin:0;
+    padding:0;
+    width:max-content;
+    color:#ff5964cc;
+    font-size:12px;
 }

@@ -1,15 +1,18 @@
-//"use strict"
+"use strict";
 
 const express = require('express');
 const connection = require('../../db');
 const router = express.Router();
-
+//reusable variables
+var id;
 var sql;
-
+var role;
+var user;
+var values;
 
 //get all the admins
 router.get('/get-admins', (req, res) => {
-  var role = "admin";
+  role = "admin";
   sql = "SELECT * FROM user WHERE user.role = ?; ";
   connection.query(sql, [role], (err, rows, fields) => {
     if(err) {
@@ -22,7 +25,7 @@ router.get('/get-admins', (req, res) => {
 
 //get all the customers
 router.get('/get-customers', (req, res) => {
-  var role = "customer";
+  role = "customer";
   sql = "SELECT * FROM user WHERE user.role = ?;";
   connection.query(sql, [role], (err, rows, fields) => {
     if(err) {
@@ -35,8 +38,8 @@ router.get('/get-customers', (req, res) => {
 
 //get customer based on id
 router.post('/get-customer-by-id', (req, res) => {
-  var id = req.body.id;
-  var role = "customer";
+  id = req.body.id;
+  role = "customer";
   sql = "SELECT * FROM user WHERE id = ? AND role = ?";
   connection.query(sql, [id, role], (err, rows, fields) => {
     if(err) {
@@ -49,16 +52,16 @@ router.post('/get-customer-by-id', (req, res) => {
 
 //create a new customer
 router.post('/register-customer', (req, res) => {
-  var user = req.body;
-  var role = "customer";
+  user = req.body;
+  role = "customer";
+  values = [role, user.first_name, user.last_name, user.email, user.password];
   sql = "INSERT INTO user (role, first_name, last_name, email, password) " +
         "VALUES (?, ?, ?, ?, ?); ";
-  connection.query(sql, [role, user.first_name, user.last_name,
-    user.email, user.password], (err, rows, fields) => {
+  connection.query(sql, values, (err, rows, fields) => {
       if(err) {
         res.send(err);
       } else {
-        res.send(" was created!");
+        res.send("User Created!");
         console.log(user);
       }
   });
@@ -66,24 +69,25 @@ router.post('/register-customer', (req, res) => {
 
 //create a new admin
 router.post('/register-admin', (req, res) => {
-  var user = req.body;
-  var role = "admin";
+  user = req.body;
+  role = "admin";
+  values = [role, user.first_name, user.last_name, user.email, user.password];
+
   sql = "INSERT INTO user (role, first_name, last_name, email, password) " +
         "VALUES (?, ?, ?, ?, ?); ";
-  connection.query(sql, [role, user.first_name, user.last_name,
-    user.email, user.password], (err, rows, fields) => {
+
+  connection.query(sql, values, (err, rows, fields) => {
       if(err) {
         res.send(err);
       } else {
-        console.log(user);
+        res.send("Admin Created!");
       }
   });
 });
 
 //login user if exists
 router.post('/login-user', (req, res) => {
-  var user = req.body;
-  console.log(user);
+  user = req.body;
   sql = "SELECT user.* " +
         "FROM user " +
         "WHERE email=? AND password=?; ";
@@ -117,26 +121,25 @@ router.post('/check-email', (req, res) => {
 
 //update customer
 router.put('/update-customer', (req, res) => {
-  var user = req.body;
-  console.log(user);
-  var role = "customer";
+  user = req.body;
+  role = "customer";
+  values = [user.first_name, user.last_name, user.id, role];
   sql = "UPDATE user " +
         "SET first_name = ?, last_name = ? " +
         "WHERE user.id = ? AND user.role = ?";
-  connection.query(sql, [user.first_name, user.last_name,
-    user.id, role], (err, rows, fields) => {
+  connection.query(sql, values, (err, rows, fields) => {
     if(err) {
       res.send(err);
     } else {
-      res.send("customer updated!");
+      res.send("Customer Updated!");
     }
   });
 });
 
 //deletes a customer based on id (to be added transaction)
 router.delete('/delete-customer', (req, res) => {
-  var id = req.body.id;
-  var role = "customer";
+  id = req.body.id;
+  role = "customer";
   sql = "DELETE user_address, address, card, user " +
         "FROM user " +
         "LEFT JOIN user_address ON user.id = user_address.user_id " +
@@ -154,8 +157,8 @@ router.delete('/delete-customer', (req, res) => {
 
 //deletes an user based on email
 router.delete('/delete-admin', (req, res) => {
-  var id = req.body.id;
-  var role = "admin";
+  id = req.body.id;
+  role = "admin";
   sql = "DELETE FROM user WHERE id = ? AND role = ?;";
   connection.query(sql, [id, role], (err, rows, fields) => {
     if(err) {

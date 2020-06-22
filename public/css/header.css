@@ -4,6 +4,7 @@
     background-color: #ffffff;
     margin: 0px;
     padding: 0px;
+    overflow-x: hidden;
 }
 .navbar{
     background-color: #ffffff;
@@ -30,7 +31,7 @@
 
 }
 #wrapper{
-    height: 140px;
+    height: 30px;
 
 }
 .categorySpace{
@@ -358,12 +359,13 @@ li a {
 
 .basketimage .image{
     width:120px;
-    height:192px;
+    height:100%;
     object-fit: cover;
 }
 .basketimage{
     display: inline-block;
             vertical-align: top;
+    height:100%;
 
 }
 .basketinfo{
@@ -381,6 +383,9 @@ li a {
 .basketitem{
     margin:12px;
     background-color:#ffffff;
+    border-top:1px solid #00000022;
+    border-bottom:1px solid #00000022;
+    height:192px;
     
     
     
@@ -408,8 +413,14 @@ li a {
     border-bottom-color: #fcdebe;
     border-bottom-style: solid;
     margin-bottom: 0px;
-    padding: 0px 8px 8px 8px;
+    padding: 0px 2px 2px 2px;
     text-align: center;
+}
+.shoppingtitle h4{
+  margin:0;
+    padding:0;
+    line-height:0px;
+    padding-bottom:16px;
 }
 
 
@@ -598,7 +609,7 @@ path{
 
 
 .bigtitle{
-    font-size:80vh;
+    font-size:72vh;
     color:#00000011;
     position:absolute;
     left:-18px;
@@ -659,6 +670,7 @@ font-size:38px;
     height:74%;
     object-fit: cover;
     transition: 0.4s;
+    border-bottom: 1px solid #00000022;
     
 
 
@@ -673,8 +685,11 @@ font-size:38px;
     position: relative;
     display:inline-block;
     box-sizing:border-box;
-    padding:0px 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 12px;
     overflow:hidden;
+    border:1px solid #00000088;
     
     
 }
@@ -701,4 +716,12 @@ font-size:38px;
     /*background-color: #edafb8;*/
     color: #000000;
     text-align: center;
+}
+.basketprice{
+    border-bottom:1px solid #00000022;
+    text-align: center;
+    padding-bottom:14px;
+}
+.actualbasketprice{
+    font-size: 24px;
 }

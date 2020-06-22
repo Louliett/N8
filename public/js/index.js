@@ -1,5 +1,6 @@
 "use strict";
 
+
 var loaded_products = [];
 var x = $("#main").width();
 var xx = window.innerWidth;
@@ -31,6 +32,7 @@ $("#includedContent").load("/public/html/header.html", () => {
         $('.gradient').width(bigimage.width());
         $('.gradient').height(bigimage.height());
 
+        console.log('shitshti')
       });
 
 
@@ -62,7 +64,7 @@ $("#includedContent").load("/public/html/header.html", () => {
   fetch('http://192.168.0.107:3000/products/')
     .then(response => response.json())
     .then(data => {
-      product_list = data;
+      product_list = data
       for (var i = 0; i < product_list.length; i++) {
         fetchImages(product_list[i].id, i);
       }
@@ -101,13 +103,13 @@ $("#includedContent").load("/public/html/header.html", () => {
           for (var i = 0; i < loaded_products.length; i++) {
             var height = $('#itemrow').innerHeight();
             var width = $('#itemrow').innerWidth();
-            loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1 + 1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
+            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / (1 + 1))) + "px - 8px); height: " + Math.floor(y * 0.8) + "px;");
           }
         } else {
           for (var i = 0; i < loaded_products.length; i++) {
             var height = $('#itemrow').innerHeight();
             var width = $('#itemrow').innerWidth();
-            loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / 4)) + "px - 16px); height: " + Math.floor(y * 0.8) + "px;");
           }
         }
 
@@ -118,7 +120,7 @@ $("#includedContent").load("/public/html/header.html", () => {
   }
 
   function displayProducts(images, index) {
-    ii = index;
+    var ii = index;
 
 
 
@@ -132,8 +134,6 @@ $("#includedContent").load("/public/html/header.html", () => {
     cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
     document.getElementById("itemrow").appendChild(cardDiv);
 
-    console.log(cardDiv);
-    console.log(containerName);
     loaded_products.push(cardDiv);
 
     $(cardDiv).click(function () {
@@ -142,9 +142,12 @@ $("#includedContent").load("/public/html/header.html", () => {
 
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
+
+    console.log(images, "specific message");
+    
     if (images[0] !== undefined) {
       cardImg.setAttribute("src", 'http://192.168.0.107:3000' + images[0]);
-      console.log('http://192.168.0.107:3000' + images[0]);
+      //console.log('http://192.168.0.107:3000' + images[0]);
     } else {
       cardImg.setAttribute("src", undefined);
 
@@ -155,7 +158,6 @@ $("#includedContent").load("/public/html/header.html", () => {
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;
     var x = $(document).width();
     $(".productimg").on("error", function () {
-      console.log('shit');
       $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
     });
 
@@ -174,7 +176,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
     var cardTitle = document.createElement("p");
     cardTitle.setAttribute("class", "producttitle");
-    cardTitle.innerHTML = product_list[ii].name;;
+    cardTitle.innerHTML = product_list[ii].name;
     document.getElementById("productdescription" + containerName).appendChild(cardTitle);
     var x = $("#main").width();
 

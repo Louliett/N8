@@ -1,8 +1,10 @@
 "use strict";
 
-import { isItEmpty } from './utils.js';
-import "./create_product.js";
-import { fetchStuff } from './create_product.js';
+console.log("outrageous gems");
+
+import {
+  isItEmpty
+} from './utils.js';
 
 //textfields
 var subcategory_name_txt = document.getElementById('subcategory_name');
@@ -28,10 +30,6 @@ const sec_key = "secImage";
 var flag;
 //url for the default image
 const image = "/public/class_images/default.png";
-//classification name
-var sub_name;
-var cat_name;
-var sec_name;
 //sql tables
 var sub_table = "subcategory";
 var cat_table = "category";
@@ -58,25 +56,25 @@ fetchClassifications(sec_table, sec_array);
 
 //create subcategory
 subcategory_button.addEventListener("click", () => {
-  createClassification(sub_name, subcategory_name_txt, sub_array, create_sub, create_sub_img, sub_err, sub_input, sub_key, "#product_subcategory");
+  createClassification(subcategory_name_txt, sub_array, create_sub, create_sub_img, sub_err, sub_input, sub_key);
 });
 //create category
 category_button.addEventListener("click", () => {
-  createClassification(cat_name, category_name_txt, cat_array, create_cat, create_cat_img, cat_err, cat_input, cat_key, "#product_category");
+  createClassification(category_name_txt, cat_array, create_cat, create_cat_img, cat_err, cat_input, cat_key);
 });
 //create section
 section_button.addEventListener("click", () => {
-  createClassification(sec_name, section_name_txt, sec_array, create_sec, create_sec_img, sec_err, sec_input, sec_key, "#product_section");
+  createClassification(section_name_txt, sec_array, create_sec, create_sec_img, sec_err, sec_input, sec_key);
 });
 
 
-function createClassification(class_name, txtarea, array, create_class, create_class_img, error_label, fileInput, key, selector_id) {
+export function createClassification(txtarea, array, create_class, create_class_img, error_label, fileInput, key) {
   //array for checking up on empty fields
   let fields = [];
   var image_name;
   var image_path;
 
-  class_name = txtarea.value;
+  var class_name = txtarea.value;
   fields.push(class_name);
 
 
@@ -98,8 +96,8 @@ function createClassification(class_name, txtarea, array, create_class, create_c
       image_path = fileInput.value;
 
       //in case the user did not attach an image to the classification
-      if ((image_name === undefined && image_path.length === 0) || (image_name === undefined || image_path.length === 0)) {
-        
+      if (image_name === undefined && image_path.length === 0) {
+
         headers = new Headers();
         headers.append("Content-Type", "application/json");
 
@@ -120,15 +118,9 @@ function createClassification(class_name, txtarea, array, create_class, create_c
         fetch("http://192.168.0.107:3000/classifications/" + create_class, requestOptions1)
           .then(response => response.text())
           .then(result => {
-            console.log(result);
-
-            $(selector_id).html = "";
-            //to be changed, the drop down menu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-            $('#tity').load(document.URL + ' ' + '#tity', () => {
-              fetchStuff($('#product_subcategory')[0], $('#product_category')[0], $('#product_section')[0]);
-              txtarea.value = "";
-            });
-
+            error_label.innerHTML = result;
+            location.reload(true);
+            txtarea.value = "";
           }).catch(error => console.log('error', error));
 
       } else {
@@ -146,13 +138,8 @@ function createClassification(class_name, txtarea, array, create_class, create_c
           .then(response => response.text())
           .then(result => {
             error_label.innerHTML = result;
-
-            $(selector_id).load(document.URL + ' ' + selector_id, () => {
-              fetchStuff($('#product_subcategory')[0], $('#product_category')[0], $('#product_section')[0], class_name);
-              //$(default_option).val(class_name);
-              txtarea.value = "";
-            });
-
+            location.reload(true);
+            txtarea.value = "";
           }).catch(error => console.log('error', error));
       }
 
@@ -168,7 +155,7 @@ function fetchClassifications(table, array) {
     method: 'GET',
     redirect: 'follow'
   };
-  
+
   fetch('http://192.168.0.107:3000/classifications/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {

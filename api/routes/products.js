@@ -1,10 +1,21 @@
-"use strict"
+"use strict";
 
 const express = require('express');
 const connection = require('../../db');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+//stripe payment --------------------------------------
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config({
+    path: './.env'
+  });
+}
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
+const stripe = require('stripe')(stripeSecretKey);
+//---------------------------------------------------
 const router = express.Router();
 //repeating variables
 var sql;
@@ -12,6 +23,7 @@ var id;
 var name;
 var values;
 var colour;
+
 
 var storage = multer.diskStorage({
   destination: './public/product_images/',
@@ -47,7 +59,8 @@ router.post('/create-product', (req, res) => {
     product.description, product.material, product.diameter, product.length,
     product.width, product.height, product.volume, product.weight,
     product.size, product.subcategory, product.category, product.section];
-
+    
+  
   sql = "INSERT INTO product (name, price, new_price, ean, availability, quantity, brand, design, " +
         "description, material, diameter, length, width, height, volume, weight, size) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
@@ -62,6 +75,24 @@ router.post('/create-product', (req, res) => {
     if (err) {
       res.send(err);
     } else {
+      //---------------------------------------------------------
+      // stripe.products.create({
+      //     object: 'product',
+      //     name: 'Gold Special',
+      //     attributes: [],
+      //   },
+      //   function (err, product) {
+      //     // asynchronously called
+      //     if (err) {
+      //       console.log(err);
+
+      //     } else {
+      //       console.log(product);
+
+      //     }
+      //   }
+      // );
+      //-----------------------------------------------------------
       var id = rows[0]["insertId"];
       id = id + "";
       res.send(id);
@@ -74,7 +105,7 @@ router.post('/create-product', (req, res) => {
 router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
   let product = req.body;
   var colours = [];
-  if(typeof(req.body.colour) === 'string') {
+  if(typeof(req.body.colour) === 'string') {    
     colours.push(req.body.colour);
   } else {
     colours = req.body.colour;

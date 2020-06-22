@@ -5,17 +5,13 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
   <!-- jQuery library -->
+  <!-- <script src="https://js.stripe.com/v3/"></script> -->
+  <script src="https://checkout.stripe.com/checkout.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="/public/css/header.css">
   <link rel="stylesheet" href="/public/css/cart.css">
-    <script src="https://js.stripe.com/v3/"></script>
-
-
 </head>
 
 <body id="main">
@@ -23,114 +19,171 @@
   <div id="includedContent"></div>
 
 
- 
-<div class='checkoutsequence'>
+
+  <div class='checkoutsequence'>
     <div class='sequence'>
-        <svg id="svg">
-  <line id="line1" class='line'/>
-</svg>
-        <div class='sequencePointParent'>                
-        <div class='partcart' id='sequencepointactive'><p class='sequenceText'>Cart</p></div>
-            <div hidden class='hoverInfo' id='partCartDone'>
-                <span class='hoverInfoText'>Cart complete!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointDone'><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
-            <div hidden class='hoverInfo' id='partCartDone'>
-                                <span class='hoverInfoText'>Problem in your cart. Please revise it!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointWarning'><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div>
-            </div>
-<div class='sequencePointParent'>                
-        <div class='partaddress' id='sequencepoint'><p class='sequenceText'>2</p></div>
-            <div hidden class='hoverInfo' id='partAddressDone'>
-                <span class='hoverInfoText'>Address and Shipping complete!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointDone'><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
-            <div hidden class='hoverInfo' id='partAddressError'>
-                                <span class='hoverInfoText'>Problem with your address or shipping!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointWarning'><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div>
-            </div>
-        
-<div class='sequencePointParent'>                
+      <svg id="svg">
+        <line id="line1" class='line' />
+      </svg>
+      <div class='sequencePointParent'>
+        <div class='partcart' id='sequencepointactive'>
+          <p class='sequenceText'>Cart</p>
+        </div>
+        <div hidden class='hoverInfo' id='partCartDone'>
+          <span class='hoverInfoText'>Cart complete!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointDone'>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <div hidden class='hoverInfo' id='partCartDone'>
+          <span class='hoverInfoText'>Problem in your cart. Please revise it!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointWarning'>
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z" />
+            </svg></div>
+      </div>
+      <div class='sequencePointParent'>
+        <div class='partaddress' id='sequencepoint'>
+          <p class='sequenceText'>2</p>
+        </div>
+        <div hidden class='hoverInfo' id='partAddressDone'>
+          <span class='hoverInfoText'>Address and Shipping complete!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointDone'>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <div hidden class='hoverInfo' id='partAddressError'>
+          <span class='hoverInfoText'>Problem with your address or shipping!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointWarning'>
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z" />
+            </svg></div>
+      </div>
 
-                <div class='partcard' id='sequencepoint'><p class='sequenceText'>3</p></div>
-    <div hidden class='hoverInfo' id='partCardDone'>
-                <span class='hoverInfoText'>Payment details complete!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointDone'><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
-            <div hidden class='hoverInfo' id='partCardError'>
-                                <span class='hoverInfoText'>Problem with your payment information!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointWarning'><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div>
-            
-            </div>
-<div class='sequencePointParent'>                
+      <div class='sequencePointParent'>
 
-        <div class='partfinal' id='sequencepoint'><p class='sequenceText'>4</p></div>
-    <div hidden class='hoverInfo'>
-                <span class='hoverInfoText'>Order ready!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointDone'><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
-            <div hidden class='hoverInfo'>
-                                <span class='hoverInfoText'>Problem with your order!</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class='sequencePointWarning'><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div>
+        <div class='partcard' id='sequencepoint'>
+          <p class='sequenceText'>3</p>
+        </div>
+        <div hidden class='hoverInfo' id='partCardDone'>
+          <span class='hoverInfoText'>Payment details complete!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointDone'>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <div hidden class='hoverInfo' id='partCardError'>
+          <span class='hoverInfoText'>Problem with your payment information!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointWarning'>
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z" />
+            </svg></div>
+
+      </div>
+      <div class='sequencePointParent'>
+
+        <div class='partfinal' id='sequencepoint'>
+          <p class='sequenceText'>4</p>
+        </div>
+        <div hidden class='hoverInfo'>
+          <span class='hoverInfoText'>Order ready!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointDone'>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <div hidden class='hoverInfo'>
+          <span class='hoverInfoText'>Problem with your order!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"
+            class='sequencePointWarning'>
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z" />
+            </svg></div>
+      </div>
     </div>
-    </div>
-    
+
     <div class='inositol'>
-    <div class="scene">
-  <div class="carousel">
-    <div class="carousel__cell">
-    
-    
-  <div class="checkoutmenu">
-      <h2>YOUR ITEMS</h2>
-    <div class="items" id="items">
-    </div>
-  </div>
-      </div>
-        
-    
-        <div class="carousel__cell">
-         <h2>SHIPPING ADDRESS</h2>
+      <div class="scene">
+        <div class="carousel">
+          <div class="carousel__cell">
 
-    
-    
+
+            <div class="checkoutmenu">
+              <h2>YOUR ITEMS</h2>
+              <div class="items" id="items">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="carousel__cell">
+            <h2>SHIPPING ADDRESS</h2>
+
+
+
             <div class='shippingaddress'>
-                 <p>This is also my billing address <input type="checkbox" id="billing"></p>
-        <br>
-                <p class='newcardtitle'>First name</p>
-        <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone' class="required shipping_address phone">
-                <p class='newcardtitle'>Last Name</p>
-        <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone' class="required shipping_address phone">
-        <p class='newcardtitle'>City</p>
-        <select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" name="card_expirationYear" data-field-name='shippingcity'>
-          <option id="default_city"></option>
-        </select>
-        <p class='newcardtitle'>Phone Number</p>
-        <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='shippingphone' class="required shipping_address phone">
-        <p class='newcardtitle'>Address</p>
-        <input id='address1' type='text' placeholder="Address Line 1" data-field-name='shippingaddress1' class="required shipping_address address1">
-        <p class='newcardtitle'>Address</p>
-        <input id='address2' type='text' placeholder="Address Line 2" data-field-name='shippingaddress2' class="required shipping_address address2">
-        <p class='newcardtitle'>Post code</p>
-        <input id='shippingpostcode' type='text' placeholder="Post Code" class="required shipping_address postcode">
-      </div>
-                     <h2>SHIPPING OPTIONS</h2>
-            
+              <p>This is also my billing address <input type="checkbox" id="billing"></p>
+              <br>
+              <p class='newcardtitle'>First name</p>
+              <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone'
+                class="required shipping_address phone">
+              <p class='newcardtitle'>Last Name</p>
+              <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone'
+                class="required shipping_address phone">
+              <p class='newcardtitle'>City</p>
+              <select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;"
+                name="card_expirationYear" data-field-name='shippingcity'>
+                <option id="default_city"></option>
+              </select>
+              <p class='newcardtitle'>Phone Number</p>
+              <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='shippingphone'
+                class="required shipping_address phone">
+              <p class='newcardtitle'>Address</p>
+              <input id='address1' type='text' placeholder="Address Line 1" data-field-name='shippingaddress1'
+                class="required shipping_address address1">
+              <p class='newcardtitle'>Address</p>
+              <input id='address2' type='text' placeholder="Address Line 2" data-field-name='shippingaddress2'
+                class="required shipping_address address2">
+              <p class='newcardtitle'>Post code</p>
+              <input id='shippingpostcode' type='text' placeholder="Post Code"
+                class="required shipping_address postcode">
+            </div>
+            <h2>SHIPPING OPTIONS</h2>
+
 
 
 
             <div class='shippingoptions'>
-                
 
-        <p>  Normal delivery (5-8 business days): <input type="radio" name="type" value="normal" checked style='width:auto;'/>+4$</p>
 
-         <p> Fast delivery (1-3 business days):   <input type="radio" name="type" value="fast" style='width:auto;'/>+20$</p>
-                
-                
-      </div>
-      </div>
-         <div class="carousel__cell">
-             <!--
+              <p> Normal delivery (5-8 business days): <input type="radio" name="type" value="normal" checked
+                  style='width:auto;' />+4$</p>
+
+              <p> Fast delivery (1-3 business days): <input type="radio" name="type" value="fast"
+                  style='width:auto;' />+20$</p>
+
+
+            </div>
+          </div>
+          <div class="carousel__cell">
+            <!--
                    <h2>PAYMENT DETAILS</h2>
 
              <div class='cardinfo'>
@@ -159,94 +212,105 @@
           <input id="cvv" type='text' placeholder="CVV" maxLength='3' class='required card_details security_code'>
         </div>
              </div> -->
-             <h2>BILLING ADDRESS</h2>
-         <div class='billingaddressdefault'>
-                
-<p class='newcardtitle'>First name</p>
-        <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone' class="required billing_address phone">
-                <p class='newcardtitle'>Last Name</p>
-        <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone' class="required billing_address phone">
-         <p class='newcardtitle'>City</p>
-        <select id="bulgarian_cities" class="required billing_address city" style="width: 90px;" name="card_expirationYear" data-field-name='billingcity'>
-          <option id="default_city"></option>
-        </select>
-        <p class='newcardtitle'>Phone Number</p>
-        <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='billingphone' class="required billing_address phone">
-        <p class='newcardtitle'>Address</p>
-        <input id='address1' type='text' placeholder="Address Line 1" data-field-name='billingaddress1' class="required billing_address address1">
-        <p class='newcardtitle'>Address</p>
-        <input id='address2' type='text' placeholder="Address Line 2" data-field-name='billingaddress2' class="required billing_address address2">
-        <p class='newcardtitle'>Post code</p>
-        <input id='billingpostcode' type='text' placeholder="Post Code" class="required billing_address postcode">
-                
-                
-      </div>
-             
-             <div hidden class='billingaddressold'>
-                
+            <h2>BILLING ADDRESS</h2>
+            <div class='billingaddressdefault'>
 
-         <p class='newcardtitle'>First name</p>
-                 <p class="auto billing_address city"></p>
-                 <p class='newcardtitle'>Last name</p>
-                 <p class="auto billing_address city"></p>
-                 <p class='newcardtitle'>City</p>
-                 <p class="auto billing_address city"></p>
-        <p class='newcardtitle'>Phone Number</p>
-        <p class="auto billing_address phone"></p>
-        <p class='newcardtitle'>Address line 1</p>
-        <p class="auto billing_address address1"></p>
-        <p class='newcardtitle'>Address line 2</p>
-        <p class="auto billing_address address2"></p>
-        <p class='newcardtitle'>Post code</p>
-        <p class="auto billing_address postcode"></p>
-                
-                
-      </div>
-             
-             
-             </div>
-    <div class="carousel__cell">      <h2>ORDER DETAILS</h2>
-        <div>
-        <table>
-            <thead>
-                <tr>
-                <td><h3>Shipping address</h3></td>
-                <td><h3>Billing address</h3></td>
-              <!--  <td><h3>Card details</h3></td> -->
-                </tr>
-            <tr>
-                <td class='shipping_address_checkout'>
-                    <p class='newcardtitle'>First name</p>
-                 <p class="auto city"></p>
-                    <p class='newcardtitle'>Last name</p>
-                 <p class="auto city"></p>
-                <p class='newcardtitle'>City</p>
-                 <p class="auto city"></p>
-        <p class='newcardtitle'>Phone Number</p>
-        <p class="auto  phone"></p>
-        <p class='newcardtitle'>Address line 1</p>
-        <p class="auto  address1"></p>
-        <p class='newcardtitle'>Address line 2</p>
-        <p class="auto  address2"></p>
-        <p class='newcardtitle'>Post code</p>
-        <p class="auto  postcode"></p>
-                </td>
-                <td class='billing_address_checkout'>
-                    <p class='newcardtitle'>First name</p>
-                 <p class="auto city"></p>
-                    <p class='newcardtitle'>Last name</p>
-                <p class='newcardtitle'>City</p>
-                 <p class="auto  city"></p>
-        <p class='newcardtitle'>Phone Number</p>
-        <p class="auto  phone"></p>
-        <p class='newcardtitle'>Address line 1</p>
-        <p class="auto  address1"></p>
-        <p class='newcardtitle'>Address line 2</p>
-        <p class="auto  address2"></p>
-        <p class='newcardtitle'>Post code</p>
-        <p class="auto  postcode"></p>
-                </td>
-               <!-- <td class='card_checkout'>
+              <p class='newcardtitle'>First name</p>
+              <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone'
+                class="required billing_address phone">
+              <p class='newcardtitle'>Last Name</p>
+              <input id='phone_number' type='text' placeholder="First name" data-field-name='shippingphone'
+                class="required billing_address phone">
+              <p class='newcardtitle'>City</p>
+              <select id="bulgarian_cities" class="required billing_address city" style="width: 90px;"
+                name="card_expirationYear" data-field-name='billingcity'>
+                <option id="default_city"></option>
+              </select>
+              <p class='newcardtitle'>Phone Number</p>
+              <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='billingphone'
+                class="required billing_address phone">
+              <p class='newcardtitle'>Address</p>
+              <input id='address1' type='text' placeholder="Address Line 1" data-field-name='billingaddress1'
+                class="required billing_address address1">
+              <p class='newcardtitle'>Address</p>
+              <input id='address2' type='text' placeholder="Address Line 2" data-field-name='billingaddress2'
+                class="required billing_address address2">
+              <p class='newcardtitle'>Post code</p>
+              <input id='billingpostcode' type='text' placeholder="Post Code" class="required billing_address postcode">
+
+
+            </div>
+
+            <div hidden class='billingaddressold'>
+
+
+              <p class='newcardtitle'>First name</p>
+              <p class="auto billing_address city"></p>
+              <p class='newcardtitle'>Last name</p>
+              <p class="auto billing_address city"></p>
+              <p class='newcardtitle'>City</p>
+              <p class="auto billing_address city"></p>
+              <p class='newcardtitle'>Phone Number</p>
+              <p class="auto billing_address phone"></p>
+              <p class='newcardtitle'>Address line 1</p>
+              <p class="auto billing_address address1"></p>
+              <p class='newcardtitle'>Address line 2</p>
+              <p class="auto billing_address address2"></p>
+              <p class='newcardtitle'>Post code</p>
+              <p class="auto billing_address postcode"></p>
+
+
+            </div>
+
+
+          </div>
+          <div class="carousel__cell">
+            <h2>ORDER DETAILS</h2>
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <td>
+                      <h3>Shipping address</h3>
+                    </td>
+                    <td>
+                      <h3>Billing address</h3>
+                    </td>
+                    <!--  <td><h3>Card details</h3></td> -->
+                  </tr>
+                  <tr>
+                    <td class='shipping_address_checkout'>
+                      <p class='newcardtitle'>First name</p>
+                      <p class="auto city"></p>
+                      <p class='newcardtitle'>Last name</p>
+                      <p class="auto city"></p>
+                      <p class='newcardtitle'>City</p>
+                      <p class="auto city"></p>
+                      <p class='newcardtitle'>Phone Number</p>
+                      <p class="auto  phone"></p>
+                      <p class='newcardtitle'>Address line 1</p>
+                      <p class="auto  address1"></p>
+                      <p class='newcardtitle'>Address line 2</p>
+                      <p class="auto  address2"></p>
+                      <p class='newcardtitle'>Post code</p>
+                      <p class="auto  postcode"></p>
+                    </td>
+                    <td class='billing_address_checkout'>
+                      <p class='newcardtitle'>First name</p>
+                      <p class="auto city"></p>
+                      <p class='newcardtitle'>Last name</p>
+                      <p class='newcardtitle'>City</p>
+                      <p class="auto  city"></p>
+                      <p class='newcardtitle'>Phone Number</p>
+                      <p class="auto  phone"></p>
+                      <p class='newcardtitle'>Address line 1</p>
+                      <p class="auto  address1"></p>
+                      <p class='newcardtitle'>Address line 2</p>
+                      <p class="auto  address2"></p>
+                      <p class='newcardtitle'>Post code</p>
+                      <p class="auto  postcode"></p>
+                    </td>
+                    <!-- <td class='card_checkout'>
                 <p class='newcardtitle'>Card number</p>
                  <p class="auto  city"></p>
         <p class='newcardtitle'>Expiration date</p>
@@ -257,13 +321,13 @@
         <p class='newcardtitle'>Security code?</p>
         <p class="auto  address2"></p>
                 </td> -->
-                </tr>
-            </thead>
-            </table>
-        
-        </div>
-        <div>
-    <!--    <table class='simple_cart'>
+                  </tr>
+                </thead>
+              </table>
+
+            </div>
+            <div>
+              <!--    <table class='simple_cart'>
             <thead>
                 <tr>
                 <td><h3>Name</h3></td>
@@ -276,39 +340,43 @@
             <tbody id='simple_body'>
             </tbody>
             </table> -->
+            </div>
+
+            <!-- <p style='font-size:39px; color:crimson;line-height: 0;'><input id="email" type='text' placeholder="Email for sending order receipt" class='required email_checkout email' style='padding:18px 4px;'>!</p> -->
+
+            
+          </div>
         </div>
-        
-       <!-- <p style='font-size:39px; color:crimson;line-height: 0;'><input id="email" type='text' placeholder="Email for sending order receipt" class='required email_checkout email' style='padding:18px 4px;'>!</p> -->
-        
+      </div>
+
+      <div class="sum">
         <button class='finalize' style='width:100%;'>GO TO PAYMENT</button>
-</div>
-      </div>
+        <div class="info">
+          <p style="font-size:20px; border-width: 0px 0px 1px 0px; border-style:solid; border-color:darkgrey;">Order
+            summary</p>
+          <p class='subtotal'>Subtotal: 0$</p>
+          <p class='shipping'>Shipping: 0$</p>
+          <p class='vat'>VAT: 0$</p>
+          <p class='total'
+            style="border-width: 1px 0px 0px 0px; border-style:solid; border-color:darkgrey; font-weight: bold;">Total:
+            0$</p>
         </div>
-    
-    <div class="sum">
-      <div class="info">
-        <p style="font-size:20px; border-width: 0px 0px 1px 0px; border-style:solid; border-color:darkgrey;">Order summary</p>
-        <p class='subtotal'>Subtotal: 0$</p>
-        <p class='shipping'>Shipping: 0$</p>
-        <p class='vat'>VAT: 0$</p>
-        <p class='total' style="border-width: 1px 0px 0px 0px; border-style:solid; border-color:darkgrey; font-weight: bold;">Total: 0$</p>
-      </div>
         <div class="carousel-options">
-  
-  <p>
-    <button hidden class="previous-button">BACK</button>
-    <button class="next-button">NEXT</button>
-  </p>
-</div>
-    </div>
+
+          <p>
+            <button hidden class="previous-button">BACK</button>
+            <button class="next-button">NEXT</button>
+          </p>
         </div>
-    
-    
-        <div id="includedFooter"></div>
+      </div>
+    </div>
+
+
+    <div id="includedFooter"></div>
 
 
 
-  <script src="/public/js/cart.js"></script>
+    <script src="/public/js/cart.js"></script>
 
 </body>
 
