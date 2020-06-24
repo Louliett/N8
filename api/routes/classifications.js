@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const express = require('express');
 const connection = require('../../db');
@@ -327,7 +327,7 @@ router.post('/create-section-image', upload.single("secImage"), (req, res, next)
     if (err) {
       console.log(err);
     } else {
-      res.send(name + " was created!")
+      res.send(name + " was created!");
     }
   });
 });

@@ -44,6 +44,7 @@ export function readFormData(formdata) {
   }
 }
 
+//method used by the update_product script
 export function createClassification(txtarea, array, create_class, create_class_img, error_label, fileInput, key, selector_id) {
   //array for checking up on empty fields
   let fields = [];
@@ -147,3 +148,152 @@ function doesItMatch(name, name_arr) {
   }
   return false;
 }
+
+//to be not deleted, might be used later!!
+// function createStripesProduct(prod_name, prod_price, prod_brand, prod_descript, prod_image) {
+
+//   stripe.products.create({
+//       name: prod_name,
+//       attributes: [prod_brand],
+//       description: prod_descript,
+//       images: [prod_image],
+//       type: "good"
+//     },
+//     function (err, product) {
+//       // asynchronously called
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log(product, "product");
+
+//         stripe.prices.create({
+//             unit_amount: prod_price * 100,
+//             currency: 'bgn',
+//             product: product.id
+//           },
+//           function (err, price) {
+//             if (err) {
+//               console.log(err);
+//               //return false;
+//             } else {
+//               console.log(price, "price");
+//               return true;
+
+
+
+
+//             }
+//           }
+//         );
+
+
+//       }
+//     }
+//   );
+
+// }
+
+
+//create product [v]
+// router.post('/create-product', (req, res) => {
+//   let product = req.body;
+//   var values = [product.name, product.price, product.new_price, product.ean,
+//     product.availability, product.quantity, product.brand, product.design,
+//     product.description, product.material, product.diameter, product.length,
+//     product.width, product.height, product.volume, product.weight,
+//     product.size, product.subcategory, product.category, product.section];
+
+
+//   sql = "INSERT INTO product (name, price, new_price, ean, availability, quantity, brand, design, " +
+//         "description, material, diameter, length, width, height, volume, weight, size) " +
+//         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
+//         "SET @productID = LAST_INSERT_ID(); " +
+//         "INSERT INTO product_classification (product_id, subcategory_id, category_id, section_id) " +
+//         "VALUES (@productID, " +
+//         "(SELECT id FROM subcategory WHERE name = ?), " +
+//         "(SELECT id FROM category WHERE name = ?), " +
+//         "(SELECT id FROM section WHERE name = ?));";
+
+//   connection.query(sql, values, (err, rows, fields) => {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       //---------------------------------------------------------
+//       // stripe.products.create({
+//       //     object: 'product',
+//       //     name: 'Gold Special',
+//       //     attributes: [],
+//       //   },
+//       //   function (err, product) {
+//       //     // asynchronously called
+//       //     if (err) {
+//       //       console.log(err);
+
+//       //     } else {
+//       //       console.log(product);
+
+//       //     }
+//       //   }
+//       // );
+//       //-----------------------------------------------------------
+//       var id = rows[0]["insertId"];
+//       id = id + "";
+//       res.send(id);
+//     }
+//   });
+// });
+
+
+// //upload images [v]
+// router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
+//   let product = req.body;
+//   var colours = [];
+//   if(typeof(req.body.colour) === 'string') {
+//     colours.push(req.body.colour);
+//   } else {
+//     colours = req.body.colour;
+//   }
+//
+//   console.log(req.files);
+//   console.log("Images uploaded to the server!!");
+//   var first = "";
+//   var second = "";
+//   var imgarray = [];
+//   var imgproduct = [];
+//   var bigboss = [];
+//
+//   for (var i = 0; i < req.files.length; i++) {
+//     imgarray.push([req.files[i].filename, req.files[i].destination, colours[i]]);
+//     imgproduct.push([product.id, req.files[i].filename]);
+//
+//     if(i !== req.files.length-1) {
+//       first = first + "(?, ?, ?),";
+//       second = second + "(?, (SELECT id FROM image WHERE name = ?)),";
+//     } else {
+//         first = first + "(?, ?, ?);";
+//         second = second + "(?, (SELECT id FROM image WHERE name = ?));";
+//     }
+//   }
+//
+//   sql = "INSERT INTO image (name, path, colour) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
+//
+//   for (var j = 0; j < imgarray.length; j++) {
+//     bigboss.push(imgarray[j]);
+//   }
+//   for (var k = 0; k < imgproduct.length; k++) {
+//     bigboss.push(imgproduct[k]);
+//   }
+//
+//   const newboss = bigboss.flat(Infinity);
+//
+//   connection.query(sql, newboss, (err, rows, fields) => {
+//       if(err) {
+//         res.send(err);
+//         console.log(err);
+//         console.log("upload images to db failed!");
+//       } else {
+//         res.send({'status': 201});
+//         console.log("upload images to db success!");
+//       }
+//     });
+// });

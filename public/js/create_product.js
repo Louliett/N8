@@ -108,6 +108,10 @@ add_colour_row.addEventListener("click", () => {
 });
 
 create_product_button.addEventListener("click", () => {
+  formdata = new FormData();
+  headers = new Headers();
+
+
   //initializing
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
@@ -136,117 +140,66 @@ create_product_button.addEventListener("click", () => {
     product_description, product_material, product_diameter, product_length,
     product_width, product_height, product_volume, product_weight, product_size
   ]);
-
-  console.log(product_subcategory);
-  console.log(product_category);
-  console.log(product_section);
-
+  //check if the classifications are strictly not empty
   var empty_classifications = isItEmptyStrict([product_subcategory, product_category, product_section]);
 
-  var data = {
-    'name': product_name,
-    'price': product_price,
-    'new_price': product_new_price,
-    'ean': product_ean,
-    'availability': product_availability,
-    'quantity': product_quantity,
-    'brand': product_brand,
-    'design': product_design,
-    'description': product_description,
-    'material': product_material,
-    'diameter': product_diameter,
-    'length': product_length,
-    'width': product_width,
-    'height': product_height,
-    'volume': product_volume,
-    'weight': product_weight,
-    'size': product_size,
-    'subcategory': product_subcategory,
-    'category': product_category,
-    'section': product_section
-  };
+  formdata.append("name", product_name);
+  formdata.append("price", product_price);
+  formdata.append("new_price", product_new_price);
+  formdata.append("ean", product_ean);
+  formdata.append("availability", product_availability);
+  formdata.append("quantity", product_quantity);
+  formdata.append("brand", product_brand);
+  formdata.append("design", product_design);
+  formdata.append("description", product_description);
+  formdata.append("material", product_material);
+  formdata.append("diameter", product_diameter);
+  formdata.append("length", product_length);
+  formdata.append("width", product_width);
+  formdata.append("height", product_height);
+  formdata.append("volume", product_volume);
+  formdata.append("weight", product_weight);
+  formdata.append("size", product_size);
+  formdata.append("subcategory", product_subcategory);
+  formdata.append("category", product_category);
+  formdata.append("section", product_section);
 
-  console.log("empty fields", empty_fields);
-  console.log("empty class", empty_classifications);
+  var body = images_table_body.rows.length;
+
+  for (var i = 1; i <= body; i++) {
+    fileInput = document.getElementById('product_image_' + i);
+    product_colour_txt = document.getElementById('product_colour_' + i);
+
+    for (var j = 0; j < fileInput.files.length; j++) {
+      formdata.append(key, fileInput.files[j], fileInput.value);
+      formdata.append("colour", product_colour_txt.value);
+    }
+  }
 
   if (empty_fields === true || empty_classifications === true) {
     text_error_txt.innerHTML = "Fields are empty!";
   } else {
-    uploadImages(data);
+
+    headers.append("Content-Type", "multipart/form-data");
+
+    var uploadImagesRequest = {
+      method: 'POST',
+      header: headers,
+      body: formdata
+    };
+
+    fetch("http://192.168.0.107:3000/products/create-product", uploadImagesRequest)
+      .then(response => response.text())
+      .then((result) => {
+        console.log(result);
+        location.reload(true);
+      }).catch(error => console.log('error', error));
+
   }
 
 });
 
-function uploadImages(data) {
-
-  createProduct(data)
-    .then((result) => {
-      //image upload
-      var table = document.getElementById('images_table');
-      console.log(table, "global_div");
-      
-      var child = table.children[1].children[0].children[1].children[0];
-      console.log(child, "child");
-
-      if (child.files[0] !== undefined) {
-
-        var body = images_table_body.rows.length;
-        formdata = new FormData();
-        headers = new Headers();
-
-        for (var i = 1; i <= body; i++) {
-          fileInput = document.getElementById('product_image_' + i);
-          product_colour_txt = document.getElementById('product_colour_' + i);
-
-          for (var j = 0; j < fileInput.files.length; j++) {
-            formdata.append(key, fileInput.files[j], fileInput.value);
-            formdata.append("colour", product_colour_txt.value);
-          }
-        }
-
-        formdata.append("id", result);
-        headers.append("Content-Type", "multipart/form-data");
-
-        var uploadImagesRequest = {
-          method: 'POST',
-          header: headers,
-          body: formdata
-        };
-
-        fetch("http://192.168.0.107:3000/products/upload-images", uploadImagesRequest)
-          .then(response => response.json())
-          .then((result) => {
-            //location.reload(true);
-          }).catch(error => console.log('error', error));
-      }
-
-
-
-
-    }).catch(error => console.log('error', error));
-
-}
-
-async function createProduct(data) {
-  headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  var raw = JSON.stringify(data);
-
-  var createProductRequest = {
-    method: 'POST',
-    headers: headers,
-    body: raw
-  };
-
-  let response = await fetch("http://192.168.0.107:3000/products/create-product", createProductRequest);
-  let message = await response.json();
-  return message;
-
-}
-
 export function fetchClassifications(sub_slc, cat_slc, sec_slc) {
-
-  console.log("I run");
 
   var requestOptions = {
     method: 'GET',
@@ -256,9 +209,8 @@ export function fetchClassifications(sub_slc, cat_slc, sec_slc) {
   fetch("http://192.168.0.107:3000/classifications/", requestOptions)
     .then(response => response.json())
     .then((result) => {
-      console.log(result, "result");
 
-
+      //we pass classifications to arrays to check if it already exists on create classification
       sub_array = result[0].map(x => x.subcategory);
       cat_array = (result[1]).map(x => x.category);
       sec_array = (result[2]).map(x => x.section);
@@ -273,8 +225,6 @@ export function fetchClassifications(sub_slc, cat_slc, sec_slc) {
 }
 
 function populateSelector(array, selector, option_value, default_option) {
-  console.log("iruna in a function");
-
   //each array is contains objects[name:value]
   for (var i = 0; i < array.length; i++) {
     for (var item in array[i]) {

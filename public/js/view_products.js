@@ -1,4 +1,4 @@
-//"use strict"
+"use strict";
 
 //var button = document.getElementById('test');
 var products_table = document.getElementById('product_table');
@@ -29,7 +29,8 @@ function getProducts(letter) {
 
   const data = {
     letter: letter
-  }
+  };
+  
   var raw = JSON.stringify(data);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

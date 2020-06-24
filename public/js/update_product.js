@@ -1,8 +1,13 @@
 "use strict";
 
-import { isItEmpty, createClassification } from './utils.js';
+import {
+  isItEmpty,
+  createClassification,
+  readFormData
+} from './utils.js';
 
 var product_id = decodeURIComponent(window.location.search).replace("?", "");
+const default_n8_image = "/public/product_images/default.png";
 //buttons
 var update_product_button = document.getElementById('update_product');
 var subcategory_button = document.getElementById('subcategory_button');
@@ -164,11 +169,16 @@ function createArraysOfStuff(data) {
   var image_id = [];
 
   data.forEach((element, index, array) => {
-    var url = element.url;
-    images_to_delete.push([url]);
-    temp_arr.push([url, element.colour, element.id]);
-    if (!unique_col.includes(element.colour)) {
-      unique_col.push(element.colour);
+    var url = "";
+    if (element.url !== default_n8_image) {
+      url = element.url;
+
+
+      images_to_delete.push([url]);
+      temp_arr.push([url, element.colour, element.id]);
+      if (!unique_col.includes(element.colour)) {
+        unique_col.push(element.colour);
+      }
     }
   });
 
@@ -454,6 +464,9 @@ function newImagesOldColours(fileInput_id) {
     body: formdata
   };
 
+  //displays the contents of a formdata in humanly readable form
+  readFormData(formdata);
+
   fetch("http://192.168.0.107:3000/products/upload-images", requestOptions)
     .then(response => response.text())
     .then((result) => {
@@ -492,6 +505,8 @@ function newImagesNewColours() {
     header: headers,
     body: formdata
   };
+
+  readFormData(formdata);
 
   fetch("http://192.168.0.107:3000/products/upload-images", requestOptions)
     .then(response => response.text())

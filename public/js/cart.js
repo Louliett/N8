@@ -120,10 +120,6 @@ $('#billing').change(function () {
 });
 
 
-
-
-
-
 $("#includedContent").load("/public/html/header.html", () => {
 
 
@@ -142,31 +138,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     });
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   function price_manipulator() {
-
-
 
     var $select = $(".quantity");
 
@@ -179,11 +151,6 @@ $("#includedContent").load("/public/html/header.html", () => {
     }
     calculatePrice();
   }
-
-
-
-
-
 
 });
 
@@ -208,8 +175,6 @@ function initializeCheckoutSequence() {
     if (checkoutSequenceCounter > 0 && checkoutSequenceCounter < 3) {
       nextButton.style.display = '';
       prevButton.style.display = '';
-
-
     }
     if (checkoutSequenceCounter <= 0) {
       prevButton.style.display = 'none';
@@ -220,10 +185,7 @@ function initializeCheckoutSequence() {
     if (checkoutSequenceCounter >= 3) {
       nextButton.style.display = 'none';
       prevButton.style.display = '';
-
-
     }
-
 
   });
 
@@ -419,7 +381,7 @@ function addressCheck() {
       addressErrorIcon.removeAttr('hidden');
       addressDoneIcon.attr('hidden', 'hidden');
       return false;
-      
+
     } else if (!error) {
 
       addressDoneIcon.removeAttr('hidden');
@@ -674,71 +636,57 @@ fetch('/public/db/bg.json')
 
 
 // stripe code starts -----------------------------------------------------------------
-var stripeHandler;
-var stripePublicKey;
-var items = [];
-
-var requestOptions = {
-  method: 'GET',
-  redirect: 'follow'
-};
-
-fetch("http://192.168.0.107:3000/transactions/get-public-key", requestOptions)
-  .then(response => response.text())
-  .then((result) => {
-    console.log(result);
-    stripePublicKey = result;
-
-    handleStripe(result);
-
-  }).catch(error => console.log('error', error));
-
 var payment_button = $('.finalize');
 
-function handleStripe(key) {
-  items = [];
-  stripeHandler = StripeCheckout.configure({
-    key: key,
-    locale: 'auto',
-    token: (token) => {
-      console.log(token);
+payment_button.click(() => {
+  purchase(tempCookieArray);
+});
 
-      purchase(tempCookieArray, token);
-    }
-  });
-
-  payment_button.click(() => {
-    stripeHandler.open({
-      //the total price
-      amount: (+$('.totaltotal').html()) * 100
-    });
-  });
-}
-
-function purchase(array, token) {
-  myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  const data = {
-    'items': array,
-    'token': token
-  };
-
-  var raw = JSON.stringify(data);
-
+async function getSripePublicKey() {
   var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
+    method: 'GET',
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/transactions/purchase", requestOptions)
-    .then(response => response.text())
-    .then((result) => {
-      window.document.write(result);
-    })
-    .catch(error => console.log('error', error));
+  let message = await fetch("http://192.168.0.107:3000/transactions/get-public-key", requestOptions);
+  let response = await message.text();
+  return response;
+}
+
+function purchase(items_array) {
+
+  getSripePublicKey()
+    .then((publicKey) => {
+        console.log(publicKey, "pk");
+        
+        var stripe = Stripe(publicKey);
+        myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const data = {
+          'items': items_array
+        };
+
+        var raw = JSON.stringify(data);
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch("http://192.168.0.107:3000/transactions/purchase", requestOptions)
+          .then(response => response.json())
+          .then((session) => {            
+            stripe.redirectToCheckout({
+              sessionId: session.id
+            }).then(function (result) {
+              console.log(result.error.message);
+            });
+
+          }).catch(error => console.log('error', error));
+    }).catch(error => console.error(error));
 }
 
 //stripe code ends --------------------------------------------------------------------
@@ -810,7 +758,7 @@ function sendShit() {
 
 
   var table = $('.billing_address_checkout');
-  var relevant = table.children('.auto')
+  var relevant = table.children('.auto');
   var contentsBilling = [];
   for (var i = 0; i < relevant.length; i++) {
     contentsBilling.push(relevant[i].innerHTML);
@@ -879,8 +827,8 @@ function sendShit() {
       'email': 'louliett@gmail.com', //$('.email_checkout').val(),
       'timestamp': time.getTime(),
       'type': 'purchase'
-    }
-    var myHeaders = new Headers();
+    };
+    myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     var raw = JSON.stringify(data);
     var requestOptions = {
@@ -930,8 +878,9 @@ function createCart(products) {
     tempCookieArray.push({
       id: products[i].id,
       quantity: products[i].quantity,
-      color: products[i].color
-    })
+      color: products[i].color,
+      stripe_price: products[i].stripe_price
+    });
 
     cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "item");
@@ -1141,7 +1090,7 @@ if (loggedin === '1') {
 
 function fetchCustomer() {
 
-  var myHeaders = new Headers();
+  myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const data = {
@@ -1169,7 +1118,7 @@ function fetchCustomer() {
 
 
 function fetchAddress(customer) {
-  var myHeaders = new Headers();
+  myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const data = {
@@ -1204,37 +1153,26 @@ function addAddresses(addresses, customer) {
 
     $shippingAddress.html($shippingAddress.html() + '<div class="oldaddress"><div class="selection"><p>click to select</p></div><p class="newcardtitle">Address line 1</p> <input readonly id="address1" class="required shipping_address1 oldinput" value="' + addresses[i].name + '"><p class="newcardtitle">Address line 2</p><input readonly id="address2" class="required shipping_address2 oldinput" value="' + addresses[i].second_name + '"><div class="citycode"><div class="citycity"><p class="newcardtitle">City</p> <p id="bulgarian_cities" class="required shipping_address city" style="width: 90px;">' + addresses[i].city + '</p></div><div class="citycity"><p class="newcardtitle">Post code</p> <input readonly id="shipping-postcode" class="required shipping_address_post_code oldinput" value="' + addresses[i].postcode + '"></div></div><div class="citycode"><div class="citycity"><p class="newcardtitle">First name</p> <input readonly id="first_name_old" class="required shipping_address oldinput" value="' + customer[0].first_name + '"></div><div class="citycity"><p class="newcardtitle">Last Name</p> <input readonly id="last_name_old" class="required shipping_address oldinput" value="' + customer[0].last_name + '"></div></div><p class="newcardtitle">Phone Number</p> <input readonly id="phone_number" class="required phonenumber oldinput" value="' + addresses[i].phone_number + '"></div>');
 
-
   }
-
-
-
 
   $shippingAddress.html($shippingAddress.html() + '<h3>Or add new address</h3><div class="shippingaddress"><p>This is also my billing address <input type="checkbox" id="billing"></p> <br><p class="newcardtitle">First name</p> <input id="phone_number" type="text" placeholder="First name" data-field-name="shippingphone" class="required shipping_address phone"><p class="newcardtitle">Last Name</p> <input id="phone_number" type="text" placeholder="First name" data-field-name="shippingphone" class="required shipping_address phone"><p class="newcardtitle">City</p> <select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" name="card_expirationYear" data-field-name="shippingcity"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option></select><p class="newcardtitle">Phone Number</p> <input id="phone_number" type="text" placeholder="Phone Number" data-field-name="shippingphone" class="required shipping_address phone"><p class="newcardtitle">Address</p> <input id="address1" type="text" placeholder="Address Line 1" data-field-name="shippingaddress1" class="required shipping_address address1"><p class="newcardtitle">Address</p> <input id="address2" type="text" placeholder="Address Line 2" data-field-name="shippingaddress2" class="required shipping_address address2"><p class="newcardtitle">Post code</p> <input id="shippingpostcode" type="text" placeholder="Post Code" class="required shipping_address postcode"></div>');
 
-
-
   addressArray = $('.oldaddress');
-  for (var i = 0; i < addressArray.length; i++) {
-    addressArray[i].addEventListener('click', function () {
+  for (var j = 0; j < addressArray.length; j++) {
+    addressArray[j].addEventListener('click', function () {
       event.target.classList.add('selected');
       event.target.childNodes[0].childNodes[0].innerHTML = 'SELECTED';
+
       if (selectedAddress !== undefined) {
         selectedAddress.childNodes[0].childNodes[0].innerHTML = 'Click to select';
         selectedAddress.classList.remove('selected');
       }
       selectedAddress = event.target;
-
-
-
     });
   }
 
-  $('.billingaddressdefault').html('')
-
+  $('.billingaddressdefault').html('');
 
   $shippingAddress.clone().appendTo('.billingaddressdefault');
-
-
 
 }

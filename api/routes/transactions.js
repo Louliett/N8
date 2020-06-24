@@ -35,8 +35,80 @@ router.get('/get-public-key', (req, res) => {
 });
 
 
-//get transaction based on user id
 router.post('/purchase', (req, res) => {
+  var items = req.body.items;
+
+  createSession(items)
+    .then((result) => {
+
+      console.log(result, "session");
+
+      res.send(result);
+
+    }).catch(error => console.error(error));
+
+
+});
+
+async function createSession(items) {
+
+  var products = [];
+
+  for (let i = 0; i < items.length; i++) {
+    products.push({
+      price: items[i].stripe_price,
+      quantity: items[i].quantity
+    });
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: products,
+    mode: 'payment',
+    success_url: 'http://localhost:3000/public/path//payment_success.html?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: 'http://localhost:3000/public/path/cart.html',
+  });
+
+  return session;
+}
+
+//update product quantity after purchase
+router.post('/products-purchased', (req, res) => {
+  var products = req.body.products;
+  sql = "SELECT product.price, product.quantity FROM product WHERE id = ?;";
+  sql2 = "UPDATE product SET quantity = GREATEST(0, quantity - ?) WHERE id = ?;";
+
+  //iterate through the items from the request
+  for (let i = 0; i < products.length; i++) {
+
+    //at each iteration, make a DB call to fetch the price for a product
+    connection.query(sql, [products[i].id], (err, rows, fields) => {
+      if (err) {
+        res.send(err);
+      } else {
+        //if the quantity of a product is not 0 then decrease quantity by 1
+        if (rows[0].quantity > 0) {
+
+          connection.query(sql2, [products[i].quantity, products[i].id], (err, rows, fields) => {
+            if (err) {
+              res.send(err);
+            } else {
+              res.send("Products quantities updated!");
+            }
+          });
+        } else {
+          res.send("There are no items left");
+        }
+
+      }
+    });
+
+  }
+
+});
+
+//get transaction based on user id
+router.post('/puvvrchase', (req, res) => {
   var items = req.body.items;
   var token = req.body.token;
   let total = 0;
@@ -55,11 +127,11 @@ router.post('/purchase', (req, res) => {
         //increase the total price by adding product price and quantity
         total = total + parseFloat(rows[0].price) * parseInt(items[i].quantity);
         console.log(rows[0].quantity, "quantity");
-        
+
         //if the quantity of a product is not 0 then decrease quantity by 1
         if (rows[0].quantity > 0) {
           console.log("quantity > 0");
-          
+
           connection.query(sql2, [items[i].quantity, items[i].id], (err, rows, fields) => {
             if (err) {
               res.send(err);
@@ -97,7 +169,7 @@ router.post('/purchase', (req, res) => {
           });
         } else {
           console.log("quantity = 0");
-          
+
           res.send("There are no items left");
         }
 

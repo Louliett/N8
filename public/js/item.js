@@ -1,25 +1,31 @@
-var itemcolors=[];
-var colorsobjects={};
+//"use strict";
+
+var itemcolors = [];
+var colorsobjects = {};
 var received;
-var currentslides=[];
-var itemFetched={id:0, quantity:0, color:'none'};
-var cookieItems=[];
+var currentslides = [];
+var itemFetched = {
+  id: 0,
+  quantity: 0,
+  color: 'none'
+};
+var cookieItems = [];
 $("#includedContent").load("/public/html/header.html", () => {
 
 
-  $.getScript("/public/js/header.js", function() {
-      typeclassificationheader='item';
+  $.getScript("/public/js/header.js", function () {
+    typeclassificationheader = 'item';
     start();
 
   });
-    $("#includedFooter").load("/public/html/footer.html", () => {
+  $("#includedFooter").load("/public/html/footer.html", () => {
 
 
-  $.getScript("/public/js/footer.js", function() {
-    startFooter();
+    $.getScript("/public/js/footer.js", function () {
+      startFooter();
 
-  });
     });
+  });
 
 
 
@@ -36,10 +42,10 @@ $("#includedContent").load("/public/html/header.html", () => {
   var stringArray;
 
   var objectArray;
-    
-    
-    readArray();
-    
+
+
+  readArray();
+
 
 
 
@@ -64,7 +70,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     .then(response => response.json())
     .then(data => {
       product = data[0];
-      itemFetched.id=data[0].id;
+      itemFetched.id = data[0].id;
       fetchImages();
     }).catch(error => console.error(error));
 
@@ -89,13 +95,15 @@ $("#includedContent").load("/public/html/header.html", () => {
     fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
+        console.log(data, "received data");
+        
         var images = [];
-        received=data;
-        itemcolors=[...new Set(data.map(x=>x.colour))];
+        received = data;
+        itemcolors = [...new Set(data.map(x => x.colour))];
         data.forEach((element, index, array) => {
           images.push("http://192.168.0.107:3000" + element.url);
         });
-                LoadColors();
+        LoadColors();
 
         basket_image = images[0];
       }).catch(error => console.error(error));
@@ -113,11 +121,11 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
 
-            createSlides(images);
+    createSlides(images);
 
 
 
- 
+
 
 
     var leftarrow = document.getElementById("leftarrow");
@@ -143,13 +151,13 @@ $("#includedContent").load("/public/html/header.html", () => {
 
       if (product[name] !== '' && product[name] !== null) {
         if (name !== 'id' && name !== 'description' && name !== 'price' && name !== 'subcategory' &&
-        name !== 'category' && name !== 'section' && name !== 'url' && name !== 'quantity' && name !== 'new_price' && name !== 'name') {
+          name !== 'category' && name !== 'section' && name !== 'url' && name !== 'quantity' && name !== 'new_price' && name !== 'name') {
           $('<p class="info-' + name + '">' + name + ': ' + product[name] + '</p>').css({}).appendTo('.actualinfo');
         }
       }
     }
 
-    $(".displaymore").click(function() {
+    $(".displaymore").click(function () {
       if (this.id === 'open') {
         $('.actualinfo').attr('class', 'actualinfoactive');
         $('.displaymore').html('Dislay Less');
@@ -176,20 +184,20 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
   function createSlides(images) {
-  //    var images=colorsobjects[color];
-      if(images.length<2){
-    $('.prev').attr('hidden', 'hidden');
-    $('.next').attr('hidden', 'hidden');
-          }else {
-                  $('.prev').removeAttr('hidden');
-                  $('.next').removeAttr('hidden');
-          }
-      
+    //    var images=colorsobjects[color];
+    if (images.length < 2) {
+      $('.prev').attr('hidden', 'hidden');
+      $('.next').attr('hidden', 'hidden');
+    } else {
+      $('.prev').removeAttr('hidden');
+      $('.next').removeAttr('hidden');
+    }
+
     for (var i = 0; i < images.length; i++) {
       var cardDiv = document.createElement("div");
       cardDiv.setAttribute("class", "mySlides fade aslide");
       cardDiv.setAttribute("id", "container" + i);
-        currentslides.push(cardDiv);
+      currentslides.push(cardDiv);
       document.getElementById("slideshow-container").appendChild(cardDiv);
 
       var numberDiv = document.createElement("div");
@@ -202,9 +210,9 @@ $("#includedContent").load("/public/html/header.html", () => {
       cardImg.setAttribute("src", images[i]);
       document.getElementById("container" + i).appendChild(cardImg);
     }
-      
-      
-         var slideIndex = 1;
+
+
+    var slideIndex = 1;
     showSlides(slideIndex);
 
     // Next/previous controls
@@ -237,55 +245,55 @@ $("#includedContent").load("/public/html/header.html", () => {
       slides[slideIndex - 1].style.display = "block";
       dots[slideIndex - 1].className += " active";
     }
-      
-      
-    $(".prev").click(function() {
+
+
+    $(".prev").click(function () {
       plusSlides(-1)
     });
-    $(".next").click(function() {
+    $(".next").click(function () {
       plusSlides(1)
     });
-      
-      
+
+
   }
 
   $(".buttontext").click(() => {
     var quantity = $('#quantitynumber').text();
     quantity = parseInt(quantity);
-      itemFetched.quantity=quantity;
-      itemFetched.color=$('#itemcolor').val();
+    itemFetched.quantity = quantity;
+    itemFetched.color = $('#itemcolor').val();
     addToBasket();
   });
 
 
 
-function addToBasket() {
-    cookieItems=[];
-readArray();
+  function addToBasket() {
+    cookieItems = [];
+    readArray();
     console.log(cookieItems)
     var found = false;
     var found1 = false;
-    for(var i=0; i<cookieItems.length; i++){
-        if(cookieItems[i].id==itemFetched.id){
-            found=true;
-            if(cookieItems[i].color==itemFetched.color){
-                found1=true;
-            (cookieItems[i].quantity)=(+cookieItems[i].quantity)+(+itemFetched.quantity);
-            }
+    for (var i = 0; i < cookieItems.length; i++) {
+      if (cookieItems[i].id == itemFetched.id) {
+        found = true;
+        if (cookieItems[i].color == itemFetched.color) {
+          found1 = true;
+          (cookieItems[i].quantity) = (+cookieItems[i].quantity) + (+itemFetched.quantity);
         }
+      }
     }
-    
-    if(!found || !found1){
-        
-        
-        
-        
-    
-    cookieItems.push(itemFetched);
-        }
-    
 
-    
+    if (!found || !found1) {
+
+
+
+
+
+      cookieItems.push(itemFetched);
+    }
+
+
+
 
     fixArray();
 
@@ -294,7 +302,7 @@ readArray();
 
   }
 
- 
+
 
 
   function fixArray() {
@@ -303,74 +311,68 @@ readArray();
     for (var i = 0; i < cookieItems.length; i++) {
       newStringArray.push(cookieItems[i].id + ':' + cookieItems[i].quantity + ':' + cookieItems[i].color);
     }
- 
+
 
     var now = new Date();
     now.setFullYear(now.getFullYear() + 2);
     document.cookie = "items=" + newStringArray + "; expires=" + now.toUTCString() + "; " + "path=/";
-      
-      
-      Reload();
-      
-      
-      
-      
-  }
-    
-    
-    function LoadColors(){
-        
-    
-        
-                for(var i=0; i<itemcolors.length; i++){
-                    colorsobjects[itemcolors[i]]=[];
-                    for(var q=0; q<received.length; q++){
-                        if(itemcolors[i]===received[q]['colour']){
-                        if(colorsobjects[itemcolors[i]]){
-                           colorsobjects[itemcolors[i]].push("http://192.168.0.107:3000"+received[q]['url']) 
-                            
-                        }
-                            }
-                        
-                        
-                    }
-     
-        }
-        
-            for(var i=0; i<itemcolors.length; i++){
-     
-$("#itemcolor").append(new Option(itemcolors[i], itemcolors[i]));
-        }
-                fetchProduct(colorsobjects[$('#itemcolor').val()]);
-$('#itemcolor').change(function(){
-    var aslide=$('.aslide').remove()
 
-    
-    
-                    createSlides(colorsobjects[$('#itemcolor').val()]);
-    
-    
-    
-    
-})
+
+    Reload();
+
+
+
+
+  }
+
+
+  function LoadColors() {
         
-        
+    for (var i = 0; i < itemcolors.length; i++) {
+      colorsobjects[itemcolors[i]] = [];
+      for (var q = 0; q < received.length; q++) {
+        if (itemcolors[i] === received[q]['colour']) {
+          if (colorsobjects[itemcolors[i]]) {
+            colorsobjects[itemcolors[i]].push("http://192.168.0.107:3000" + received[q]['url'])
+
+          }
+        }
+
+      }
+
     }
-    
+
+    for (var i = 0; i < itemcolors.length; i++) {
+
+      $("#itemcolor").append(new Option(itemcolors[i], itemcolors[i]));
+    }
+    fetchProduct(colorsobjects[$('#itemcolor').val()]);
+    $('#itemcolor').change(function () {
+      var aslide = $('.aslide').remove()
+      createSlides(colorsobjects[$('#itemcolor').val()]);
+    })
+
+
+  }
+
 });
 
 
-function readArray(){
-      stringArray = read_cookie('items');
+function readArray() {
+  stringArray = read_cookie('items');
 
-objectArray = [];
+  objectArray = [];
 
   if (stringArray != null) {
     stringArray = stringArray.split(",");
 
     for (var iii = 0; iii < stringArray.length; iii++) {
       var smallArray = stringArray[iii].split(':');
-        cookieItems.push({id:smallArray[0],quantity:smallArray[1],color:smallArray[2]})
+      cookieItems.push({
+        id: smallArray[0],
+        quantity: smallArray[1],
+        color: smallArray[2]
+      })
 
       objectArray.push(smallArray);
 
@@ -379,12 +381,12 @@ objectArray = [];
     stringArray = [];
   }
 
-    
-    
-    
+
+
+
 }
 
- function read_cookie(key) {
-    var result;
-    return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
-  }
+function read_cookie(key) {
+  var result;
+  return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
+}

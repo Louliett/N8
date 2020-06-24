@@ -325,11 +325,6 @@ function start() {
 
   }
 
-
-
-
-
-
   function signOut() {
     var now = new Date();
     now.setFullYear(now.getFullYear() + 2);
@@ -607,8 +602,9 @@ function PrepBasket() {
                 color: result[q]['image_colour'],
                 image_url: result[q]['image_url'],
                 name: result[q]['name'],
-                price: result[q]['price']
-              })
+                price: result[q]['price'],
+                stripe_price: result[q].stripe_price
+              });
             }
 
 

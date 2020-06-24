@@ -233,8 +233,6 @@ async function checkAccount(email, password) {
 
   let response = await fetch("http://192.168.0.107:3000/users/login-user", requestOptions);
   let message = await response.json();
-  console.log(message);
-
   return message;
 }
 

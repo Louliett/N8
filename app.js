@@ -17,7 +17,7 @@ var app = express();
 
 app.use(cors());
 app.use(morgan('dev'));
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json()); // IDEA: add limit
 
 //API routes
