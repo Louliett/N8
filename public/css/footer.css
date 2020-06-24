@@ -1,7 +1,7 @@
 #includedFooter{
 
   width: 100%;
-    height:300px;
+    margin-top:80px;
 }
 .footermain{
 
@@ -14,7 +14,6 @@
 }
 .footersection{
     display:inline-block;
-        vertical-align: top;
 
 }
 .fa {
@@ -33,28 +32,28 @@
 }
 
 .fa-facebook {
-  color: white;
+  color: #ffffff;
 }
 
 .fa-twitter {
-  color: white;
+  color: #ffffff;
 }
 
 .fa-google {
-  color: white;
+  color: #ffffff;
 }
 
 .fa-linkedin {
-  color: white;
+  color: #ffffff;
 }
 
 .fa-youtube {
-  color: white;
+  color: #ffffff;
 }
 
 .fa-instagram {
   
-  color: white;
+  color: #ffffff;
 }
 h3{
     text-align: left;
@@ -71,7 +70,6 @@ box-shadow: inset 0px 15px 7px -13px rgba(0,0,0,0.47);
     border-top: 1px solid #000000;
 }
 .footerinner{
-    height:290px;
 }
 .companylogo{
     width:58px;
@@ -89,7 +87,6 @@ width:58px;
     height:58px;
     margin:0;
     padding:0;
-    padding-top:30px;
 
 }
 .jinxed{
@@ -97,4 +94,15 @@ width:58px;
     
     
     
+}
+ul.footerItems li {
+  display:inline;
+}
+.jinxInfo{
+    line-height: 0;
+    margin:0;
+    padding:0;
+}
+.footerA{
+    display:inline-block !important;
 }
