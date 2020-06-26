@@ -64,7 +64,7 @@ SectionsStuff();
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.107:3000/users/get-customer-by-id", requestOptions)
+    fetch("http://192.168.0.108:3000/users/get-customer-by-id", requestOptions)
       .then(response => response.json())
       .then((result) => {
         loadProfile(result[0]);
@@ -376,7 +376,7 @@ function SectionsStuff(){
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.107:3000/classifications/class-groups", requestOptions)
+    fetch("http://192.168.0.108:3000/classifications/class-groups", requestOptions)
       .then(response => response.json())
       .then((result) => {
 Order(result)      })
@@ -444,17 +444,17 @@ function setTitle2(a){
 }
 function setCover1(a){
  if(a in bigboss){
-    $('.bigimageimage').attr('src','http://192.168.0.107:3000'+bigboss[a]['sec_img']);
+    $('.bigimageimage').attr('src','http://192.168.0.108:3000'+bigboss[a]['sec_img']);
         }
 }
 function setCover2(a, b){
  if(a in bigboss){
-    $('.bigimageimage').attr('src','http://192.168.0.107:3000'+bigboss[a][b]['cat_img']);
+    $('.bigimageimage').attr('src','http://192.168.0.108:3000'+bigboss[a][b]['cat_img']);
         }
 }
 function setCover3(a, b, c){
  if(a in bigboss){
-    $('.bigimageimage').attr('src','http://192.168.0.107:3000'+bigboss[a][b][c]['sub_img']);
+    $('.bigimageimage').attr('src','http://192.168.0.108:3000'+bigboss[a][b][c]['sub_img']);
         }
 }
 
@@ -560,7 +560,7 @@ function PrepBasket(){
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/products/products-images", requestOptions)
+  fetch("http://192.168.0.108:3000/products/products-images", requestOptions)
     .then(response => response.json())
     .then(result => {
       var tempArray=[];
@@ -632,7 +632,7 @@ function loadBasket(products) {
       cardDiv = document.createElement("img");
       cardDiv.setAttribute("class", "image");
        if(products[i].image_url!==null){
-    cardDiv.setAttribute("src", 'http://192.168.0.107:3000'+products[i].image_url);
+    cardDiv.setAttribute("src", 'http://192.168.0.108:3000'+products[i].image_url);
            
            
         }else{
@@ -642,7 +642,7 @@ function loadBasket(products) {
         }
 
     $(cardDiv).on("error", function(){
-        $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
+        $(this).attr('src', 'http://192.168.0.108:3000/public/product_images/default.png');
     });
       document.getElementById("basketimage" + product_id).appendChild(cardDiv);
 
@@ -698,7 +698,7 @@ function newFetch(id, color){
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/products/single-images-basket", requestOptions)
+  fetch("http://192.168.0.108:3000/products/single-images-basket", requestOptions)
     .then(response => response.json())
     .then(result => {
  console.log(result)

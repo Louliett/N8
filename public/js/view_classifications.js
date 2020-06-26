@@ -52,7 +52,7 @@ function populateTable(url, table, update_class, delete_class, delete_image, upd
     headers: myHeaders,
     redirect: 'follow'
   };
-  fetch('http://192.168.0.107:3000/classifications/' + url, requestOptions)
+  fetch('http://192.168.0.108:3000/classifications/' + url, requestOptions)
     .then(response => response.json())
     .then(data => {
 
@@ -138,7 +138,7 @@ function updateClass(id, button_event, url, img_url, key) {
         redirect: 'follow'
       };
 
-      fetch("http://192.168.0.107:3000/classifications/" + img_url, requestOptions)
+      fetch("http://192.168.0.108:3000/classifications/" + img_url, requestOptions)
         .then(response => response.text())
         .then((result) => {
           class_name.value = result;
@@ -155,7 +155,7 @@ function updateClass(id, button_event, url, img_url, key) {
         redirect: 'follow'
       };
 
-      fetch("http://192.168.0.107:3000/classifications/" + img_url, requestOptions)
+      fetch("http://192.168.0.108:3000/classifications/" + img_url, requestOptions)
         .then(response => response.text())
         .then(result => {
           location.reload(true);
@@ -179,9 +179,9 @@ function updateClass(id, button_event, url, img_url, key) {
       headers: myHeaders,
       body: raw,
       redirect: 'follow'
-    }
+    };
 
-    fetch("http://192.168.0.107:3000/classifications/update-" + url, requestOptions)
+    fetch("http://192.168.0.108:3000/classifications/update-" + url, requestOptions)
       .then(response => response.text())
       .then((result) => {
         class_name.value = result;
@@ -208,7 +208,7 @@ function deleteClass(id, url, image) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/classifications/delete-" + url, requestOptions)
+  fetch("http://192.168.0.108:3000/classifications/delete-" + url, requestOptions)
     .then(response => response.json())
     .then((result) => {
       //console.log(result);
@@ -243,7 +243,7 @@ function deleteImage(image, id, url) {
       redirect: 'follow'
     };
 
-    fetch("http://192.168.0.107:3000/classifications/delete-" + url + "-image", requestOptions)
+    fetch("http://192.168.0.108:3000/classifications/delete-" + url + "-image", requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));

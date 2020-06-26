@@ -2,11 +2,14 @@
 
 import {
   isItEmpty,
+  isItEmptyStrict,
   createClassification,
   readFormData
 } from './utils.js';
 
 var product_id = decodeURIComponent(window.location.search).replace("?", "");
+var stripe_id = "";
+var stripe_price = "";
 const default_n8_image = "/public/product_images/default.png";
 //buttons
 var update_product_button = document.getElementById('update_product');
@@ -296,7 +299,7 @@ function deleteImages(image_id, url) {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.107:3000/products/delete-images', requestOptions)
+  fetch('http://192.168.0.108:3000/products/delete-images', requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);
@@ -337,10 +340,17 @@ update_product_button.addEventListener("click", () => {
     product_width, product_height, product_volume, product_weight, product_size
   ]);
 
+  //check if the classifications are strictly not empty
+  var empty_classifications = isItEmptyStrict([product_subcategory, product_category, product_section]);
+
+  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_description]);
+
   var data = {
     'id': product_id,
+    'stripe_id': stripe_id,
     'name': product_name,
     'price': product_price,
+    'stripe_price': stripe_price,
     'new_price': product_new_price,
     'ean': product_ean,
     'availability': product_availability,
@@ -362,8 +372,12 @@ update_product_button.addEventListener("click", () => {
   };
 
 
-  if (empty_fields) {
-    text_label.innerHTML = "Text fields are empty!";
+  if (empty_fields === true) {
+    text_label.innerHTML = "Fields are empty!";
+  } else if (special_fields === true) {
+    text_label.innerHTML = "Name, Price, Brand or Description missing!";
+  } else if (empty_classifications === true) {
+    class_label.innerHTML = "Please select classifications!";
   } else {
     updateProductText(data);
   }
@@ -383,7 +397,7 @@ function updateProductText(data) {
     body: raw
   };
 
-  fetch("http://192.168.0.107:3000/products/update-product", requestOptions)
+  fetch("http://192.168.0.108:3000/products/update-product", requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);
@@ -404,11 +418,22 @@ function updateProductColours() {
     colour = colour.childNodes[0].value;
     product_ids = [];
 
+
+    console.log(colour, "colour in first loop");
+
     for (var j = 1; j < updated_colours[i].cells.length - 1; j++) {
+      console.log(updated_colours[i].cells[j].childNodes[0].dataset.imageId, "colour in second loop");
+
       product_ids.push(updated_colours[i].cells[j].childNodes[0].dataset.imageId);
 
     }
-    unique_col.push([colour, product_ids]);
+    colour = colour.replace(/\s/g, "X");
+    if (colour === "default") {
+      image_label.innerHTML = "'default' can not be a colour!";
+    } else {
+      unique_col.push([colour, product_ids]);
+    }
+
   }
 
   const data = {
@@ -426,7 +451,7 @@ function updateProductColours() {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/products/update-colour", requestOptions)
+  fetch("http://192.168.0.108:3000/products/update-colour", requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);
@@ -467,7 +492,7 @@ function newImagesOldColours(fileInput_id) {
   //displays the contents of a formdata in humanly readable form
   readFormData(formdata);
 
-  fetch("http://192.168.0.107:3000/products/upload-images", requestOptions)
+  fetch("http://192.168.0.108:3000/products/upload-images", requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);
@@ -508,7 +533,7 @@ function newImagesNewColours() {
 
   readFormData(formdata);
 
-  fetch("http://192.168.0.107:3000/products/upload-images", requestOptions)
+  fetch("http://192.168.0.108:3000/products/upload-images", requestOptions)
     .then(response => response.text())
     .then(result => {
       console.log(result);
@@ -531,7 +556,7 @@ function populateSelectors(table, array, selector) {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.107:3000/classifications/' + table, requestOptions)
+  fetch('http://192.168.0.108:3000/classifications/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {
       for (var i = 0; i < data.length; i++) {
@@ -568,7 +593,7 @@ function displayProductImages() {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
+  fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
     .then(response => response.json())
     .then(data => {
       createArraysOfStuff(data);
@@ -596,11 +621,13 @@ function populateSelectorsFields() {
   };
 
   //populates the textfields and selectors with appropriate product info
-  fetch('http://192.168.0.107:3000/products/product-classifications-id', requestOptions)
+  fetch('http://192.168.0.108:3000/products/product-classifications-id', requestOptions)
     .then(response => response.json())
     .then(data => {
+      stripe_id = data[0].stripe_id;
       product_name_txt.value = data[0].name;
       product_price_txt.value = data[0].price;
+      stripe_price = data[0].stripe_price;
       product_new_price_txt.value = data[0].new_price;
       product_ean_txt.value = data[0].ean;
       product_availability_txt.value = data[0].availability;

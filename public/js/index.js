@@ -61,7 +61,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
 
 
-  fetch('http://192.168.0.107:3000/products/')
+  fetch('http://192.168.0.108:3000/products/')
     .then(response => response.json())
     .then(data => {
       product_list = data
@@ -89,7 +89,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     };
 
 
-    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
+    fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data, 'null');
@@ -146,8 +146,8 @@ $("#includedContent").load("/public/html/header.html", () => {
     console.log(images, "specific message");
     
     if (images[0] !== undefined) {
-      cardImg.setAttribute("src", 'http://192.168.0.107:3000' + images[0]);
-      //console.log('http://192.168.0.107:3000' + images[0]);
+      cardImg.setAttribute("src", 'http://192.168.0.108:3000' + images[0]);
+      //console.log('http://192.168.0.108:3000' + images[0]);
     } else {
       cardImg.setAttribute("src", undefined);
 
@@ -158,7 +158,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;
     var x = $(document).width();
     $(".productimg").on("error", function () {
-      $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
+      $(this).attr('src', 'http://192.168.0.108:3000/public/product_images/default.png');
     });
 
 

@@ -10,10 +10,10 @@
   <!-- jQuery library -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
-
+  <link rel="icon" href="../site/n8.ico">
   <link rel="stylesheet" href="/public/css/header.css">
   <link rel="stylesheet" href="/public/css/cart.css">
-    <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://js.stripe.com/v3/"></script>
 
 
 </head>
@@ -22,110 +22,139 @@
   <div id="includedContent"></div>
 
 
- 
-<div class='checkoutsequence'>
-    <div class='snap_prevention'>SHOPPING CART ++ CHECKOUT
-        </div>
-    
-    <div class='inositol'>
-    <div class='inner_inositol'>
-        <div class='details'>
-    <div class="carousel__cell">
 
-        <div class='match_point one'><div class='match_point_inner one'><div class='match_point_number'>1</div></div></div>
+  <div class='checkoutsequence'>
+    <div class='snap_prevention'>SHOPPING CART ++ CHECKOUT
+    </div>
+
+    <div class='inositol'>
+      <div class='inner_inositol'>
+        <div class='details'>
+          <div class="carousel__cell">
+
+            <div class='match_point one'>
+              <div class='match_point_inner one'>
+                <div class='match_point_number'>1</div>
+              </div>
+            </div>
             <svg id="svg">
-  <line class='line1'/>
-</svg>
-  <div class="checkoutmenu">
-      <h3>YOUR ITEMS</h3>
-    <div class="items" id="items">
-        <div class='empty_cart'>You dont have any items in your cart. Head back to the main page and pick something!</div>
+              <line class='line1' />
+            </svg>
+            <div class="checkoutmenu">
+              <h3>YOUR ITEMS</h3>
+              <div class="items" id="items">
+                <div class='empty_cart'>You dont have any items in your cart. Head back to the main page and pick
+                  something!</div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="carousel__cell">
+            <div class='match_point two'>
+              <div class='match_point_inner two'>
+                <div class='match_point_number'>2</div>
+              </div>
+            </div>
+            <svg id="svg">
+              <line class='line2' />
+            </svg>
+            <div class='inner_cell'>
+              <h3>SHIPPING ADDRESS</h3>
+
+
+
+              <div class='shippingaddress'>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="carousel__cell">
+            <div class='match_point three'>
+              <div class='match_point_inner three'>
+                <div class='match_point_number'>3</div>
+              </div>
+            </div>
+            <svg id="svg">
+              <line class='line3' />
+            </svg>
+            <div class='inner_cell'>
+              <h3>BILLING ADDRESS</h3>
+              <div class='billingaddressdefault'>
+
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+          <div class="carousel__cell">
+            <div class='match_point four'>
+              <div class='match_point_inner four'>
+                <div class='match_point_number'>4</div>
+              </div>
+            </div> <svg id="svg">
+              <line class='line4' />
+            </svg>
+            <div class='inner_cell'>
+              <h2>ORDER DETAILS</h2>
+              <div>
+
+                <div>
+                  <h4>Shipping address</h4>
+                  <div class='final-shipping'></div>
+                </div>
+                <div>
+                  <h4>Billing address</h4>
+                  <div class='final-billing'></div>
+                </div>
+
+
+              </div>
+
+
+
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <div class="sum">
+
+
+          <div class="info">
+            <p style="font-size:20px; border-width: 0px 0px 1px 0px; border-style:solid; border-color:darkgrey;">Order
+              summary</p>
+            <p class='subtotal'>Subtotal: 0$</p>
+            <p class='shipping'>Shipping: 0$</p>
+            <p class='vat'>VAT: 0$</p>
+            <p class='total'
+              style="border-width: 1px 0px 0px 0px; border-style:solid; border-color:darkgrey; font-weight: bold;">
+              Total: 0$</p>
+
+            <div class="carousel-options">
+              <button class='finalize_top' style='width:100%;'>CONFIRM DETAILS</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class='finalize_bottom' style='width:100%;'>CONFIRM DETAILS</button>
+
     </div>
   </div>
 
-      </div>
 
-    
-        <div class="carousel__cell">
-          <div class='match_point two'><div class='match_point_inner two'><div class='match_point_number'>2</div></div></div>
-                        <svg id="svg">
-  <line class='line2'/>
-</svg>
-            <div class='inner_cell'> 
-         <h3>SHIPPING ADDRESS</h3>
 
-    
-    
-            <div class='shippingaddress'>
-           
-  
-      </div>
-      </div>
-      </div>
-         <div class="carousel__cell"> 
-           <div class='match_point three'><div class='match_point_inner three'><div class='match_point_number'>3</div></div></div>
-                         <svg id="svg">
-  <line class='line3'/>
-</svg>
-             <div class='inner_cell'> 
-             <h3>BILLING ADDRESS</h3>
-         <div class='billingaddressdefault'>
 
-                
-                
-      </div>
-
-      </div>
-             
-             
-             </div>
-    <div class="carousel__cell">  <div class='match_point four'><div class='match_point_inner four'><div class='match_point_number'>4</div></div></div>            <svg id="svg">
-  <line class='line4'/>
-</svg> <div class='inner_cell'>     <h2>ORDER DETAILS</h2>
-        <div>
-       
-               <div><h4>Shipping address</h4><div class='final-shipping'></div></div>
-                <div><h4>Billing address</h4><div class='final-billing'></div></div>
-       
-        
-        </div>
-       
- 
-        
-</div>
-      </div>
-            
-            
-            
-      </div>
-    
-    <div class="sum">
-                
-
-      <div class="info">
-        <p style="font-size:20px; border-width: 0px 0px 1px 0px; border-style:solid; border-color:darkgrey;">Order summary</p>
-        <p class='subtotal'>Subtotal: 0$</p>
-        <p class='shipping'>Shipping: 0$</p>
-        <p class='vat'>VAT: 0$</p>
-        <p class='total' style="border-width: 1px 0px 0px 0px; border-style:solid; border-color:darkgrey; font-weight: bold;">Total: 0$</p>
-    
-        <div class="carousel-options">
-            <button class='finalize_top' style='width:100%;'>CONFIRM DETAILS</button>
-  
-  
-</div>
-</div>
-    </div>
-        </div>
-                    <button class='finalize_bottom' style='width:100%;'>CONFIRM DETAILS</button>
-
-        </div>
-        </div>
-    
-   
-    
-    
-        <div id="includedFooter"></div>
+  <div id="includedFooter"></div>
 
 
 

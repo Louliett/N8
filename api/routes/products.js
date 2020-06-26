@@ -83,102 +83,106 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
   }
 
   //we get the stripe object, then we can use stripe price id to save it in n8 db
-  createStripeProduct(product.name, product.price, product.brand, product.description, stripeImage)
-    .then((result) => {
+  createStripeProduct(product.name, product.brand, product.description, stripeImage)
+    .then((stripe_product) => {
 
-      var values = [product.name, product.price, result.id, product.new_price,
-        product.ean, product.availability, product.quantity, product.brand,
-        product.design, product.description, product.material, product.diameter,
-        product.length, product.width, product.height, product.volume, product.weight,
-        product.size, product.subcategory, product.category, product.section,
-        "default", default_n8_image
-      ];
+      createStripePrice(product.price, stripe_product.id)
+        .then((stripe_price) => {
 
-      sql = "INSERT INTO product (name, price, stripe_price, new_price, ean, availability, quantity, brand, design, " +
-        "description, material, diameter, length, width, height, volume, weight, size) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
-        "SET @productID = LAST_INSERT_ID(); " +
-        "INSERT INTO product_classification (product_id, subcategory_id, category_id, section_id) " +
-        "VALUES (@productID, " +
-        "(SELECT id FROM subcategory WHERE name = ?), " +
-        "(SELECT id FROM category WHERE name = ?), " +
-        "(SELECT id FROM section WHERE name = ?)); " +
-        "INSERT INTO image (colour, url) VALUES (?, ?); " +
-        "SET @imageID = LAST_INSERT_ID(); " +
-        "INSERT INTO product_image (product_id, image_id) " +
-        "VALUES (@productID, @imageID); ";
+          var values = [stripe_product.id, product.name, product.price, stripe_price.id, product.new_price,
+            product.ean, product.availability, product.quantity, product.brand,
+            product.design, product.description, product.material, product.diameter,
+            product.length, product.width, product.height, product.volume, product.weight,
+            product.size, product.subcategory, product.category, product.section,
+            "default", default_n8_image
+          ];
 
-      //let's check if there are any files attached to the formdata
-      if (req.files.length > 0) {
+          sql = "INSERT INTO product (stripe_id, name, price, stripe_price, new_price, ean, availability, quantity, brand, design, " +
+            "description, material, diameter, length, width, height, volume, weight, size) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
+            "SET @productID = LAST_INSERT_ID(); " +
+            "INSERT INTO product_classification (product_id, subcategory_id, category_id, section_id) " +
+            "VALUES (@productID, " +
+            "(SELECT id FROM subcategory WHERE name = ?), " +
+            "(SELECT id FROM category WHERE name = ?), " +
+            "(SELECT id FROM section WHERE name = ?)); " +
+            "INSERT INTO image (colour, url) VALUES (?, ?); " +
+            "SET @imageID = LAST_INSERT_ID(); " +
+            "INSERT INTO product_image (product_id, image_id) " +
+            "VALUES (@productID, @imageID); ";
 
-        stripeImage = "http://192.168.0.107:3000" + (req.files[0].destination + req.files[0].filename).substr(1);
+          //let's check if there are any files attached to the formdata
+          if (req.files.length > 0) {
 
-        if (typeof (req.body.colour) === 'string') {
-          colours.push(req.body.colour);
-        } else {
-          colours = req.body.colour;
-        }
+            stripeImage = "http://192.168.0.107:3000" + (req.files[0].destination + req.files[0].filename).substr(1);
 
-        for (var i = 0; i < req.files.length; i++) {
+            if (typeof (req.body.colour) === 'string') {
+              colours.push(req.body.colour);
+            } else {
+              colours = req.body.colour;
+            }
 
-          if (colours[i] === "") {
-            imgarray.push(["default", (req.files[i].destination + req.files[i].filename).substr(1)]);
+            for (var i = 0; i < req.files.length; i++) {
+
+              if (colours[i] === "") {
+                imgarray.push(["default", (req.files[i].destination + req.files[i].filename).substr(1)]);
+              } else {
+                imgarray.push([colours[i], (req.files[i].destination + req.files[i].filename).substr(1)]);
+              }
+
+              imgproduct.push([(req.files[i].destination + req.files[i].filename).substr(1)]);
+
+              if (i !== req.files.length - 1) {
+                first = first + "(?, ?),";
+                second = second + "(@productID, (SELECT id FROM image WHERE url = ?)),";
+              } else {
+                first = first + "(?, ?);";
+                second = second + "(@productID, (SELECT id FROM image WHERE url = ?));";
+              }
+            }
+
+            sql2 = "INSERT INTO image (colour, url) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
+
+            for (var j = 0; j < imgarray.length; j++) {
+              bigboss.push(imgarray[j]);
+            }
+
+            for (var k = 0; k < imgproduct.length; k++) {
+              bigboss.push(imgproduct[k]);
+            }
+
+            //flatten all the image values into a 1D array
+            newboss = bigboss.flat(Infinity);
+            //concatinate the queries so that they contain txt + image
+            finalquery = sql + sql2;
+            //concatinate the text values and image values
+            finalboss = values.concat(newboss);
+
           } else {
-            imgarray.push([colours[i], (req.files[i].destination + req.files[i].filename).substr(1)]);
+            finalquery = sql;
+            finalboss = values;
+            stripeImage = default_stripe_image;
           }
 
-          imgproduct.push([(req.files[i].destination + req.files[i].filename).substr(1)]);
+          connection.query(finalquery, finalboss, (err, rows, fields) => {
+            if (err) {
+              res.send(err);
+              console.log(err);
+            } else {
+              res.send("Product Created!");
+            }
+          });
 
-          if (i !== req.files.length - 1) {
-            first = first + "(?, ?),";
-            second = second + "(@productID, (SELECT id FROM image WHERE url = ?)),";
-          } else {
-            first = first + "(?, ?);";
-            second = second + "(@productID, (SELECT id FROM image WHERE url = ?));";
-          }
-        }
 
-        sql2 = "INSERT INTO image (colour, url) VALUES " + first + "INSERT INTO product_image (product_id, image_id) VALUES " + second;
-
-        for (var j = 0; j < imgarray.length; j++) {
-          bigboss.push(imgarray[j]);
-        }
-
-        for (var k = 0; k < imgproduct.length; k++) {
-          bigboss.push(imgproduct[k]);
-        }
-
-        //flatten all the image values into a 1D array
-        newboss = bigboss.flat(Infinity);
-        //concatinate the queries so that they contain txt + image
-        finalquery = sql + sql2;
-        //concatinate the text values and image values
-        finalboss = values.concat(newboss);
-
-      } else {
-        finalquery = sql;
-        finalboss = values;
-        stripeImage = default_stripe_image;
-      }
-
-      connection.query(finalquery, finalboss, (err, rows, fields) => {
-        if (err) {
-          res.send(err);
-          console.log(err);
-        } else {
-          res.send("Product Created!");
-        }
-      });
+        }).catch(error => console.error(error));
 
     }).catch(error => console.error(error));
 
 });
 
-
-
 //creates a stripe product and a price for that product
 //returns the stripe price object
-async function createStripeProduct(prod_name, prod_price, prod_brand, prod_descript, prod_image) {
+async function createStripeProduct(prod_name, prod_brand, prod_descript, prod_image) {
 
   let stripeProduct = await stripe.products.create({
     name: prod_name,
@@ -188,10 +192,14 @@ async function createStripeProduct(prod_name, prod_price, prod_brand, prod_descr
     type: "good"
   });
 
+  return stripeProduct;
+}
+
+async function createStripePrice(prod_price, prod_id) {
   let stripePrice = await stripe.prices.create({
     unit_amount: prod_price * 100,
     currency: 'bgn',
-    product: stripeProduct.id
+    product: prod_id
   });
 
   return stripePrice;
@@ -205,32 +213,12 @@ router.post('/get-stripe-product', (req, res) => {
   }).catch(error => console.error(error));
 });
 
-router.put('/update-stripe-product', (req, res) => {
-  var product_id = req.body.productid;
-  updateStripeProduct(product_id)
-    .then((result) => {
-      res.send(result);
-    }).catch(error => console.error(error));
-});
-
-
-async function updateStripeProduct(prod_id) {
-  let updatedStripeProduct = await stripe.products.update(
-    prod_id, {
-      active: false
-    });
-  return updatedStripeProduct;
-}
-
 async function getStripeProduct(prod_id) {
   let stripeProduct = await stripe.products.retrieve(prod_id);
   return stripeProduct;
 }
 
-
-
-
-
+//upload images [v]
 router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
   let product = req.body;
   var colours = [];
@@ -243,7 +231,7 @@ router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
 
   console.log(product, "received");
 
-
+  //if the server didn't receive a colour for images, the if statement triggers
   if (colours[0] === "") {
     res.send("Please provide a colour!");
     //we delete all the images uploaded to the server because they don't have colours
@@ -363,40 +351,9 @@ router.put('/update-colour', (req, res) => {
   });
 });
 
-//select products based on colour [v]
-// router.post('/product-colour', (req, res) => {
-//   var colour = req.body.colour;
-//   sql = "SELECT pro.*, sub.name AS subcategory, cat.name AS category, " +
-//         "sec.name AS section, img.name AS image_name, img.path AS image_path, " +
-//         "img.colour AS image_colour " +
-//         "FROM product AS pro " +
-//         "LEFT JOIN product_classification AS pc " +
-// 	      "ON pro.id = pc.product_id " +
-//         "LEFT JOIN subcategory AS sub " +
-// 	      "ON pc.subcategory_id = sub.id " +
-//         "LEFT JOIN category AS cat " +
-// 	      "ON pc.category_id = cat.id " +
-//         "LEFT JOIN section AS sec " +
-// 	      "ON pc.section_id = sec.id " +
-//         "LEFT JOIN product_image AS pi " +
-// 	      "ON pro.id = pi.product_id " +
-//         "LEFT JOIN image AS img " +
-// 	      "ON pi.image_id = img.id " +
-//         "WHERE img.colour = ?;";
-//
-//   connection.query(sql, [colour], (err, rows, fields) => {
-//     if(err) {
-//       res.send(err);
-//     } else {
-//       res.send(rows);
-//     }
-//   });
-// });
-
 //select all products based on name's first letter
-router.post('/name', (req, res) => {
-  var letter = req.body.letter + "%";
-  var all;
+router.get('/first-letter/:letter', (req, res) => {
+  var letter = req.params.letter + "%";
 
   //default query for dealing with product's first letter
   sql = "SELECT product.*, subcategory.name as subcategory, category.name as category, section.name as section " +
@@ -408,7 +365,7 @@ router.post('/name', (req, res) => {
     "WHERE product.name LIKE ?;";
 
   //query for selecting all the products
-  if (req.body.letter === "*") {
+  if (req.params.letter === "*") {
     sql = "SELECT product.*, subcategory.name as subcategory, category.name as category, section.name as section " +
       "FROM product " +
       "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
@@ -521,39 +478,97 @@ router.post('/update-default-image', (req, res) => {
 //updates a product and its classifications
 router.put('/update-product', (req, res, next) => {
   var product = req.body;
-  var values = [product.name, product.price, product.new_price, product.ean,
-    product.availability, product.quantity, product.brand, product.design,
-    product.description, product.material, product.diameter, product.length,
-    product.width, product.height, product.volume, product.weight, product.size, product.id,
-    product.subcategory, product.category, product.section, product.id
-  ];
 
-  sql = "UPDATE product " +
-    "SET name =?, price=?, new_price=?, ean=?, availability=?, quantity=?, " +
-    "brand=?, design=?, description=?, material=?, diameter=?, length=?, " +
-    "width=?, height=?, volume=?, weight=?, size=? " +
-    "WHERE id=?; " +
-    "UPDATE product_classification " +
-    "SET subcategory_id=(select id from subcategory where name=?), " +
-    "category_id=(select id from category where name=?), " +
-    "section_id=(select id from section where name=?) " +
-    "WHERE product_id = ?;";
 
-  connection.query(sql, values, (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send("product updated!");
-    }
+  updateStripeProduct(product.stripe_id, product.name, product.brand, product.description)
+    .then((stripe_product) => {
+      console.log(stripe_product);
+      createStripePrice(product.price, stripe_product.id)
+        .then((stripe_price) => {
+          console.log(stripe_price, "updated");
 
-  });
+          var values = [product.name, product.price, stripe_price.id, product.new_price, product.ean,
+            product.availability, product.quantity, product.brand, product.design,
+            product.description, product.material, product.diameter, product.length,
+            product.width, product.height, product.volume, product.weight, product.size, product.id,
+            product.subcategory, product.category, product.section, product.id
+          ];
+
+          sql = "UPDATE product " +
+            "SET name =?, price=?, stripe_price=?, new_price=?, ean=?, availability=?, quantity=?, " +
+            "brand=?, design=?, description=?, material=?, diameter=?, length=?, " +
+            "width=?, height=?, volume=?, weight=?, size=? " +
+            "WHERE id=?; " +
+            "UPDATE product_classification " +
+            "SET subcategory_id=(select id from subcategory where name=?), " +
+            "category_id=(select id from category where name=?), " +
+            "section_id=(select id from section where name=?) " +
+            "WHERE product_id = ?;";
+
+          connection.query(sql, values, (err, rows, fields) => {
+            if (err) {
+              res.send(err);
+            } else {
+              res.send("product updated!");
+            }
+
+          });
+
+
+        }).catch(error => console.error(error));
+
+    }).catch(error => console.error(error));
+
 });
+
+//update stripe product
+async function updateStripeProduct(product_id, prod_name, prod_brand, prod_descript) {
+  var updatedStripeProduct = await stripe.products.update(product_id, {
+    name: prod_name,
+    attributes: [prod_brand],
+    description: prod_descript
+  });
+  return updatedStripeProduct;
+}
+
+//update stripe price
+async function updateStripePrice(price_id, price_amount) {
+  var updatedStripePrice = await stripe.prices.update(price_id, {
+    unit_amount: price_amount
+  });
+
+  return updatedStripePrice;
+}
+
+router.get('/stripe-price/:stripe', (req, res) => {
+  var price_id = req.params.stripe;
+  getStripePrice(price_id).then((price) => {
+    res.send(price);
+  }).catch(error => console.error(error));
+});
+
+router.post('/update-stripe', (req, res) => {
+  var newprice = req.body.price;
+  var stripeid = req.body.stripeid;
+
+  updateStripePrice(stripeid, newprice)
+    .then((stripe_price) => {
+      res.send(stripe_price);
+
+    }).catch(error => res.send(error));
+});
+
+async function getStripePrice(price_id) {
+  var stripePrice = await stripe.prices.retrieve(price_id);
+
+  return stripePrice;
+}
 
 //get products for search bar
 router.post('/search-product', (req, res) => {
   var criterias = "%" + req.body.criteria + "%";
   sql = "SELECT pro.*, sub.name AS subcategory, cat.name AS category, " +
-    "sec.name AS section, img.url AS image_url " +
+    "sec.name AS section, img.url AS image_url, img.colour AS image_colour " +
     "FROM product AS pro " +
     "LEFT JOIN product_classification AS pc " +
     "ON pro.id = pc.product_id " +
@@ -610,57 +625,19 @@ router.post('/pro-sub-cat-sec', (req, res) => {
   });
 });
 
-//get product based on subcategory
-// router.post('/subcategory', (req, res) => {
-//   name = req.body.name;
-//   sql = "SELECT product.* " +
-//         "FROM product_classification " +
-//         "JOIN product ON product_classification.product_id = product.id " +
-//         "JOIN subcategory ON product_classification.subcategory_id = subcategory.id " +
-//         "WHERE subcategory.name = ?;";
-//   connection.query(sql, [name], (err, rows, fields) => {
-//     if(err) {
-//       console.log(err);
-//     } else {
-//       res.send(rows);
-//     }
-//   });
-// });
-//
-// //get product based on category
-// router.post('/category', (req, res) => {
-//   name = req.body.name;
-//   sql = "SELECT product.* " +
-//         "FROM product_classification " +
-//         "JOIN product ON product_classification.product_id = product.id " +
-//         "JOIN category ON product_classification.category_id = category.id " +
-//         "WHERE category.name = ?;";
-//   connection.query(sql, [name], (err, rows, fields) => {
-//     if(err) {
-//       console.log(err);
-//     } else {
-//       res.send(rows);
-//     }
-//   });
-// });
-//
-// //get product based on section
-// router.post('/section', (req, res) => {
-//   name = req.body.name;
-//   sql = "SELECT product.* " +
-//         "FROM product_classification " +
-//         "JOIN product ON product_classification.product_id = product.id " +
-//         "JOIN section ON product_classification.section_id = section.id " +
-//         "WHERE section.name = ?;";
-//   connection.query(sql, [name], (err, rows, fields) => {
-//     if(err) {
-//       console.log(err);
-//     } else {
-//       res.send(rows);
-//     }
-//   });
-// });
+//get product quantity based on id
+router.get('/quantity/:id', (req, res) => {
+  id = req.params.id;
+  sql = "SELECT quantity FROM product WHERE id = ?";
 
+  connection.query(sql, id, (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(rows);
+    }
+  });
+});
 
 //method for cart!!!! to be reviewved it complains
 router.post("/products-images", (req, res) => {
@@ -739,7 +716,10 @@ router.post('/single-images-basket', (req, res) => {
 // delete everything related to a product based on product id
 router.delete('/delete-product', (req, res, next) => {
   var id = req.body.id;
+  var stripe_id = req.body.stripe_id;
   var path = req.body.path;
+  console.log(stripe_id, "received stuff");
+
   sql = "DELETE product_image, image, product_classification " +
     "FROM product " +
     "LEFT JOIN product_image ON product.id = product_image.product_id " +
@@ -751,6 +731,7 @@ router.delete('/delete-product', (req, res, next) => {
     if (err) {
       res.send(err);
     } else {
+
       //res.send("product deleted!");
       try {
         for (var i = 0; i < path.length; i++) {
@@ -766,6 +747,12 @@ router.delete('/delete-product', (req, res, next) => {
     }
   });
 });
+
+//delete stripe product in case needed
+async function deleteStripeProduct(product_id) {
+  var confirmation = await stripe.products.del(product_id);
+  return confirmation;
+}
 
 //deletes an image based on id
 router.delete('/delete-images', (req, res, next) => {
@@ -791,5 +778,40 @@ router.delete('/delete-images', (req, res, next) => {
     }
   });
 });
+
+//returns an array of objects {id, quantity}
+router.post('/quantities', (req, res) => {
+  var repeating_ids = req.body.ids;
+
+  //filter the id array for unique ids
+  var ids = repeating_ids.filter(function (elem, index, self) {
+    return index === self.indexOf(elem);
+  });
+
+  var quantities = [];
+  sql = "SELECT product.quantity FROM product WHERE id = ?;";
+
+  for (let i = 0; i < ids.length; i++) {
+
+    connection.query(sql, [ids[i]], (err, rows, fields) => {
+      if (err) {
+        res.send(err);
+      } else {
+
+        quantities.push({
+          id: ids[i],
+          quantity: rows[0].quantity
+        });
+
+        if (i === ids.length - 1) {
+          res.send(quantities);
+        }
+      }
+    });
+
+  }
+
+});
+
 
 module.exports = router;

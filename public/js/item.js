@@ -66,7 +66,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.107:3000/products/id', requestOptions)
+  fetch('http://192.168.0.108:3000/products/id', requestOptions)
     .then(response => response.json())
     .then(data => {
       product = data[0];
@@ -92,7 +92,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
+    fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data, "received data");
@@ -101,7 +101,7 @@ $("#includedContent").load("/public/html/header.html", () => {
         received = data;
         itemcolors = [...new Set(data.map(x => x.colour))];
         data.forEach((element, index, array) => {
-          images.push("http://192.168.0.107:3000" + element.url);
+          images.push("http://192.168.0.108:3000" + element.url);
         });
         LoadColors();
 
@@ -333,7 +333,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       for (var q = 0; q < received.length; q++) {
         if (itemcolors[i] === received[q]['colour']) {
           if (colorsobjects[itemcolors[i]]) {
-            colorsobjects[itemcolors[i]].push("http://192.168.0.107:3000" + received[q]['url'])
+            colorsobjects[itemcolors[i]].push("http://192.168.0.108:3000" + received[q]['url'])
 
           }
         }

@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 
 
 var stringArray = [];
@@ -13,7 +13,8 @@ var selectedNewShipping = {
   names1: "####",
   names2: "####",
   phonenumber: "####"
-}
+};
+
 var selectedNewBilling = {
   delivery_postcode: "####",
   delivery_address1: "####",
@@ -22,10 +23,9 @@ var selectedNewBilling = {
   names1: "####",
   names2: "####",
   phonenumber: "####"
-}
+};
+
 var sequenceActive = null;
-
-
 var cellCount = 4; // cellCount set from cells-range input value
 var selectedIndex = 0;
 var isHorizontal = false;
@@ -59,6 +59,8 @@ var searches = document.cookie;
 var id = read_cookie('id');
 var loggedin = read_cookie('loggedin');
 var customerid = read_cookie('customer');
+var customer_email = "";
+var stripe_customer = "";
 var tempCookieArray = [];
 
 function rotateCarousel() {
@@ -126,7 +128,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     setTitle('YOUR CART');
     $('<div class="sequence"><div class="sequencePointParent" data-id="one" data-name="Cart"><div class="partcart sequencepoint active" id="sequencepointactive"  data-id="1"><p class="sequenceText">Cart</p></div><div hidden class="hoverInfo" id="partCartDone"> <span class="hoverInfoText">Cart complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone one"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCartError"> <span class="hoverInfoText">Your cart is empty!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="two" data-name="Shipping"><div class="partaddress sequencepoint" id="sequencepoint"  data-id="2"><p class="sequenceText">2</p></div><div hidden class="hoverInfo" id="partAddressDone"> <span class="hoverInfoText">Shipping information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone two"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partAddressError"> <span class="hoverInfoText">Problem with your shipping information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="three" data-name="Billing"><div   data-id="3" class="partcard sequencepoint" id="sequencepoint"><p class="sequenceText">3</p></div><div hidden class="hoverInfo" id="partCardDone"> <span class="hoverInfoText">Billing information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone three"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCardError"> <span class="hoverInfoText">Problem with your billing information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="four" data-name="Summary"><div  data-id="4" class="partfinal sequencepoint" id="sequencepoint"><p class="sequenceText">4</p></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Order ready!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone four"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Problem with your order!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div></div>').appendTo($('.free_real_estate'));
 
-    $sequence = $('.sequencePointParent');
+    var $sequence = $('.sequencePointParent');
     sequenceActive = $sequence[0].childNodes[0];
 
     $sequence.click(function (e) {
@@ -146,7 +148,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       $('html, body').animate({
         scrollTop: ($('.match_point.' + e.currentTarget.dataset.id).offset().top - $('.match_point.' + e.currentTarget.dataset.id).height() * 2 - 111)
       }, 800);
-    })
+    });
 
 
     mapSequence($sequence);
@@ -258,7 +260,8 @@ function initializeCheckoutSequence() {
 
     }
 
-  })
+  });
+
   div3.click(() => {
     div3.attr('id', 'sequencepointactive');
     div3.children().text('card details');
@@ -292,7 +295,8 @@ function initializeCheckoutSequence() {
 
     }
 
-  })
+  });
+
   div4.click(() => {
     div4.attr('id', 'sequencepointactive');
     div4.children().text('finalize');
@@ -326,7 +330,7 @@ function initializeCheckoutSequence() {
 
     }
 
-  })
+  });
 
   var x1 = div1.offset().left + (0);
   var y1 = div1.offset().top + (div1.outerHeight() / 2);
@@ -334,7 +338,7 @@ function initializeCheckoutSequence() {
   var y2 = div4.offset().top + (div4.outerHeight() / 2);
 
   line.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2);
-};
+}
 
 
 function moveSequence() {
@@ -420,7 +424,7 @@ function addressCheck() {
   var requiredFields = $('.required.shipping_address');
   var error = false;
   if (selectedAddress == undefined) {
-    $('#error_shipping_address_general').html('Please select a shipping address.').removeAttr('hidden')
+    $('#error_shipping_address_general').html('Please select a shipping address.').removeAttr('hidden');
   }
 
   if (loggedin == 1 && (selectedAddress !== undefined) && selectedAddress.dataset.age === 'old') {
@@ -485,7 +489,6 @@ function cardCheck() {
   var requiredFields = $('.required.billing_address');
   var error = false;
 
-  var error = false;
   if (selectedBilling == undefined) {
     $('#error_billing_address_general').html('Please select a billing address.').removeAttr('hidden');
   }
@@ -608,9 +611,10 @@ var errorScript = function (event) {
   } else {
     e.classList.remove('error');
   }
-}
+};
+
 for (var i = 0; i < required.length; i++) {
-  required[i].addEventListener('input', errorScript)
+  required[i].addEventListener('input', errorScript);
   required[i].addEventListener("focusout", errorScript);
 
 
@@ -631,19 +635,19 @@ $('.finalize_top, .finalize_bottom').click(function () {
 });
 
 
-//-------------------------
 function purchase(items_array) {
 
   getSripePublicKey()
     .then((publicKey) => {
-      console.log(publicKey, "pk");
 
       var stripe = Stripe(publicKey);
       myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
+      console.log(stripe_customer, "stripe");
 
       const data = {
-        'items': items_array
+        'items': items_array,
+        'stripe_id': stripe_customer,
       };
 
       var raw = JSON.stringify(data);
@@ -655,7 +659,7 @@ function purchase(items_array) {
         redirect: 'follow'
       };
 
-      fetch("http://192.168.0.107:3000/transactions/purchase", requestOptions)
+      fetch("http://192.168.0.108:3000/transactions/purchase", requestOptions)
         .then(response => response.json())
         .then((session) => {
           stripe.redirectToCheckout({
@@ -674,18 +678,10 @@ async function getSripePublicKey() {
     redirect: 'follow'
   };
 
-  let message = await fetch("http://192.168.0.107:3000/transactions/get-public-key", requestOptions);
+  let message = await fetch("http://192.168.0.108:3000/transactions/get-public-key", requestOptions);
   let response = await message.text();
   return response;
 }
-
-
-
-
-
-
-//---------------------------
-
 
 
 function populateList() {
@@ -698,7 +694,7 @@ function populateList() {
 
 
       var tempShipping = $(selectedAddress).clone();
-      tempShipping.children('.shipping-cover').remove()
+      tempShipping.children('.shipping-cover').remove();
       $('.final-shipping').html('');
       tempShipping.appendTo($('.final-shipping'));
     }
@@ -721,7 +717,7 @@ function populateList() {
 
 
       var tempBilling = $(selectedBilling).clone();
-      tempBilling.children('.billing-cover').remove()
+      tempBilling.children('.billing-cover').remove();
       $('.final-billing').html('');
       tempBilling.appendTo($('.final-billing'));
     }
@@ -828,19 +824,10 @@ var year_slc = document.getElementById('expiration_year');
     year_slc.appendChild(el);
   }*/
 
-
-
-
-
-
-
-
-
-
 var time = new Date();
 var randHex = function (len) {
   var maxlen = 8,
-    min = Math.pow(16, Math.min(len, maxlen) - 1)
+    min = Math.pow(16, Math.min(len, maxlen) - 1);
   max = Math.pow(16, Math.min(len, maxlen)) - 1,
     n = Math.floor(Math.random() * (max - min + 1)) + min,
     r = n.toString(16);
@@ -874,7 +861,7 @@ function read_cookie(key) {
 
 function createCart(products) {
   if (products == 0) {
-    return
+    return;
   }
   $('#items').html('');
 
@@ -888,7 +875,7 @@ function createCart(products) {
       quantity: products[i].quantity,
       color: products[i].color,
       stripe_price: products[i].stripe_price
-    })
+    });
 
     cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "item");
@@ -908,17 +895,18 @@ function createCart(products) {
     cardDiv.setAttribute("class", "productimage");
     cardDiv.setAttribute("data-redirect", products[i].id);
     if (products[i].image_name !== null) {
-      cardDiv.setAttribute("src", 'http://192.168.0.107:3000' + products[i].image_url);
+      cardDiv.setAttribute("src", 'http://192.168.0.108:3000' + products[i].image_url);
     } else {
 
     }
 
     $(cardDiv).on("error", function () {
-      $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
+      $(this).attr('src', 'http://192.168.0.108:3000/public/product_images/default.png');
     });
     cardDiv.addEventListener('click', function (e) {
-      window.location.replace('/public/path/item.html?' + e.target.dataset.redirect)
-    })
+      window.location.replace('/public/path/item.html?' + e.target.dataset.redirect);
+    });
+
     document.getElementById("left" + product_id).appendChild(cardDiv);
 
     cardDiv = document.createElement("div");
@@ -985,13 +973,13 @@ function createCart(products) {
     $dropdown.change(function (e) {
 
       $("#total" + e.target.dataset.product).html('Total: <span class="totalspan">' + ((+$("#price" + e.currentTarget.dataset.product + 'span').html()) * (+e.currentTarget.value)) + '</span>$');
-      console.log(tempCookieArray)
+      console.log(tempCookieArray);
 
       for (var iii = 0; iii < tempCookieArray.length; iii++) {
         if (tempCookieArray[iii].id == e.currentTarget.dataset.itemId && tempCookieArray[iii].color === e.currentTarget.dataset.itemColor) {
 
           tempCookieArray[iii].quantity = e.currentTarget.value;
-          console.log(tempCookieArray[iii])
+          console.log(tempCookieArray[iii]);
 
         }
 
@@ -999,7 +987,7 @@ function createCart(products) {
       }
       fixArray();
 
-    })
+    });
 
 
     cardDiv = document.createElement("p");
@@ -1117,12 +1105,15 @@ function fetchCustomer() {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/users/get-customer-by-id", requestOptions)
+  fetch("http://192.168.0.108:3000/users/get-customer-by-id", requestOptions)
     .then(response => response.json())
     .then((result) => {
+      console.log(result, "result");
+
+      customer_email = result[0].email;
+      stripe_customer = result[0].stripe_id;
       fetchAddress(result);
-    })
-    .catch(error => console.log('error', error));
+    }).catch(error => console.log('error', error));
 
 
 }
@@ -1145,7 +1136,7 @@ function fetchAddress(customer) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/addresses/customer-address-id", requestOptions)
+  fetch("http://192.168.0.108:3000/addresses/customer-address-id", requestOptions)
     .then(response => response.json())
     .then((result) => {
       console.log(result, customer);
@@ -1164,7 +1155,7 @@ function addAddresses(addresses, customer) {
   var isShipping = false;
 
   for (var i = 0; i < addresses.length; i++) {
-    isShipping = addresses[i].shipping ? true : false
+    isShipping = addresses[i].shipping ? true : false;
     var $tempdiv = $('<div class="shipping-old" data-age="old"  data-address="{&quot;delivery_postcode&quot;:&quot;' + addresses[i].postcode + '&quot;,&quot;delivery_address1&quot;:&quot;' + addresses[i].name + '&quot;,&quot;delivery_address2&quot;:&quot;' + addresses[i].second_name + '&quot;,&quot;delivery_city&quot;:&quot;' + addresses[i].city + '&quot;,&quot;names1&quot;:&quot;' + customer[0].first_name + '&quot;,&quot;names2&quot;:&quot;' + customer[0].last_name + '&quot;,&quot;phonenumber&quot;:&quot;' + addresses[i].phone_number + '&quot;}"><div class="shipping-cover"></div><div class="shipping-button"></div><div class="shipping-info"><div class="shipping-name"> ' + customer[0].first_name + ' ' + customer[0].last_name + '</div><div class="shipping-address">' + addresses[i].name + addresses[i].second_name + '</div><div class="shipping-address">' + addresses[i].city + ', ' + addresses[i].postcode + '</div><div class="shipping-address">' + addresses[i].phone_number + '</div></div> </div>').appendTo($shippingAddress);
 
     if (isShipping) {
@@ -1316,10 +1307,10 @@ function fetchCustomerNew() {
 
 
 function drawLine() {
-  var line1 = $('.line1')
-  var line2 = $('.line2')
-  var line3 = $('.line3')
-  var line4 = $('.line4')
+  var line1 = $('.line1');
+  var line2 = $('.line2');
+  var line3 = $('.line3');
+  var line4 = $('.line4');
 
   var x1 = line1.parent().width() / 2;
   var y1 = '60px';
@@ -1362,7 +1353,7 @@ function drawLine() {
 }
 $(window).resize(function () {
   drawLine();
-})
+});
 
 
 
@@ -1371,7 +1362,7 @@ $(window).resize(function () {
 function mapSequence(sequence) {
 
   window.onscroll = function () {
-    myFunction()
+    myFunction();
   };
 
   var matchPointTwo = $('.match_point_inner.two')[0].parentNode.parentNode;

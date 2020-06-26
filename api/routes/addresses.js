@@ -1,8 +1,19 @@
-"use strict"
+"use strict";
 
 
 const express = require('express');
 const connection = require('../../db');
+//stripe payment --------------------------------------
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config({
+    path: './.env'
+  });
+}
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
+const stripe = require('stripe')(stripeSecretKey);
+//---------------------------------------------------
 const router = express.Router();
 
 var sql;
@@ -47,6 +58,7 @@ router.post('/create-address', (req, res) => {
        }
      });
 });
+
 
 //update address
 router.put('/update-address', (req, res) => {

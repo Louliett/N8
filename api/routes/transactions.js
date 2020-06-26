@@ -3,6 +3,7 @@
 const express = require('express');
 const connection = require('../../db');
 const nodemailer = require('nodemailer');
+const { get } = require('./products');
 //stripe payment --------------------------------------
 if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv');
@@ -37,20 +38,56 @@ router.get('/get-public-key', (req, res) => {
 
 router.post('/purchase', (req, res) => {
   var items = req.body.items;
+  var cus = req.body;
 
-  createSession(items)
-    .then((result) => {
+  console.log(cus.stripe_id, "customerid");
+  
 
-      console.log(result, "session");
+  if (cus.stripe_id === "") {
+    createUnregistredSession(items)
+      .then((result) => {
 
-      res.send(result);
+        console.log(result, "session");
+        res.send(result);
 
-    }).catch(error => console.error(error));
+      }).catch(error => console.error(error));
+  } else {
+    createRegistredSession(items, cus.stripe_id)
+      .then((result) => {
+
+        console.log(result, "session");
+        res.send(result);
+
+      }).catch(error => console.error(error));
+  }
 
 
 });
 
-async function createSession(items) {
+async function createRegistredSession(items, customer_id) {
+
+  var products = [];
+
+  for (let i = 0; i < items.length; i++) {
+    products.push({
+      price: items[i].stripe_price,
+      quantity: items[i].quantity
+    });
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    customer: customer_id,
+    payment_method_types: ['card'],
+    line_items: products,
+    mode: 'payment',
+    success_url: 'http://localhost:3000/public/path/payment_success.html?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: 'http://localhost:3000/public/path/cart.html',
+  });
+
+  return session;
+}
+
+async function createUnregistredSession(items) {
 
   var products = [];
 
@@ -65,31 +102,54 @@ async function createSession(items) {
     payment_method_types: ['card'],
     line_items: products,
     mode: 'payment',
-    success_url: 'http://localhost:3000/public/path//payment_success.html?session_id={CHECKOUT_SESSION_ID}',
+    success_url: 'http://localhost:3000/public/path/payment_success.html?session_id={CHECKOUT_SESSION_ID}',
     cancel_url: 'http://localhost:3000/public/path/cart.html',
   });
 
   return session;
 }
 
-//update product quantity after purchase
-router.post('/products-purchased', (req, res) => {
-  var products = req.body.products;
-  sql = "SELECT product.price, product.quantity FROM product WHERE id = ?;";
-  sql2 = "UPDATE product SET quantity = GREATEST(0, quantity - ?) WHERE id = ?;";
 
+router.post('/get-stripe-session-line-items', (req, res) => {
+  var session_id = req.body.sessionid;
+
+  getStripeSessionLineItems(session_id)
+    .then((session) => {
+      console.log(session, "session");
+      
+      res.send(session);
+    }).catch(error => console.error(error));
+});
+
+
+
+
+async function getStripeSessionLineItems(session_id) {
+  let stripeSession = await stripe.checkout.sessions.listLineItems(session_id);
+  return stripeSession;
+}
+
+
+
+//update product quantity after purchase
+router.post('/purchased-products', (req, res) => {
+  var products = req.body.products;
+  sql = "SELECT product.price, product.quantity FROM product WHERE stripe_price = ?;";
+  sql2 = "UPDATE product SET quantity = GREATEST(0, quantity - ?) WHERE stripe_price = ?;";
+  console.log(products, "products");
+  
   //iterate through the items from the request
   for (let i = 0; i < products.length; i++) {
 
     //at each iteration, make a DB call to fetch the price for a product
-    connection.query(sql, [products[i].id], (err, rows, fields) => {
+    connection.query(sql, [products[i].stripe_id], (err, rows, fields) => {
       if (err) {
         res.send(err);
       } else {
         //if the quantity of a product is not 0 then decrease quantity by 1
         if (rows[0].quantity > 0) {
 
-          connection.query(sql2, [products[i].quantity, products[i].id], (err, rows, fields) => {
+          connection.query(sql2, [products[i].quantity, products[i].stripe_id], (err, rows, fields) => {
             if (err) {
               res.send(err);
             } else {
@@ -106,6 +166,9 @@ router.post('/products-purchased', (req, res) => {
   }
 
 });
+
+
+
 
 //get transaction based on user id
 router.post('/puvvrchase', (req, res) => {

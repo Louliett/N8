@@ -81,6 +81,9 @@ export function createClassification(txtarea, array, create_class, create_class_
   if (isItEmpty(fields) == true) {
     error_label.innerHTML = "Field is empty!";
     txtarea.value = "";
+  } else if(txtarea.value.includes(',')) {
+    error_label.innerHTML = "Classification can not contain commas!";
+    txtarea.value = "";
   } else {
 
     if (array.length > 0) {
@@ -115,7 +118,7 @@ export function createClassification(txtarea, array, create_class, create_class_
           redirect: 'follow'
         };
 
-        fetch("http://192.168.0.107:3000/classifications/" + create_class, requestOptions1)
+        fetch("http://192.168.0.108:3000/classifications/" + create_class, requestOptions1)
           .then(response => response.text())
           .then(result => {
             error_label.innerHTML = result;
@@ -134,7 +137,7 @@ export function createClassification(txtarea, array, create_class, create_class_
           redirect: 'follow'
         };
 
-        fetch("http://192.168.0.107:3000/classifications/" + create_class_img, requestOptions2)
+        fetch("http://192.168.0.108:3000/classifications/" + create_class_img, requestOptions2)
           .then(response => response.text())
           .then(result => {
             error_label.innerHTML = result;
@@ -156,7 +159,7 @@ function fetchClassifications(table, array) {
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.107:3000/classifications/' + table, requestOptions)
+  fetch('http://192.168.0.108:3000/classifications/' + table, requestOptions)
     .then(response => response.json())
     .then(data => {
       for (var i = 0; i < data.length; i++) {

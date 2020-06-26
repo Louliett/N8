@@ -64,7 +64,7 @@ var bigimage=$('.bigimage');
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/users/get-customer-by-id", requestOptions)
+  fetch("http://192.168.0.108:3000/users/get-customer-by-id", requestOptions)
     .then(response => response.json())
     .then((result) => {
       customer = result[0];
@@ -484,7 +484,7 @@ function address() {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/addresses/customer-address-id", requestOptions)
+  fetch("http://192.168.0.108:3000/addresses/customer-address-id", requestOptions)
     .then(response => response.json())
     .then((result) => {
       for (var j = 0; j < result.length; j++) {
@@ -629,7 +629,7 @@ function updateCustomer(first_name, last_name, id) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/users/update-customer", requestOptions)
+  fetch("http://192.168.0.108:3000/users/update-customer", requestOptions)
     .then(response => response.text())
     .then((result) => {
       console.log(result);

@@ -36,7 +36,7 @@ function loadProducts(table, name, name1, name2){
   };
 
 
-  fetch('http://192.168.0.107:3000/products/pro-sub-cat-sec', requestOptions)
+  fetch('http://192.168.0.108:3000/products/pro-sub-cat-sec', requestOptions)
     .then(response => response.json())
     .then(data => {
       console.log(data, 'cheeks');
@@ -65,7 +65,7 @@ function loadProducts(table, name, name1, name2){
     };
       
 
-    fetch('http://192.168.0.107:3000/products/product-images-id', requestOptions)
+    fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
         var images = [];
@@ -119,7 +119,7 @@ function displayProducts(images, index) {
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
     if(images[0]!==null){
-    cardImg.setAttribute("src", 'http://192.168.0.107:3000'+images[0]);
+    cardImg.setAttribute("src", 'http://192.168.0.108:3000'+images[0]);
         }else{
                 cardImg.setAttribute("src", undefined);
 
@@ -130,7 +130,7 @@ function displayProducts(images, index) {
     var ratio = cardImg.naturalWidth / cardImg.naturalHeight;
     var x = $(document).width();
     $(".productimg").on("error", function(){
-        $(this).attr('src', 'http://192.168.0.107:3000/public/product_images/default.png');
+        $(this).attr('src', 'http://192.168.0.108:3000/public/product_images/default.png');
     });
 
 

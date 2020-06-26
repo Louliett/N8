@@ -143,6 +143,8 @@ create_product_button.addEventListener("click", () => {
   //check if the classifications are strictly not empty
   var empty_classifications = isItEmptyStrict([product_subcategory, product_category, product_section]);
 
+  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_description]);
+
   formdata.append("name", product_name);
   formdata.append("price", product_price);
   formdata.append("new_price", product_new_price);
@@ -176,8 +178,12 @@ create_product_button.addEventListener("click", () => {
     }
   }
 
-  if (empty_fields === true || empty_classifications === true) {
+  if (empty_fields === true) {
     text_error_txt.innerHTML = "Fields are empty!";
+  } else if (special_fields === true) {
+    text_error_txt.innerHTML = "Name, Price, Brand or Description missing!";
+  } else if (empty_classifications === true) {
+    class_error_txt.innerHTML = "Please select classifications!";
   } else {
 
     headers.append("Content-Type", "multipart/form-data");
@@ -188,7 +194,7 @@ create_product_button.addEventListener("click", () => {
       body: formdata
     };
 
-    fetch("http://192.168.0.107:3000/products/create-product", uploadImagesRequest)
+    fetch("http://192.168.0.108:3000/products/create-product", uploadImagesRequest)
       .then(response => response.text())
       .then((result) => {
         console.log(result);
@@ -206,7 +212,7 @@ export function fetchClassifications(sub_slc, cat_slc, sec_slc) {
     redirect: 'follow'
   };
 
-  fetch("http://192.168.0.107:3000/classifications/", requestOptions)
+  fetch("http://192.168.0.108:3000/classifications/", requestOptions)
     .then(response => response.json())
     .then((result) => {
 
@@ -261,6 +267,9 @@ function createClassification(txtarea, array, create_class, create_class_img, er
   if (isItEmpty(fields) == true) {
     error_label.innerHTML = "Field is empty!";
     txtarea.value = "";
+  } else if (txtarea.value.includes(',')) {
+    error_label.innerHTML = "Classification can not contain commas!";
+    txtarea.value = "";
   } else {
 
     if (array.length > 0) {
@@ -295,7 +304,7 @@ function createClassification(txtarea, array, create_class, create_class_img, er
           redirect: 'follow'
         };
 
-        fetch("http://192.168.0.107:3000/classifications/" + create_class, requestOptions1)
+        fetch("http://192.168.0.108:3000/classifications/" + create_class, requestOptions1)
           .then(response => response.text())
           .then(result => {
             console.log(result);
@@ -320,7 +329,7 @@ function createClassification(txtarea, array, create_class, create_class_img, er
           redirect: 'follow'
         };
 
-        fetch("http://192.168.0.107:3000/classifications/" + create_class_img, requestOptions2)
+        fetch("http://192.168.0.108:3000/classifications/" + create_class_img, requestOptions2)
           .then(response => response.text())
           .then(result => {
             error_label.innerHTML = result;

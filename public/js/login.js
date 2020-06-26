@@ -177,7 +177,7 @@ function registerUser(first_name, last_name, email, password) {
           redirect: 'follow'
         };
 
-        fetch("http://192.168.0.107:3000/users/register-customer", requestOptions)
+        fetch("http://192.168.0.108:3000/users/register-customer", requestOptions)
           .then(response => response.text())
           .then(result => {
             console.log(result);
@@ -208,7 +208,7 @@ async function checkEmail(email) {
     redirect: 'follow'
   };
 
-  let response = await fetch("http://192.168.0.107:3000/users/check-email", requestOptions);
+  let response = await fetch("http://192.168.0.108:3000/users/check-email", requestOptions);
   let message = await response.json();
   return message;
 }
@@ -231,7 +231,7 @@ async function checkAccount(email, password) {
     redirect: 'follow'
   };
 
-  let response = await fetch("http://192.168.0.107:3000/users/login-user", requestOptions);
+  let response = await fetch("http://192.168.0.108:3000/users/login-user", requestOptions);
   let message = await response.json();
   return message;
 }
