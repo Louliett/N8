@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 
 //default image
@@ -32,8 +32,9 @@ var del_sub_img = "delete_sub_img";
 var del_cat_img = "delete_cat_img";
 var del_sec_img = "delete_sec_img";
 
-
 var counter = 0;
+//reusable variables
+var myHeaders;
 
 
 populateTable(sub, sub_table, upd_sub, del_sub, del_sub_img, upd_sub_img, sub_key);
@@ -67,7 +68,7 @@ function populateTable(url, table, update_class, delete_class, delete_image, upd
           tempp += "<td id= " + u.id + "><img src= '" + u.image + "' style='width:100px;height:60px;'></img>" + "<button type='button' class= '" + delete_image + "' data-image= '" + u.image + "' data-class-id= '" + u.id + "'> Delete </button>" + "</td>";
           tempp += "<td>" + "<button type='button' class= " + update_class + " data-class-id= " + u.id + "> Update </button>" + "</td>";
           tempp += "<td>" + "<button type='button' class= " + delete_class + " data-class-id= '" + u.id + "' data-url='" + url + "' data-image= '" + u.image + "'> Delete </button>" + "</td>";
-          tempp += "<tr>"
+          tempp += "<tr>";
         });
         table.innerHTML = tempp;
 
@@ -193,7 +194,6 @@ function updateClass(id, button_event, url, img_url, key) {
 
 function deleteClass(id, url, image) {
 
-  console.log(image);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   const data = {

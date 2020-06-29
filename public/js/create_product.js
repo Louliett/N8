@@ -9,7 +9,7 @@ import {
 //textfields
 var product_name_txt = document.getElementById('product_name');
 var product_price_txt = document.getElementById('product_price');
-var product_new_price_txt = document.getElementById('product_new_price');
+//var product_new_price_txt = document.getElementById('product_new_price');
 var product_ean_txt = document.getElementById('product_ean');
 var product_availability_txt = document.getElementById('product_availability');
 var product_quantity_txt = document.getElementById('product_quantity');
@@ -115,7 +115,7 @@ create_product_button.addEventListener("click", () => {
   //initializing
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
-  var product_new_price = product_new_price_txt.value;
+  //var product_new_price = product_new_price_txt.value;
   var product_ean = product_ean_txt.value;
   var product_availability = product_availability_txt.value;
   var product_quantity = product_quantity_txt.value;
@@ -135,7 +135,7 @@ create_product_button.addEventListener("click", () => {
   var product_section = sec_slc.value;
 
   //check if the fields are empty
-  var empty_fields = isItEmpty([product_name, product_price, product_new_price,
+  var empty_fields = isItEmpty([product_name, product_price,
     product_ean, product_availability, product_quantity, product_brand, product_design,
     product_description, product_material, product_diameter, product_length,
     product_width, product_height, product_volume, product_weight, product_size
@@ -147,7 +147,7 @@ create_product_button.addEventListener("click", () => {
 
   formdata.append("name", product_name);
   formdata.append("price", product_price);
-  formdata.append("new_price", product_new_price);
+  //formdata.append("new_price", product_new_price);
   formdata.append("ean", product_ean);
   formdata.append("availability", product_availability);
   formdata.append("quantity", product_quantity);

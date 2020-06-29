@@ -7,6 +7,8 @@ letters = letters.split(",");
 var container;
 var clicked_letter = "";
 
+$("#popup_message").load("/public/admin/delete_product_popup.html", () => {});
+
 for (var i = 0; i < letters.length; i++) {
   container = document.createElement("a");
   container.setAttribute("id", letters[i]);
@@ -30,7 +32,6 @@ for (var i = 0; i < letters.length; i++) {
 function getProducts(letter) {
 
   console.log(letter, "received letter");
-  
 
   var requestOptions = {
     method: 'GET',
@@ -40,6 +41,7 @@ function getProducts(letter) {
   fetch('http://192.168.0.108:3000/products/first-letter/' + letter, requestOptions)
     .then(response => response.json())
     .then(data => {
+      
       if (data.length > 0) {
         var tempp = "";
         var product_id;
@@ -89,6 +91,8 @@ function getProducts(letter) {
           });
         }
 
+      } else if(data == 0) {
+          products_table.innerHTML = "";
       }
 
     }).catch(error => console.error(error));
@@ -123,33 +127,47 @@ function fetchImages(id, stripe_id) {
 }
 
 function deleteProduct(product_id, images_to_delete, stripe_id) {
+  //let's create a popup before deleting a product
+  var popup_modal_div = document.getElementById("popup_modal_div");
+  var yes_button = document.getElementById("yes_button");
+  var no_button = document.getElementById("no_button");
+  popup_modal_div.style.display = "block";
 
-  console.log(stripe_id, "before sending");
-  
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  var data = {
-    'id': product_id,
-    'path': images_to_delete,
-    'stripe_id': stripe_id
-  };
-  var raw = JSON.stringify(data);
+  //if no, hide the popup
+  no_button.addEventListener("click", () => {
+    popup_modal_div.style.display = "none";
+  });
 
-  var requestOptions = {
-    method: 'DELETE',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
+  //if yes, delete the product
+  yes_button.addEventListener("click", () => {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      var data = {
+        'id': product_id,
+        'path': images_to_delete,
+        'stripe_id': stripe_id
+      };
+      var raw = JSON.stringify(data);
 
-  fetch("http://192.168.0.108:3000/products/delete-product", requestOptions)
-    .then(response => response.text())
-    .then((result) => {      
-      console.log(result);
-      $('#product_table').load(document.URL + ' #product_table', () => {
-        console.log(clicked_letter, "afterload");
-        getProducts(clicked_letter);
-      });
-    }).catch(error => console.log('error', error));
+      var requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("http://192.168.0.108:3000/products/delete-product", requestOptions)
+        .then(response => response.text())
+        .then((result) => {
+          popup_modal_div.style.display = "none";
+          console.log(result);
+          $('#product_table').load(document.URL + ' #product_table', () => {
+            console.log(clicked_letter, "afterload");
+            getProducts(clicked_letter);
+          });
+        }).catch(error => console.log('error', error));
+  });
+
+
 
 }

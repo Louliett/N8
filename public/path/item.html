@@ -1,108 +1,113 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-
-
-  <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
-  <link rel="icon" href="../site/n8.ico">
-  <link rel="stylesheet" href="../css/item.css">
-  <link rel="stylesheet" href="../css/header.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-</head>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
 
 
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
 
+
+         <link rel="stylesheet" href="../css/item.css">
+         <link rel="stylesheet" href="../css/header.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    </head>
 
 
 
 
 
-<body id="main">
 
 
 
-  <div id="includedContent"></div>
+    <body id="main">
+
+
+
+     <div id="includedContent"></div>
 
 
 
 
 
-  <div id="wrapper">
+              <div id="wrapper">
 
 
-  </div>
-  <div class="content">
-    <div class="itemdisplay">
-      <div class="slideshow-container" id="slideshow-container">
-
-
-
-        <a class="prev">&#10094;</a>
-        <a class="next">&#10095;</a>
-      </div>
-      <br>
-
-      <div hidden style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
-      </div>
-    </div>
-    <div class="itemdescription">
-      <h2 class="itemtitle"></h2>
-      <h3 class="itemcategory"></h3>
-      <p class="itemdetails"> </p>
-      <p>Color <select id='itemcolor'></select></p>
-
-      <p class="productprice"></p>
-      <div class="productextrainfo">
-
-        <button class='displaymore' id='open'>Dislay More</button>
-        <div class="actualinfo">
         </div>
-        <div class="purchasemenu">
-          <div class="quantity">
-            <p style="display: inline-block;">Quantity: </p>
-            <a class="leftarrow" id="leftarrow">&#10094;</a>
-            <p style="display: inline-block;" id="quantitynumber">1</p>
-            <a class="rightarrow" id="rightarrow">&#10095;</a>
-          </div>
-          <div class="addtocart">
+        <div class="content">
+            <div class="itemdisplay">
+             <div class="slideshow-container" id="slideshow-container">
 
 
-            <div class="svg-wrapper">
-              <svg height="60" width="320" xmlns="http://www.w3.org/2000/svg" class="parentshape">
-                <rect class="shape" height="60" width="320" />
-              </svg>
-              <div class="buttontext">Add to basket</div>
+
+  <a class="prev">&#10094;</a>
+  <a class="next">&#10095;</a>
+</div>
+<br>
+
+<div hidden style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+  <span class="dot" onclick="currentSlide(3)"></span>
+</div>
+            </div><div class="itemdescription">
+                <h2 class="itemtitle"></h2>
+                <h3 class="itemcategory"></h3>
+                <p class="itemdetails"> </p>
+           <p>Color <select id='itemcolor'></select></p>
+            
+            <p class="productprice"></p>
+            <div class="productextrainfo">
+
+                <button class='displaymore' id='open'>Dislay More</button>
+                            <div class="actualinfo">
+    </div>
+            <div class="purchasemenu">
+                <div class="quantity"><div>
+                    <p style="display: inline-block;">Quantity: </p>
+                    <a class="leftarrow" id="leftarrow">&#10094;</a>
+                    <p style="display: inline-block;" id="quantitynumber">1</p>
+                    <a class="rightarrow" id="rightarrow">&#10095;</a>
+                    </div>
+                    <div class='no'>This quantity is not available!</div>
+                    </div>
+                <div class="addtocart">
+
+
+<div class="svg-wrapper">
+  <svg height="60" width="320" xmlns="http://www.w3.org/2000/svg" class="parentshape">
+    <rect class="shape" height="60" width="320" />
+  </svg>
+   <div class="buttontext">Add to basket</div>
+</div>
+
+
+                </div>
             </div>
-
-
-          </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
-
-
-
-
-
-
-  <div id="includedFooter"></div>
+     </div>
+        
+        
+        <div class='bigitem'><img class='bigitemimage' src=''></div>
+        
 
 
 
 
 
-  <script src="/public/js/item.js"></script>
-</body>
 
-</html>
+    <div id="includedFooter"></div>
+
+
+
+
+
+ <script src="/public/js/item.js"></script>
+  </body>
+    </html>

@@ -16,7 +16,8 @@ $("#includedContent").load("/public/html/header.html", () => {
     start();
       var query = decodeURIComponent(window.location.search);
   query = query.replace('?', '');
-setTitle(query);
+//setTitle(query);
+     $('<div class="searchnotification"><h4>Search results for &quot;'+query+'&quot;</h4><p class="searchresult">Found nothing</p></div>').appendTo('.free_real_estate2');
   });
     
     $("#includedFooter").load("/public/html/footer.html", () => {
@@ -32,13 +33,6 @@ setTitle(query);
   var query = decodeURIComponent(window.location.search);
   query = query.replace('?', '');
 
-
-
-  $(document).ready(function() {
-    $(".query").text('"' + query + '"');
-          
-
-  });
 
   var searches = document.cookie;
 
@@ -61,7 +55,15 @@ setTitle(query);
   fetch("http://192.168.0.108:3000/products/search-product", requestOptions)
     .then(response => response.json())
     .then(result => {
-console.log(result, 'shit');
+      if(result.length>1){
+            for(var i=0; i<result.length; i++){
+                if(result[i].image_colour=='default'){
+                result.splice(i, 1);
+                }
+                
+            }
+            
+        }
         for (var i = 0; i < result.length; i++) {
 
           if(product_ids <= 0) {
@@ -87,13 +89,13 @@ console.log(result, 'shit');
             for(var i=0; i<loaded_products.length;i++){
             var height=$('#itemrow').innerHeight();
             var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.7) + "px;");
             }
         }else{
         for(var i=0; i<loaded_products.length;i++){
             var height=$('#itemrow').innerHeight();
             var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.7) + "px;");
             }
             }
     }).catch(error => console.log('error', error));
@@ -108,13 +110,12 @@ console.log(result, 'shit');
 function loadItems(products) {
 
 
-  $('.searchresult').text('found [' + products.length + '] items matching your query.');
+ $('.searchresult').text('found [' + products.length + '] items matching your query.');
 
 
   for (var ii = 0; ii < products.length; ii++) {
 
-    var navbar = document.getElementById("navbar");
-    navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
+
 
     var height = navbar.offsetHeight;
 
@@ -123,7 +124,6 @@ function loadItems(products) {
     $(window).resize(function() {
       x = $(window).width();
       y = screen.height;
-      navbar.setAttribute("style", "width:100%; height:" + 32 + "px;");
       var height = navbar.offsetHeight;
       var wrapper = document.getElementById("categorySpace");
       //wrapper.setAttribute("style", "margin-top:"+height+"px;");
@@ -173,13 +173,13 @@ function loadItems(products) {
     var x = $(document).width();
 
     var cardTag = document.createElement("strong");
-    cardTag.innerHTML = products[ii].subcategory;
+    cardTag.innerHTML = products[ii].name;
     document.getElementById("productdescription" + containerName).appendChild(cardTag);
     var x = $(document).width();
 
     var cardTitle = document.createElement("p");
     cardTitle.setAttribute("class", "producttitle");
-    cardTitle.innerHTML = products[ii].name;;
+    cardTitle.innerHTML = products[ii].brand+'/'+products[ii].design;
     document.getElementById("productdescription" + containerName).appendChild(cardTitle);
     var x = $("#main").width();
 
@@ -196,8 +196,23 @@ function loadItems(products) {
     var priceDiv = document.createElement("div");
     priceDiv.setAttribute("class", "price");
     priceDiv.setAttribute("id", "price" + ii);
-    priceDiv.innerHTML = products[ii].price;
-    document.getElementById(containerName).appendChild(priceDiv);
+    priceDiv.innerHTML = products[ii].price +' лв.';
+    document.getElementById("productdescription" + containerName).appendChild(priceDiv);
+      
+      
+      
+          var $availability=$('<div class="stock_notification"></div>');
+      $availability.appendTo($("#productdescription" + containerName));
+      if(products[ii].quantity<1){
+          $availability.css('display', 'block');
+          $availability.html('OUT OF STOCK');
+          
+      }else if(products[ii].quantity<4){
+           $availability.css('display', 'block');
+           $availability.css('background-color', '#FFB11A99');
+          $availability.html('LIMITED STOCK');
+          
+      }
 
 
 

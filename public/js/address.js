@@ -1,5 +1,6 @@
 "use strict";
 
+
 // Get the button that opens the modal_address_div
 var modal_address_div = document.getElementById("modal_address_div");
 var address_span_div = document.getElementsByClassName("address_span_div")[0];
@@ -8,8 +9,6 @@ var shipping_check = document.getElementById("shipping");
 //selector
 var cities_slc = document.getElementById('bulgarian_cities');
 var default_city = document.getElementById('default_city');
-
-
 //textfields
 var address1_txt = $('#address1');
 var address2_txt = $('#address2');
@@ -23,7 +22,8 @@ var cities_array = [];
 function updateAddress(fields, customer, address_id) {
   var address_operation = $('#address_operation');
   var address_button = $('#address_button');
-
+  console.log(modal_address_div, "modal-div");
+  
   var customer_id = customer.id;
   //populating the dropdownlist with cities
   fetchCities(cities_array, cities_slc);
@@ -84,7 +84,7 @@ function updateAddress(fields, customer, address_id) {
       .then((result) => {
         cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
         closeAddressModal();
-        location.reload();
+        location.reload(true);
       }).catch(error => console.log('error', error));
   });
 
@@ -102,7 +102,7 @@ function writeAddress(customer) {
   address_button.html("Create Address");
   modal_address_div.style.display = "block";
 
-  cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
+  //cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
 
   address_button.click(() => {
 
@@ -145,9 +145,10 @@ function writeAddress(customer) {
     fetch("http://192.168.0.108:3000/addresses/create-address", requestOptions)
       .then(response => response.text())
       .then((result) => {
+        console.log(result, "from server");
         cleanAddressFields([address1_txt, address2_txt, postcode_txt, phone_number_txt], default_city, shipping_check);
         closeAddressModal();
-        address(customer);
+        address();
       }).catch(error => console.log('error', error));
 
   });
@@ -157,6 +158,7 @@ function writeAddress(customer) {
 
 //cleaning the fields
 function cleanAddressFields(fields, default_city, shipping) {
+  $(address_button).off('click');
   for (var i = 0; i < fields.length; i++) {
     fields[i].val("");
   }

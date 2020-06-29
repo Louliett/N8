@@ -92,7 +92,15 @@ $("#includedContent").load("/public/html/header.html", () => {
     fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
-        console.log(data, 'null');
+        if(data.length>1){
+            for(var i=0; i<data.length; i++){
+                if(data[i].colour=='default'){
+                data.splice(i, 1);
+                }
+                
+            }
+            
+        }
         var images = [];
         data.forEach((element, index, array) => {
 
@@ -103,13 +111,13 @@ $("#includedContent").load("/public/html/header.html", () => {
           for (var i = 0; i < loaded_products.length; i++) {
             var height = $('#itemrow').innerHeight();
             var width = $('#itemrow').innerWidth();
-            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / (1 + 1))) + "px - 8px); height: " + Math.floor(y * 0.8) + "px;");
+            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / (1 + 1))) + "px - 8px); height: " + Math.floor(y * 0.7) + "px;");
           }
         } else {
           for (var i = 0; i < loaded_products.length; i++) {
             var height = $('#itemrow').innerHeight();
             var width = $('#itemrow').innerWidth();
-            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / 4)) + "px - 16px); height: " + Math.floor(y * 0.8) + "px;");
+            loaded_products[i].setAttribute("style", "width: calc(" + (Math.floor(width / 4)) + "px - 16px); height: " + Math.floor(y * 0.7) + "px;");
           }
         }
 
@@ -131,7 +139,7 @@ $("#includedContent").load("/public/html/header.html", () => {
 
     cardDiv.setAttribute("class", "productcontainer");
     cardDiv.setAttribute("id", containerName);
-    cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+    cardDiv.setAttribute("style", "width: " + (Math.floor(x / 4)) + "px; height: " + Math.floor(y * 0.5) + "px;");
     document.getElementById("itemrow").appendChild(cardDiv);
 
     loaded_products.push(cardDiv);
@@ -143,7 +151,6 @@ $("#includedContent").load("/public/html/header.html", () => {
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
 
-    console.log(images, "specific message");
     
     if (images[0] !== undefined) {
       cardImg.setAttribute("src", 'http://192.168.0.108:3000' + images[0]);
@@ -170,15 +177,13 @@ $("#includedContent").load("/public/html/header.html", () => {
     var x = $(document).width();
 
     var cardTag = document.createElement("strong");
-    cardTag.innerHTML = product_list[ii].subcategory;
+    cardTag.innerHTML = product_list[ii].name;
     document.getElementById("productdescription" + containerName).appendChild(cardTag);
     var x = $(document).width();
-
     var cardTitle = document.createElement("p");
     cardTitle.setAttribute("class", "producttitle");
-    cardTitle.innerHTML = product_list[ii].name;
+    cardTitle.innerHTML = product_list[ii].brand+'/'+product_list[ii].design;
     document.getElementById("productdescription" + containerName).appendChild(cardTitle);
-    var x = $("#main").width();
 
     var ratio = window.devicePixelRatio || 1;
     var w = screen.width * ratio;
@@ -193,8 +198,23 @@ $("#includedContent").load("/public/html/header.html", () => {
     var priceDiv = document.createElement("div");
     priceDiv.setAttribute("class", "price");
     priceDiv.setAttribute("id", "price" + ii);
-    priceDiv.innerHTML = product_list[ii].price;
-    document.getElementById(containerName).appendChild(priceDiv);
+    priceDiv.innerHTML = product_list[ii].price+' лв.';
+    document.getElementById("productdescription" + containerName).appendChild(priceDiv);
+      
+      
+      var $availability=$('<div class="stock_notification"></div>');
+      $availability.appendTo($("#productdescription" + containerName));
+      if(product_list[ii].quantity<1){
+          $availability.css('display', 'block');
+          $availability.html('OUT OF STOCK');
+          
+      }else if(product_list[ii].quantity<4){
+           $availability.css('display', 'block');
+           $availability.css('background-color', '#FFB11A99');
+          $availability.html('LIMITED STOCK');
+          
+      }
+      
 
   }
 
@@ -304,7 +324,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       cardDiv.addEventListener("mouseover", function () {
         console.log(this);
         //var image=this.childNodes[1].setAttribute("style", "width:60%; height:120%;");
-      })
+      });
     }
 
 

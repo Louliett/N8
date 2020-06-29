@@ -2,11 +2,39 @@
 <html lang="en">
 
 <head>
+     <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../site/n8.ico">
+             <link rel="stylesheet" href="/public/css/payment_success.css">
+      <link rel="stylesheet" href="/public/css/header.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
 </head>
 
-<body>
-<h1>success</h1>
+<body id='main'>
+        <div id='includedContent'></div>
+    <div class='receipt_bodeh'>
+    <div class='receipt_inner'>
+        <div class='receipt_header'><img class='store_logo' src='/public/img/pink.png'>
+        </div>
+         <div class='receipt_body'>
+             <div class='top_line'><div class='description'>Description</div><div class='subtotal'>Subtotal</div></div>
+             <div class='contents'></div>
+             <div class='total'><div class='title'>Total</div><div class='amount'></div></div>
+        </div>
+        <div class='code' id='code'><div id='actual_code'></div></div>
+        <div class='receipt_footer'><button type="button" id="return_button">Return To Main Page</button></div>
+        
+        
+        </div>
+        
+    
+    
+    </div>
+    
+    
+       <div id="includedFooter"></div>
+    
 
 
 
@@ -14,9 +42,9 @@
 
 
 
-<button type="button" id="return_button">Return To Main Page</button>
 
 
+         <script src="/public/js/qrcode.js"></script>
 <script src="/public/js/payment_success.js"></script>
 </body>
 

@@ -1,10 +1,15 @@
 "use strict";
 
-
+var quantityError = false;
 var stringArray = [];
 var addressArray = [];
 var selectedAddress;
 var selectedBilling;
+let isEvent = false;
+var product_ids_check = [];
+var product_ids_values = [];
+var $wrapper = $('.finalize_top, .finalize_bottom')
+
 var selectedNewShipping = {
   delivery_postcode: "####",
   delivery_address1: "####",
@@ -26,34 +31,14 @@ var selectedNewBilling = {
 };
 
 var sequenceActive = null;
+
+
 var cellCount = 4; // cellCount set from cells-range input value
 var selectedIndex = 0;
 var isHorizontal = false;
 var rotateFn = 'rotateX';
 var radius, theta;
 var checkoutSequenceCounter = 0;
-var product_ids = [{
-  Test1: 'price_HLhvSREgp7XgDV'
-}, {
-  Test2: 'price_HM3NQJlxKNoMd4'
-}, {
-  Test3: 'price_HLhx2nQ0l8r0do'
-}, {
-  Test4: 'price_HM3OgGZyLcHtYS'
-}, {
-  Test5: 'price_HM3PiRwwN6OnU8'
-}];
-var product_idss = [{
-  Test1: 'price_HLhvSREgp7XgDV'
-}, {
-  Test2: 'price_HM3NQJlxKNoMd4'
-}, {
-  Test3: 'price_HLhx2nQ0l8r0do'
-}, {
-  Test4: 'price_HM3OgGZyLcHtYS'
-}, {
-  Test5: 'price_HM3PiRwwN6OnU8'
-}];
 
 var searches = document.cookie;
 var id = read_cookie('id');
@@ -62,38 +47,6 @@ var customerid = read_cookie('customer');
 var customer_email = "";
 var stripe_customer = "";
 var tempCookieArray = [];
-
-function rotateCarousel() {
-  var angle = theta * selectedIndex * -1;
-  carousel.style.transform = 'translateZ(' + -radius + 'px) ' +
-    rotateFn + '(' + angle + 'deg)';
-}
-
-
-function changeCarousel() {
-  theta = 360 / cellCount;
-  var cellSize = isHorizontal ? cellWidth : cellHeight;
-  radius = Math.round((cellSize / 2) / Math.tan(Math.PI / cellCount));
-  for (var i = 0; i < cells.length; i++) {
-    var cell = cells[i];
-    if (i < cellCount) {
-      // visible cell
-      cell.style.opacity = 1;
-      var cellAngle = theta * i;
-      cell.style.transform = rotateFn + '(' + cellAngle + 'deg) translateZ(' + radius + 'px)';
-    } else {
-      // hidden cell
-      cell.style.opacity = 0;
-      cell.style.transform = 'none';
-    }
-  }
-
-  rotateCarousel();
-}
-
-function onOrientationChange() {
-  changeCarousel();
-}
 
 // set initials
 
@@ -126,7 +79,7 @@ $("#includedContent").load("/public/html/header.html", () => {
   $.getScript("/public/js/header.js", function () {
     start();
     setTitle('YOUR CART');
-    $('<div class="sequence"><div class="sequencePointParent" data-id="one" data-name="Cart"><div class="partcart sequencepoint active" id="sequencepointactive"  data-id="1"><p class="sequenceText">Cart</p></div><div hidden class="hoverInfo" id="partCartDone"> <span class="hoverInfoText">Cart complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone one"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCartError"> <span class="hoverInfoText">Your cart is empty!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="two" data-name="Shipping"><div class="partaddress sequencepoint" id="sequencepoint"  data-id="2"><p class="sequenceText">2</p></div><div hidden class="hoverInfo" id="partAddressDone"> <span class="hoverInfoText">Shipping information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone two"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partAddressError"> <span class="hoverInfoText">Problem with your shipping information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="three" data-name="Billing"><div   data-id="3" class="partcard sequencepoint" id="sequencepoint"><p class="sequenceText">3</p></div><div hidden class="hoverInfo" id="partCardDone"> <span class="hoverInfoText">Billing information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone three"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCardError"> <span class="hoverInfoText">Problem with your billing information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="four" data-name="Summary"><div  data-id="4" class="partfinal sequencepoint" id="sequencepoint"><p class="sequenceText">4</p></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Order ready!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone four"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Problem with your order!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div></div>').appendTo($('.free_real_estate'));
+    $('<div class="sequence"><div class="sequencePointParent" data-id="one" data-name="Cart"><div class="partcart sequencepoint active" id="sequencepointactive"  data-id="1"><p class="sequenceText">Cart</p></div><div hidden class="hoverInfo" id="partCartDone"> <span class="hoverInfoText">Cart complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone one"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCartError"> <span class="hoverInfoText cart_error">Your cart is empty!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="two" data-name="Shipping"><div class="partaddress sequencepoint" id="sequencepoint"  data-id="2"><p class="sequenceText">2</p></div><div hidden class="hoverInfo" id="partAddressDone"> <span class="hoverInfoText">Shipping information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone two"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partAddressError"> <span class="hoverInfoText">Problem with your shipping information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="three" data-name="Billing"><div   data-id="3" class="partcard sequencepoint" id="sequencepoint"><p class="sequenceText">3</p></div><div hidden class="hoverInfo" id="partCardDone"> <span class="hoverInfoText">Billing information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone three"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCardError"> <span class="hoverInfoText">Problem with your billing information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="four" data-name="Summary"><div  data-id="4" class="partfinal sequencepoint" id="sequencepoint"><p class="sequenceText">4</p></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Order ready!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone four"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Problem with your order!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div></div>').appendTo($('.free_real_estate'));
 
     var $sequence = $('.sequencePointParent');
     sequenceActive = $sequence[0].childNodes[0];
@@ -148,7 +101,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       $('html, body').animate({
         scrollTop: ($('.match_point.' + e.currentTarget.dataset.id).offset().top - $('.match_point.' + e.currentTarget.dataset.id).height() * 2 - 111)
       }, 800);
-    });
+    })
 
 
     mapSequence($sequence);
@@ -175,8 +128,8 @@ $("#includedContent").load("/public/html/header.html", () => {
       $select.append($('<option></option>').val(i).html(i));
     }
 
-    for (var i = 0; i < objectArray.length; i++) {
-      $("#quantity" + objectArray[i][0]).val(objectArray[i][1]);
+    for (var i = 0; i < objectArrayHeader.length; i++) {
+      $("#quantity" + objectArrayHeader[i][0]).val(objectArrayHeader[i][1]);
     }
     calculatePrice();
   }
@@ -189,233 +142,38 @@ $("#includedContent").load("/public/html/header.html", () => {
 });
 
 
-function initializeCheckoutSequence() {
 
-
-  var line = $('#line1');
-  div1.click(() => {
-    div1.addClass('active');
-    div1.children().text('cart');
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-    selectedIndex = checkoutSequenceCounter = 0;
-    rotateCarousel();
-    if (checkoutSequenceCounter > 0 && checkoutSequenceCounter < 3) {
-      nextButton.style.display = '';
-      prevButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter <= 0) {
-      prevButton.style.display = 'none';
-      nextButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter >= 3) {
-      nextButton.style.display = 'none';
-      prevButton.style.display = '';
-
-
-    }
-
-
-  });
-
-  div2.click(() => {
-    div2.attr('id', 'sequencepointactive');
-    div2.children().text('address and shipping');
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-    selectedIndex = checkoutSequenceCounter = 1;
-    rotateCarousel();
-    if (checkoutSequenceCounter > 0 && checkoutSequenceCounter < 3) {
-      nextButton.style.display = '';
-      prevButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter <= 0) {
-      prevButton.style.display = 'none';
-      nextButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter >= 3) {
-      nextButton.style.display = 'none';
-      prevButton.style.display = '';
-
-
-    }
-
-  });
-
-  div3.click(() => {
-    div3.attr('id', 'sequencepointactive');
-    div3.children().text('card details');
-
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-    selectedIndex = checkoutSequenceCounter = 2;
-    rotateCarousel();
-    if (checkoutSequenceCounter > 0 && checkoutSequenceCounter < 3) {
-      nextButton.style.display = '';
-      prevButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter <= 0) {
-      prevButton.style.display = 'none';
-      nextButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter >= 3) {
-      nextButton.style.display = 'none';
-      prevButton.style.display = '';
-
-
-    }
-
-  });
-
-  div4.click(() => {
-    div4.attr('id', 'sequencepointactive');
-    div4.children().text('finalize');
-
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-    selectedIndex = checkoutSequenceCounter = 3;
-    rotateCarousel();
-    if (checkoutSequenceCounter > 0 && checkoutSequenceCounter < 3) {
-      nextButton.style.display = '';
-      prevButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter <= 0) {
-      prevButton.style.display = 'none';
-      nextButton.style.display = '';
-
-
-    }
-    if (checkoutSequenceCounter >= 3) {
-      nextButton.style.display = 'none';
-      prevButton.style.display = '';
-
-
-    }
-
-  });
-
-  var x1 = div1.offset().left + (0);
-  var y1 = div1.offset().top + (div1.outerHeight() / 2);
-  var x2 = div4.offset().left + (0);
-  var y2 = div4.offset().top + (div4.outerHeight() / 2);
-
-  line.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2);
-}
-
-
-function moveSequence() {
-  if (checkoutSequenceCounter > 0) {
-    prevButton.style.display = '';
-
-  }
-  if (checkoutSequenceCounter < 3) {
-    nextButton.style.display = '';
-
-  }
-  if (checkoutSequenceCounter === 0) {
-    div1.attr('id', 'sequencepointactive');
-    div1.children().text('cart');
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-  } else if (checkoutSequenceCounter === 1) {
-    div2.attr('id', 'sequencepointactive');
-    div2.children().text('address and shipping');
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-  } else if (checkoutSequenceCounter === 2) {
-    div3.attr('id', 'sequencepointactive');
-    div3.children().text('payment details');
-
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div4.attr('id', 'sequencepoint');
-    div4.children().text('4');
-
-  } else if (checkoutSequenceCounter === 3) {
-    div4.attr('id', 'sequencepointactive');
-    div4.children().text('finalize');
-
-    div1.attr('id', 'sequencepoint');
-    div1.children().text('1');
-
-    div2.attr('id', 'sequencepoint');
-    div2.children().text('2');
-
-    div3.attr('id', 'sequencepoint');
-    div3.children().text('3');
-  }
-}
 
 
 function cartCheck() {
   var cartDoneIcon = $('#partCartDone');
   var cartErrorIcon = $('#partCartError');
+  var cartErrorText = $('.hoverInfoText.cart_error');
+
+
   if (tempCookieArray.length < 1) {
 
 
     cartDoneIcon.attr('hidden', 'hidden');
     cartErrorIcon.removeAttr('hidden');
+    cartErrorText.text('Your cart is empty!');
     return false;
-  } else {
-    cartDoneIcon.removeAttr('hidden');
-    cartErrorIcon.attr('hidden', 'hidden');
+  } else if (quantityError) {
+    cartDoneIcon.attr('hidden', 'hidden');
+    cartErrorIcon.removeAttr('hidden');
+    cartErrorText.text('There is a problem with your items!');
+    return false;
 
-    return true;
+
   }
+
+
+  cartDoneIcon.removeAttr('hidden');
+  cartErrorIcon.attr('hidden', 'hidden');
+
+  return true;
+
+
 }
 
 function addressCheck() {
@@ -424,7 +182,7 @@ function addressCheck() {
   var requiredFields = $('.required.shipping_address');
   var error = false;
   if (selectedAddress == undefined) {
-    $('#error_shipping_address_general').html('Please select a shipping address.').removeAttr('hidden');
+    $('#error_shipping_address_general').html('Please select a shipping address.').removeAttr('hidden')
   }
 
   if (loggedin == 1 && (selectedAddress !== undefined) && selectedAddress.dataset.age === 'old') {
@@ -489,6 +247,7 @@ function cardCheck() {
   var requiredFields = $('.required.billing_address');
   var error = false;
 
+  var error = false;
   if (selectedBilling == undefined) {
     $('#error_billing_address_general').html('Please select a billing address.').removeAttr('hidden');
   }
@@ -611,10 +370,9 @@ var errorScript = function (event) {
   } else {
     e.classList.remove('error');
   }
-};
-
+}
 for (var i = 0; i < required.length; i++) {
-  required[i].addEventListener('input', errorScript);
+  required[i].addEventListener('input', errorScript)
   required[i].addEventListener("focusout", errorScript);
 
 
@@ -623,7 +381,6 @@ for (var i = 0; i < required.length; i++) {
 }
 $('.finalize_top, .finalize_bottom').click(function () {
 
-  console.log(cartCheck(), addressCheck(), cardCheck());
 
 
   if (cartCheck() && addressCheck() && cardCheck()) {
@@ -635,6 +392,7 @@ $('.finalize_top, .finalize_bottom').click(function () {
 });
 
 
+//-------------------------
 function purchase(items_array) {
 
   getSripePublicKey()
@@ -684,9 +442,16 @@ async function getSripePublicKey() {
 }
 
 
+
+
+
+
+//---------------------------
+
+
+
 function populateList() {
-  console.log(selectedAddress);
-  console.log(selectedBilling);
+
 
   if (selectedAddress != undefined) {
 
@@ -694,7 +459,7 @@ function populateList() {
 
 
       var tempShipping = $(selectedAddress).clone();
-      tempShipping.children('.shipping-cover').remove();
+      tempShipping.children('.shipping-cover').remove()
       $('.final-shipping').html('');
       tempShipping.appendTo($('.final-shipping'));
     }
@@ -717,7 +482,7 @@ function populateList() {
 
 
       var tempBilling = $(selectedBilling).clone();
-      tempBilling.children('.billing-cover').remove();
+      tempBilling.children('.billing-cover').remove()
       $('.final-billing').html('');
       tempBilling.appendTo($('.final-billing'));
     }
@@ -734,100 +499,21 @@ function populateList() {
     }
   }
 
-
-
-  /*  var table=document.getElementById('simple_body');
-    var itemsList=$('.cart_item');
-    for(var i=0;i<itemsList.length;i++){
-        
-        var row=table.insertRow(0);
-        var cell=row.insertCell(0);
-        cell.innerHTML='<p>'+itemsList[i].dataset.itemName+'</p>';
-        cell=row.insertCell(1);
-        cell.innerHTML='<p>'+itemsList[i].dataset.itemPrice+'</p>';
-        cell=row.insertCell(2);
-        cell.innerHTML='<p>'+itemsList[i].dataset.itemQuantity+'</p>';
-        cell=row.insertCell(3);
-        cell.innerHTML='<p>20%</p>';
-        
-        
-    }
-    var row=table.insertRow(table.rows.length);
-    var cell=row.insertCell(0);
-    cell=row.insertCell(1);
-    cell=row.insertCell(2);
-    cell=row.insertCell(3);
-    cell=row.insertCell(4);
-    cell.innerHTML='<p>'+$('.total').text()+'</p>';
-   
-    
-    var table=$('.shipping_address_checkout');
-    var relevant=table.children('.auto')
-    var old=$('.required.shipping_address');
-    for(var i=0; i<relevant.length;i++){
-        relevant[i].innerHTML=old[i].value;
-    }
-    
-     
-    var table=$('.billing_address_checkout');
-    var relevant=table.children('.auto')
-    
-    var old;
-var isBilling=document.getElementById('billing');
-    var c = isBilling.checked;
-    if(c===true){
-           old=$('.auto.billing_address');
-        for(var i=0; i<relevant.length;i++){
-        relevant[i].innerHTML=old[i].innerHTML;
-    }
- 
-    }
-    else{
-            old=$('.required.billing_address');
-        for(var i=0; i<relevant.length;i++){
-        relevant[i].innerHTML=old[i].value;
-    }
-
-    }
-     */
-
-  /*   
-     var table=$('.card_checkout');
-     var relevant=table.children('.auto')
-     var old=$('.card_details');
-     for(var i=0; i<relevant.length;i++){
-         relevant[i].innerHTML=old[i].value;
-     }*/
-
-
-
 }
-/*var month_slc = document.getElementById('expiration_month');
-var year_slc = document.getElementById('expiration_year');
 
 
-  var months = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-  for (var i = 0; i < months.length; i++) {
-    var opt = months[i];
-    var el = document.createElement("option");
-    el.textContent = opt;
-    el.value = opt;
-    month_slc.appendChild(el);
-  }
 
 
-  for (var i = 20; i < 51; i++) {
-    var opt = i;
-    var el = document.createElement("option");
-    el.textContent = opt;
-    el.value = opt;
-    year_slc.appendChild(el);
-  }*/
+
+
+
+
+
 
 var time = new Date();
 var randHex = function (len) {
   var maxlen = 8,
-    min = Math.pow(16, Math.min(len, maxlen) - 1);
+    min = Math.pow(16, Math.min(len, maxlen) - 1)
   max = Math.pow(16, Math.min(len, maxlen)) - 1,
     n = Math.floor(Math.random() * (max - min + 1)) + min,
     r = n.toString(16);
@@ -861,12 +547,14 @@ function read_cookie(key) {
 
 function createCart(products) {
   if (products == 0) {
-    return;
+    return
   }
   $('#items').html('');
 
   var cardDiv;
   var product_id;
+  product_ids_check = [];
+  product_ids_values = [];
 
   for (var i = 0; i < products.length; i++) {
     product_id = products[i].id + products[i].color;
@@ -875,13 +563,14 @@ function createCart(products) {
       quantity: products[i].quantity,
       color: products[i].color,
       stripe_price: products[i].stripe_price
-    });
+    })
+    product_ids_values.push(products[i].id);
 
     cardDiv = document.createElement("div");
     cardDiv.setAttribute("class", "item");
     cardDiv.classList.add('cart_item');
     cardDiv.setAttribute('data-item-name', products[i].name);
-    cardDiv.setAttribute('data-item-quantity', objectArray[i][1]);
+    cardDiv.setAttribute('data-item-quantity', objectArrayHeader[i][1]);
     cardDiv.setAttribute('data-item-price', products[i].price);
     cardDiv.setAttribute("id", "item" + product_id);
     document.getElementById("items").appendChild(cardDiv);
@@ -904,9 +593,8 @@ function createCart(products) {
       $(this).attr('src', 'http://192.168.0.108:3000/public/product_images/default.png');
     });
     cardDiv.addEventListener('click', function (e) {
-      window.location.replace('/public/path/item.html?' + e.target.dataset.redirect);
-    });
-
+      window.location.replace('/public/path/item.html?' + e.target.dataset.redirect)
+    })
     document.getElementById("left" + product_id).appendChild(cardDiv);
 
     cardDiv = document.createElement("div");
@@ -951,49 +639,72 @@ function createCart(products) {
 
     cardDiv = document.createElement("p");
     cardDiv.setAttribute('id', 'price' + product_id);
-    cardDiv.innerHTML = 'Price: <span id="price' + product_id + 'span" >' + products[i].price + '</span>$';
+    cardDiv.innerHTML = 'Price: <span id="price' + product_id + 'span" >' + products[i].price + '</span> лв.';
     document.getElementById("rightinfo" + product_id).appendChild(cardDiv);
 
 
     cardDiv = document.createElement("select");
-    cardDiv.setAttribute("class", "quantity");
+    cardDiv.setAttribute("class", "quantity " + products[i].id);
     cardDiv.setAttribute("id", "quantity" + product_id);
     cardDiv.setAttribute("data-product", product_id);
     cardDiv.setAttribute('data-item-id', products[i].id);
     cardDiv.setAttribute('data-item-color', products[i].color);
-    cardDiv.addEventListener('input', () => {
-      //update(event.target.getAttribute('id'), event.target.value);
-    });
     document.getElementById("rightinfo" + product_id).appendChild(cardDiv);
+
     var $dropdown = $('#quantity' + product_id);
     for (var q = 1; q < 30; q++) {
       $dropdown.append($("<option />").val(q).text('QTY: ' + q));
     }
     $dropdown.val(products[i].quantity);
     $dropdown.change(function (e) {
+      quantityConfirm(e.currentTarget.dataset.itemId).then((result) => {
+        var top = result;
+        if (e.currentTarget.value <= result) {
+          enable(e.currentTarget.dataset.itemId + e.currentTarget.dataset.itemColor);
+          $("#total" + e.target.dataset.product).html('Total: <span class="totalspan">' + ((+$("#price" + e.currentTarget.dataset.product + 'span').html()) * (+e.currentTarget.value)) + '</span> лв.');
 
-      $("#total" + e.target.dataset.product).html('Total: <span class="totalspan">' + ((+$("#price" + e.currentTarget.dataset.product + 'span').html()) * (+e.currentTarget.value)) + '</span>$');
-      console.log(tempCookieArray);
+          for (var iii = 0; iii < tempCookieArray.length; iii++) {
+            if (tempCookieArray[iii].id == e.currentTarget.dataset.itemId && tempCookieArray[iii].color === e.currentTarget.dataset.itemColor) {
 
-      for (var iii = 0; iii < tempCookieArray.length; iii++) {
-        if (tempCookieArray[iii].id == e.currentTarget.dataset.itemId && tempCookieArray[iii].color === e.currentTarget.dataset.itemColor) {
+              tempCookieArray[iii].quantity = e.currentTarget.value;
 
-          tempCookieArray[iii].quantity = e.currentTarget.value;
-          console.log(tempCookieArray[iii]);
+            }
+
+
+          }
+          fixArray();
+        } else {
+          disable(e.currentTarget.dataset.itemId + e.currentTarget.dataset.itemColor);
 
         }
+      }).catch((error) => {
+        console.log(error)
+      })
 
 
-      }
-      fixArray();
 
-    });
+
+    })
+
+
+    cardDiv = document.createElement("div");
+    cardDiv.setAttribute('id', 'availability' + product_id);
+    cardDiv.setAttribute('class', 'no');
+    cardDiv.innerHTML = 'This quantity is not available!';
+    document.getElementById("rightinfo" + product_id).appendChild(cardDiv);
+
+    product_ids_check.push({
+      id: products[i].id,
+      field: $("#quantity" + product_id),
+      error: $('#availability' + product_id)
+    })
+
 
 
     cardDiv = document.createElement("p");
     cardDiv.setAttribute('id', 'total' + product_id);
     cardDiv.setAttribute('style', 'border-top: 1px solid #00000044; font-size: 18px; padding-top: 4px;');
-    cardDiv.innerHTML = 'Total: <span class="totalspan">' + ((+products[i].price) * (+products[i].quantity)) + '</span>$';
+    cardDiv.innerHTML = 'Total: <span class="totalspan">' + ((+products[i].price) * (+products[i].quantity)) + '</span> лв.';
     document.getElementById("rightinfo" + product_id).appendChild(cardDiv);
 
 
@@ -1003,6 +714,8 @@ function createCart(products) {
   drawLine();
 
   calculatePrice();
+
+  checkAvailability();
 
 
 
@@ -1155,7 +868,7 @@ function addAddresses(addresses, customer) {
   var isShipping = false;
 
   for (var i = 0; i < addresses.length; i++) {
-    isShipping = addresses[i].shipping ? true : false;
+    isShipping = addresses[i].shipping ? true : false
     var $tempdiv = $('<div class="shipping-old" data-age="old"  data-address="{&quot;delivery_postcode&quot;:&quot;' + addresses[i].postcode + '&quot;,&quot;delivery_address1&quot;:&quot;' + addresses[i].name + '&quot;,&quot;delivery_address2&quot;:&quot;' + addresses[i].second_name + '&quot;,&quot;delivery_city&quot;:&quot;' + addresses[i].city + '&quot;,&quot;names1&quot;:&quot;' + customer[0].first_name + '&quot;,&quot;names2&quot;:&quot;' + customer[0].last_name + '&quot;,&quot;phonenumber&quot;:&quot;' + addresses[i].phone_number + '&quot;}"><div class="shipping-cover"></div><div class="shipping-button"></div><div class="shipping-info"><div class="shipping-name"> ' + customer[0].first_name + ' ' + customer[0].last_name + '</div><div class="shipping-address">' + addresses[i].name + addresses[i].second_name + '</div><div class="shipping-address">' + addresses[i].city + ', ' + addresses[i].postcode + '</div><div class="shipping-address">' + addresses[i].phone_number + '</div></div> </div>').appendTo($shippingAddress);
 
     if (isShipping) {
@@ -1307,10 +1020,10 @@ function fetchCustomerNew() {
 
 
 function drawLine() {
-  var line1 = $('.line1');
-  var line2 = $('.line2');
-  var line3 = $('.line3');
-  var line4 = $('.line4');
+  var line1 = $('.line1')
+  var line2 = $('.line2')
+  var line3 = $('.line3')
+  var line4 = $('.line4')
 
   var x1 = line1.parent().width() / 2;
   var y1 = '60px';
@@ -1353,7 +1066,7 @@ function drawLine() {
 }
 $(window).resize(function () {
   drawLine();
-});
+})
 
 
 
@@ -1362,7 +1075,7 @@ $(window).resize(function () {
 function mapSequence(sequence) {
 
   window.onscroll = function () {
-    myFunction();
+    myFunction()
   };
 
   var matchPointTwo = $('.match_point_inner.two')[0].parentNode.parentNode;
@@ -1396,4 +1109,139 @@ function mapSequence(sequence) {
 
 
 
+}
+
+
+async function quantityConfirm(itemId) {
+
+  var actualQuantity = 0;
+
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+  };
+
+
+
+
+  var message = await fetch('http://192.168.0.108:3000/products/quantity/' + itemId, requestOptions);
+  var responce = await message.json();
+  if (responce.length > 0) {
+    actualQuantity = responce[0].quantity
+  } else {
+    actualQuantity = 0;
+    removeStuff();
+  }
+  actualQuantity = parseInt(actualQuantity);
+  return actualQuantity;
+
+}
+
+
+async function quantityConfirmMany(itemIds) {
+
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const data = {
+    'ids': itemIds
+  };
+
+  var raw = JSON.stringify(data);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+
+
+
+  var message = await fetch('http://192.168.0.108:3000/products/quantities', requestOptions);
+  var responce = await message.json();
+  console.log(responce);
+
+  return responce;
+
+
+
+}
+
+
+
+function disable(id) {
+  $('#availability' + id).css('display', 'block');
+  $wrapper.css('opacity', '0.4');
+  quantityError = true;
+
+
+
+
+}
+
+function enable(id) {
+  $('#availability' + id).css('display', 'none');
+  $wrapper.css('opacity', '1');
+
+
+
+
+
+
+}
+
+
+function checkAvailability() {
+  var tempError = false;
+  quantityConfirmMany(product_ids_values).then((result) => {
+    for (var i = 0; i < product_ids_check.length; i++) {
+      for (var q = 0; q < result.length; q++) {
+
+        if (product_ids_check[i].id == result[q].id) {
+
+          var summedQuantity = $(".quantity." + product_ids_check[i].id).map(function () {
+            return ($(this).val() == "") ? null : $(this).val();
+          }).get().join("+");
+
+          summedQuantity = summedQuantity.split('+');
+
+          summedQuantity = summedQuantity.map(function (elt) {
+
+            return /^\d+$/.test(elt) ? parseInt(elt) : 0;
+          }).reduce(function (a, b) {
+
+            return a + b
+          })
+
+          if (summedQuantity > result[q].quantity) {
+
+            product_ids_check[i].error.css('display', 'block');
+            quantityError = true;
+            tempError = true;
+
+
+          }
+
+
+        }
+
+
+      }
+
+
+
+    }
+    if (tempError) {
+      quantityError = true
+    } else if (!tempError) {
+      quantityError = false
+    }
+
+
+  }).catch((error) => {
+    console.log(error)
+  })
 }

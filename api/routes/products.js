@@ -59,6 +59,30 @@ function checkFileType(file, cb) {
   }
 }
 
+//get * from product based on stripe id
+router.post('/stripe-id', (req, res) => {
+  var stripe_product_ids = req.body.stripe_ids;
+  console.log(stripe_product_ids, "received");
+
+  sql = "SELECT * FROM product WHERE stripe_id = ?; ";
+  var final_query = "";
+  var values = [];
+
+  for (let i = 0; i < stripe_product_ids.length; i++) {
+    final_query = final_query + sql;
+    values.push(stripe_product_ids[i]);
+  }
+
+  connection.query(final_query, values, (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(rows);
+    }
+  });
+
+});
+
 
 router.post('/create-product', upload.array('myImage', 5), (req, res) => {
   var sql2;
@@ -89,7 +113,7 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
       createStripePrice(product.price, stripe_product.id)
         .then((stripe_price) => {
 
-          var values = [stripe_product.id, product.name, product.price, stripe_price.id, product.new_price,
+          var values = [stripe_product.id, product.name, product.price, stripe_price.id, "",
             product.ean, product.availability, product.quantity, product.brand,
             product.design, product.description, product.material, product.diameter,
             product.length, product.width, product.height, product.volume, product.weight,
@@ -97,7 +121,7 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
             "default", default_n8_image
           ];
 
-          sql = "INSERT INTO product (stripe_id, name, price, stripe_price, new_price, ean, availability, quantity, brand, design, " +
+          sql = "INSERT INTO product (stripe_id, name, price, stripe_price, old_price, ean, availability, quantity, brand, design, " +
             "description, material, diameter, length, width, height, volume, weight, size) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
             "SET @productID = LAST_INSERT_ID(); " +
@@ -180,31 +204,6 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
 
 });
 
-//creates a stripe product and a price for that product
-//returns the stripe price object
-async function createStripeProduct(prod_name, prod_brand, prod_descript, prod_image) {
-
-  let stripeProduct = await stripe.products.create({
-    name: prod_name,
-    attributes: [prod_brand],
-    description: prod_descript,
-    images: [prod_image],
-    type: "good"
-  });
-
-  return stripeProduct;
-}
-
-async function createStripePrice(prod_price, prod_id) {
-  let stripePrice = await stripe.prices.create({
-    unit_amount: prod_price * 100,
-    currency: 'bgn',
-    product: prod_id
-  });
-
-  return stripePrice;
-}
-
 
 router.post('/get-stripe-product', (req, res) => {
   var product_id = req.body.productid;
@@ -213,10 +212,7 @@ router.post('/get-stripe-product', (req, res) => {
   }).catch(error => console.error(error));
 });
 
-async function getStripeProduct(prod_id) {
-  let stripeProduct = await stripe.products.retrieve(prod_id);
-  return stripeProduct;
-}
+
 
 //upload images [v]
 router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
@@ -479,15 +475,20 @@ router.post('/update-default-image', (req, res) => {
 router.put('/update-product', (req, res, next) => {
   var product = req.body;
 
-
+  //first we update the product on stripe
   updateStripeProduct(product.stripe_id, product.name, product.brand, product.description)
     .then((stripe_product) => {
-      console.log(stripe_product);
-      createStripePrice(product.price, stripe_product.id)
+      
+      //then we update the price(if needed) for that product
+      updateStripePrice(product.price, stripe_product.id, product.stripe_price)
         .then((stripe_price) => {
-          console.log(stripe_price, "updated");
+          console.log(stripe_price, "function ressult");
+          console.log(product.price, "mysql");
+          console.log(product.old_price, "oldmysql");
+          console.log(product.id, "productid");
 
-          var values = [product.name, product.price, stripe_price.id, product.new_price, product.ean,
+          //then we update the product in our internal db
+          var values = [product.name, product.price, stripe_price, product.old_price, product.ean,
             product.availability, product.quantity, product.brand, product.design,
             product.description, product.material, product.diameter, product.length,
             product.width, product.height, product.volume, product.weight, product.size, product.id,
@@ -495,7 +496,7 @@ router.put('/update-product', (req, res, next) => {
           ];
 
           sql = "UPDATE product " +
-            "SET name =?, price=?, stripe_price=?, new_price=?, ean=?, availability=?, quantity=?, " +
+            "SET name =?, price=?, stripe_price=?, old_price=?, ean=?, availability=?, quantity=?, " +
             "brand=?, design=?, description=?, material=?, diameter=?, length=?, " +
             "width=?, height=?, volume=?, weight=?, size=? " +
             "WHERE id=?; " +
@@ -521,30 +522,18 @@ router.put('/update-product', (req, res, next) => {
 
 });
 
-//update stripe product
-async function updateStripeProduct(product_id, prod_name, prod_brand, prod_descript) {
-  var updatedStripeProduct = await stripe.products.update(product_id, {
-    name: prod_name,
-    attributes: [prod_brand],
-    description: prod_descript
-  });
-  return updatedStripeProduct;
-}
-
-//update stripe price
-async function updateStripePrice(price_id, price_amount) {
-  var updatedStripePrice = await stripe.prices.update(price_id, {
-    unit_amount: price_amount
-  });
-
-  return updatedStripePrice;
-}
 
 router.get('/stripe-price/:stripe', (req, res) => {
   var price_id = req.params.stripe;
-  getStripePrice(price_id).then((price) => {
-    res.send(price);
-  }).catch(error => console.error(error));
+  getStripePrice(price_id)
+    .then((price) => {
+      // var units = price.unit_amount;
+      // res.send({
+      //   units
+      // });
+      res.send(price);
+
+    }).catch(error => res.send(error));
 });
 
 router.post('/update-stripe', (req, res) => {
@@ -558,11 +547,13 @@ router.post('/update-stripe', (req, res) => {
     }).catch(error => res.send(error));
 });
 
-async function getStripePrice(price_id) {
-  var stripePrice = await stripe.prices.retrieve(price_id);
 
-  return stripePrice;
-}
+//search for a product on admin side
+router.get('/search/sku/:keyword', (req, res) => {
+  var keyword = "%" + req.params.keyword + "%";
+  
+});
+
 
 //get products for search bar
 router.post('/search-product', (req, res) => {
@@ -748,12 +739,6 @@ router.delete('/delete-product', (req, res, next) => {
   });
 });
 
-//delete stripe product in case needed
-async function deleteStripeProduct(product_id) {
-  var confirmation = await stripe.products.del(product_id);
-  return confirmation;
-}
-
 //deletes an image based on id
 router.delete('/delete-images', (req, res, next) => {
   var url = "." + req.body.url;
@@ -812,6 +797,101 @@ router.post('/quantities', (req, res) => {
   }
 
 });
+
+//Stripe Product ----------------------------------------------------------------------
+
+//creates a stripe product, returns the stripe price object
+async function createStripeProduct(prod_name, prod_brand, prod_descript, prod_image) {
+
+  let stripeProduct = await stripe.products.create({
+    name: prod_name,
+    attributes: [prod_brand],
+    description: prod_descript,
+    images: [prod_image],
+    type: "good"
+  });
+
+  return stripeProduct;
+}
+
+//get stripe product based on stripe product id
+async function getStripeProduct(prod_id) {
+  let stripeProduct = await stripe.products.retrieve(prod_id);
+  return stripeProduct;
+}
+
+//update stripe product based on stripe product id
+async function updateStripeProduct(product_id, prod_name, prod_brand, prod_descript) {
+  var updatedStripeProduct = await stripe.products.update(product_id, {
+    name: prod_name,
+    attributes: [prod_brand],
+    description: prod_descript
+  });
+  return updatedStripeProduct;
+}
+
+//delete stripe product in case needed
+async function deleteStripeProduct(product_id) {
+  var confirmation = await stripe.products.del(product_id);
+  return confirmation;
+}
+
+
+//Stripe Price -----------------------------------------------------------
+
+async function createStripePrice(prod_price, prod_id) {
+  let stripePrice = await stripe.prices.create({
+    unit_amount: prod_price * 100,
+    currency: 'bgn',
+    product: prod_id
+  });
+
+  return stripePrice;
+}
+
+async function updateStripePrice(prod_price, prod_id, existing_stripe_price_id) {
+
+  var price = await getStripePrice(existing_stripe_price_id);
+
+  console.log(price, "atwhatcost");
+
+
+  if (!("statusCode" in price)) {
+    console.log(prod_price * 100, "modified price");
+    console.log(price, "existing price");
+    console.log((prod_price * 100 == price), "evaluation");
+
+    if (prod_price * 100 == price.unit_amount) {
+      return existing_stripe_price_id;
+    } else {
+      let stripePrice = await stripe.prices.create({
+        unit_amount: prod_price * 100,
+        currency: 'bgn',
+        product: prod_id
+      });
+
+      return stripePrice.id;
+    }
+  }
+
+
+  return "";
+
+}
+
+async function getStripePrice(price_id) {
+  var stripePrice = await stripe.prices.retrieve(price_id);
+  return stripePrice;
+}
+
+// //update stripe price
+// async function updateStripePrice(price_id, price_amount) {
+//   var updatedStripePrice = await stripe.prices.update(price_id, {
+//     unit_amount: price_amount
+//   });
+
+//   return updatedStripePrice;
+// }
 
 
 module.exports = router;

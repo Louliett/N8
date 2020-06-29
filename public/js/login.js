@@ -254,5 +254,5 @@ function createCookieAdmin(id) {
     expires: 1,
     path: '/public/admin'
   });
-  document.location.href = '/public/admin/home.html';
+  document.location.href = '/public/admin/admin_home.html';
 }

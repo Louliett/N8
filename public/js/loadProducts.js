@@ -68,6 +68,16 @@ function loadProducts(table, name, name1, name2){
     fetch('http://192.168.0.108:3000/products/product-images-id', requestOptions)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
+        if(data.length>1){
+            for(var i=0; i<data.length; i++){
+                if(data[i].colour=='default'){
+                data.splice(i, 1);
+                }
+                
+            }
+            
+        }
         var images = [];
         data.forEach((element, index, array) => {
             
@@ -78,13 +88,13 @@ function loadProducts(table, name, name1, name2){
             for(var i=0; i<loaded_products.length;i++){
             var height=$('#itemrow').innerHeight();
             var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.8) + "px;");
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / (1+1))) + "px; height: " + Math.floor(y * 0.7) + "px;");
             }
         }else{
         for(var i=0; i<loaded_products.length;i++){
             var height=$('#itemrow').innerHeight();
             var width=$('#itemrow').innerWidth();
-      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.8) + "px;");
+      loaded_products[i].setAttribute("style", "width: " + (Math.floor(width / 4)) + "px; height: " + Math.floor(y * 0.7) + "px;");
             }
             }
      
@@ -97,7 +107,6 @@ function loadProducts(table, name, name1, name2){
 function displayProducts(images, index) {
     ii = index;
 
- 
 
 
     var cardDiv = document.createElement("div");
@@ -115,6 +124,7 @@ function displayProducts(images, index) {
     $(cardDiv).click(function() {
       document.location.href = "/public/path/item.html?" + $(this).attr('id');
     });
+    console.log(images);
 
     var cardImg = document.createElement("img");
     cardImg.setAttribute("class", "productimg");
@@ -142,13 +152,13 @@ function displayProducts(images, index) {
     var x = $(document).width();
 
     var cardTag = document.createElement("strong");
-    cardTag.innerHTML = product_list[ii].subcategory;
+    cardTag.innerHTML = product_list[ii].name;
     document.getElementById("productdescription" + containerName).appendChild(cardTag);
     var x = $(document).width();
 
     var cardTitle = document.createElement("p");
     cardTitle.setAttribute("class", "producttitle");
-    cardTitle.innerHTML = product_list[ii].name;;
+    cardTitle.innerHTML = product_list[ii].brand+'/'+product_list[ii].design;
     document.getElementById("productdescription" + containerName).appendChild(cardTitle);
     var x = $("#main").width();
 
@@ -165,8 +175,26 @@ function displayProducts(images, index) {
     var priceDiv = document.createElement("div");
     priceDiv.setAttribute("class", "price");
     priceDiv.setAttribute("id", "price" + ii);
-    priceDiv.innerHTML = product_list[ii].price;
-    document.getElementById(containerName).appendChild(priceDiv);
+    priceDiv.innerHTML = product_list[ii].price+' лв.';
+    document.getElementById("productdescription" + containerName).appendChild(priceDiv);
+    
+    
+        var $availability=$('<div class="stock_notification"></div>');
+      $availability.appendTo($("#productdescription" + containerName));
+      if(product_list[ii].quantity<1){
+          $availability.css('display', 'block');
+          $availability.html('OUT OF STOCK');
+          
+      }else if(product_list[ii].quantity<4){
+           $availability.css('display', 'block');
+           $availability.css('background-color', '#FFB11A99');
+          
+          
+          
+          $availability.html('LIMITED STOCK');
+          
+      }
+    
 
   }
 

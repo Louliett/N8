@@ -114,7 +114,7 @@ router.put('/update-shipping-address', (req, res) => {
     if(err) {
       res.send(err);
     } else {
-      res.send("Shipping changed!")
+      res.send("Shipping changed!");
     }
   });
 });

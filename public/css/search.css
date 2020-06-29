@@ -1,11 +1,13 @@
 
 .searchnotification{
-    width:100%;
-    background-color: #ccc5b988;
     text-align: center;
     word-wrap: break-word;
     height:auto;
-    padding:20px;
+    color:#ffffff;
+    background-color:#00000044;
+    width:100vw;
+    padding:4px;
+    backdrop-filter: blur(8px);
 }
 
 

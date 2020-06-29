@@ -3,7 +3,9 @@
 const express = require('express');
 const connection = require('../../db');
 const nodemailer = require('nodemailer');
-const { get } = require('./products');
+const {
+  get
+} = require('./products');
 //stripe payment --------------------------------------
 if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv');
@@ -41,7 +43,7 @@ router.post('/purchase', (req, res) => {
   var cus = req.body;
 
   console.log(cus.stripe_id, "customerid");
-  
+
 
   if (cus.stripe_id === "") {
     createUnregistredSession(items)
@@ -102,8 +104,8 @@ async function createUnregistredSession(items) {
     payment_method_types: ['card'],
     line_items: products,
     mode: 'payment',
-    success_url: 'http://localhost:3000/public/path/payment_success.html?session_id={CHECKOUT_SESSION_ID}',
-    cancel_url: 'http://localhost:3000/public/path/cart.html',
+    success_url: 'http://192.168.0.108:3000/public/path/payment_success.html?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: 'http://192.168.108:3000/public/path/cart.html',
   });
 
   return session;
@@ -116,19 +118,10 @@ router.post('/get-stripe-session-line-items', (req, res) => {
   getStripeSessionLineItems(session_id)
     .then((session) => {
       console.log(session, "session");
-      
+
       res.send(session);
     }).catch(error => console.error(error));
 });
-
-
-
-
-async function getStripeSessionLineItems(session_id) {
-  let stripeSession = await stripe.checkout.sessions.listLineItems(session_id);
-  return stripeSession;
-}
-
 
 
 //update product quantity after purchase
@@ -137,14 +130,16 @@ router.post('/purchased-products', (req, res) => {
   sql = "SELECT product.price, product.quantity FROM product WHERE stripe_price = ?;";
   sql2 = "UPDATE product SET quantity = GREATEST(0, quantity - ?) WHERE stripe_price = ?;";
   console.log(products, "products");
-  
+
   //iterate through the items from the request
   for (let i = 0; i < products.length; i++) {
 
     //at each iteration, make a DB call to fetch the price for a product
     connection.query(sql, [products[i].stripe_id], (err, rows, fields) => {
       if (err) {
-        res.send(err);
+        //res.send(err);
+        console.log(err);
+
       } else {
         //if the quantity of a product is not 0 then decrease quantity by 1
         if (rows[0].quantity > 0) {
@@ -157,7 +152,9 @@ router.post('/purchased-products', (req, res) => {
             }
           });
         } else {
-          res.send("There are no items left");
+          console.log("there are no items left");
+
+          //res.send("There are no items left");
         }
 
       }
@@ -171,79 +168,79 @@ router.post('/purchased-products', (req, res) => {
 
 
 //get transaction based on user id
-router.post('/puvvrchase', (req, res) => {
-  var items = req.body.items;
-  var token = req.body.token;
-  let total = 0;
-  sql = "SELECT product.price, product.quantity FROM product WHERE id = ?;";
-  sql2 = "UPDATE product SET quantity = quantity - ? WHERE  id = ?;";
-  //console.log(token, "id");
+// router.post('/puvvrchase', (req, res) => {
+//   var items = req.body.items;
+//   var token = req.body.token;
+//   let total = 0;
+//   sql = "SELECT product.price, product.quantity FROM product WHERE id = ?;";
+//   sql2 = "UPDATE product SET quantity = quantity - ? WHERE  id = ?;";
+//   //console.log(token, "id");
 
-  //iterate through the items from the request
-  for (let i = 0; i < items.length; i++) {
+//   //iterate through the items from the request
+//   for (let i = 0; i < items.length; i++) {
 
-    //at each iteration, make a DB call to fetch the price for a product
-    connection.query(sql, [items[i].id], (err, rows, fields) => {
-      if (err) {
-        res.send(err);
-      } else {
-        //increase the total price by adding product price and quantity
-        total = total + parseFloat(rows[0].price) * parseInt(items[i].quantity);
-        console.log(rows[0].quantity, "quantity");
+//     //at each iteration, make a DB call to fetch the price for a product
+//     connection.query(sql, [items[i].id], (err, rows, fields) => {
+//       if (err) {
+//         res.send(err);
+//       } else {
+//         //increase the total price by adding product price and quantity
+//         total = total + parseFloat(rows[0].price) * parseInt(items[i].quantity);
+//         console.log(rows[0].quantity, "quantity");
 
-        //if the quantity of a product is not 0 then decrease quantity by 1
-        if (rows[0].quantity > 0) {
-          console.log("quantity > 0");
+//         //if the quantity of a product is not 0 then decrease quantity by 1
+//         if (rows[0].quantity > 0) {
+//           console.log("quantity > 0");
 
-          connection.query(sql2, [items[i].quantity, items[i].id], (err, rows, fields) => {
-            if (err) {
-              res.send(err);
-            } else {
+//           connection.query(sql2, [items[i].quantity, items[i].id], (err, rows, fields) => {
+//             if (err) {
+//               res.send(err);
+//             } else {
 
-              //by the end of all the items in the cart, maake a purchase
-              if (i === items.length - 1) {
+//               //by the end of all the items in the cart, maake a purchase
+//               if (i === items.length - 1) {
 
-                stripe.charges.create({
-                  amount: total * 100,
-                  source: token.id,
-                  currency: 'bgn'
-                }).then(() => {
+//                 stripe.charges.create({
+//                   amount: total * 100,
+//                   source: token.id,
+//                   currency: 'bgn'
+//                 }).then(() => {
 
-                  const data = {
-                    "card_brand": token.card.brand,
-                    "card_last4": token.card.last4,
-                    "card_holder": token.card.name,
-                    "date": token.created,
-                    "email": token.email,
-                    "total_amount": total + "Lev"
-                  };
+//                   const data = {
+//                     "card_brand": token.card.brand,
+//                     "card_last4": token.card.last4,
+//                     "card_holder": token.card.name,
+//                     "date": token.created,
+//                     "email": token.email,
+//                     "total_amount": total + "Lev"
+//                   };
 
-                  //on purchase success, inflate a page with purchase infor
-                  res.render("receipt", data);
-
-
-                }).catch((error) => {
-                  console.log(error);
-                  res.send(error);
-                });
-              }
-
-            }
-          });
-        } else {
-          console.log("quantity = 0");
-
-          res.send("There are no items left");
-        }
+//                   //on purchase success, inflate a page with purchase infor
+//                   res.render("receipt", data);
 
 
+//                 }).catch((error) => {
+//                   console.log(error);
+//                   res.send(error);
+//                 });
+//               }
 
-      }
-    });
+//             }
+//           });
+//         } else {
+//           console.log("quantity = 0");
 
-  }
+//           res.send("There are no items left");
+//         }
 
-});
+
+
+//       }
+//     });
+
+//   }
+
+// });
 
 
 //get transaction based on user id
@@ -337,5 +334,107 @@ router.get('/test', (req, res) => {
     root: __dirname
   });
 });
+
+//get stripe payment intent object
+router.get('/payment-intent/:paymentid', (req, res) => {
+  var payment_id = req.params.paymentid;
+
+  getPaymentIntent(payment_id)
+    .then((payment) => {
+      console.log(payment, "http received");
+
+      res.send(payment);
+    }).catch(error => res.send(error));
+});
+
+//get stripe session id object
+router.get('/stripe-session/:id', (req, res) => {
+  var session_id = req.params.id;
+
+  getSession(session_id).then((session) => {
+    res.send(session);
+  }).catch(error => res.send(error));
+});
+
+router.post('/create-order', (req, res) => {
+  var session_id = req.body.sessionid;
+  var values;
+  //console.log(sql, "at begining");
+
+  var sql = "INSERT INTO orders (receipt_number, created, amount) VALUES (?, ?, ?); " +
+    "SET @orderID = LAST_INSERT_ID(); " +
+    "INSERT INTO user_order (user_id, order_id) VALUES " +
+    "((SELECT id FROM user WHERE stripe_id = ?), @orderID); ";
+  console.log(session_id, "from request");
+
+  getSession(session_id)
+    .then((session) => {
+      console.log(session, "get session");
+
+      getPaymentIntent(session.payment_intent)
+        .then((intent) => {
+          //console.log(intent, "intent");
+          console.log(intent.charges.data[0], "datazero");
+          console.log(intent.charges.data[0].receipt_number, "receipt number");
+          console.log(intent.created, "created");
+          console.log(intent.amount / 100, "amount");
+          console.log(session.customer, "customer");
+
+          //we pass to the array the receipt_number, data created, amount and stripe customer
+          values = [intent.charges.data[0].receipt_number, intent.created, intent.amount / 100, session.customer];
+
+          console.log(sql, "cursed sql");
+          console.log(values, "values");
+
+          connection.query(sql, values, (err, rows, fields) => {
+            if (err) {
+              res.send(err);
+            } else {
+              res.sendStatus(201);
+            }
+          });
+        }).catch(error => console.error(error));
+
+    }).catch(error => res.send(error));
+
+});
+
+
+router.get('/orders/:id', (req, res) => {
+  var user_id = req.params.id;
+
+  sql = "SELECT orders.* " +
+    "FROM user " +
+    "LEFT JOIN user_order ON user.id = user_order.user_id " +
+    "LEFT JOIN orders ON user_order.order_id = orders.id " +
+    "WHERE user.id = ?;";
+  connection.query(sql, [user_id], (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(rows);
+    }
+  });
+
+});
+
+//Stripe session ----------------------------------------------------------
+
+async function getSession(session_id) {
+  var session = await stripe.checkout.sessions.retrieve(session_id);
+  return session;
+}
+
+async function getStripeSessionLineItems(session_id) {
+  let stripeSession = await stripe.checkout.sessions.listLineItems(session_id);
+  return stripeSession;
+}
+
+//Stripe payment intent --------------------------------------------------
+
+async function getPaymentIntent(payment_id) {
+  var paymentIntent = await stripe.paymentIntents.retrieve(payment_id);
+  return paymentIntent;
+}
 
 module.exports = router;

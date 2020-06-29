@@ -27,7 +27,7 @@ var default_section;
 //product textfields
 var product_name_txt = document.getElementById('product_name');
 var product_price_txt = document.getElementById('product_price');
-var product_new_price_txt = document.getElementById('product_new_price');
+//var product_new_price_txt = document.getElementById('product_new_price');
 var product_ean_txt = document.getElementById('product_ean');
 var product_availability_txt = document.getElementById('product_availability');
 var product_quantity_txt = document.getElementById('product_quantity');
@@ -91,6 +91,7 @@ var cat_array = [];
 var sec_array = [];
 //reusable variables
 var key = "myImage";
+var product_old_price = "";
 var formdata;
 var fileInput;
 var colour;
@@ -314,7 +315,7 @@ function deleteImages(image_id, url) {
 update_product_button.addEventListener("click", () => {
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
-  var product_new_price = product_new_price_txt.value;
+  //var product_new_price = product_new_price_txt.value;
   var product_ean = product_ean_txt.value;
   var product_availability = product_availability_txt.value;
   var product_quantity = product_quantity_txt.value;
@@ -334,7 +335,7 @@ update_product_button.addEventListener("click", () => {
   var product_section = product_section_slc.value;
 
   //check if the fields are empty
-  var empty_fields = isItEmpty([product_name, product_price, product_new_price,
+  var empty_fields = isItEmpty([product_name, product_price,
     product_ean, product_availability, product_quantity, product_brand, product_design,
     product_description, product_material, product_diameter, product_length,
     product_width, product_height, product_volume, product_weight, product_size
@@ -351,7 +352,7 @@ update_product_button.addEventListener("click", () => {
     'name': product_name,
     'price': product_price,
     'stripe_price': stripe_price,
-    'new_price': product_new_price,
+    'old_price': product_old_price,
     'ean': product_ean,
     'availability': product_availability,
     'quantity': product_quantity,
@@ -401,7 +402,7 @@ function updateProductText(data) {
     .then(response => response.text())
     .then((result) => {
       console.log(result);
-      location.reload(true);
+      //location.reload(true);
     }).catch(error => console.log('error', error));
 }
 
@@ -627,8 +628,9 @@ function populateSelectorsFields() {
       stripe_id = data[0].stripe_id;
       product_name_txt.value = data[0].name;
       product_price_txt.value = data[0].price;
+      product_old_price = data[0].price;
       stripe_price = data[0].stripe_price;
-      product_new_price_txt.value = data[0].new_price;
+      //product_new_price_txt.value = data[0].new_price;
       product_ean_txt.value = data[0].ean;
       product_availability_txt.value = data[0].availability;
       product_quantity_txt.value = data[0].quantity;

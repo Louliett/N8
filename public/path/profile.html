@@ -14,27 +14,63 @@
   <link rel="icon" href="../site/n8.ico">
   <link rel="stylesheet" href="/public/css/profile.css">
   <link rel="stylesheet" href="/public/css/header.css">
-  <link rel="stylesheet" href="/public/css/popupaddcard.css">
-
 </head>
-
-
-
-
-
-
 
 
 <body id="main">
 
+  <div id="modal_address_div" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <span class="address_span_div">
+          <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 0 20 20" width="30" class="closecard"
+            id="close_address_window">
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
+        </span>
+        <h2 id="address_operation"> Address </h2>
+      </div>
+
+      <div class="modal-body">
+
+        <div class='billing address'>
+          <p class='separator'>Address</p>
+          <p class='newcardtitle'>City</p>
+          <select id="bulgarian_cities" class="required card_expirationYear" style="width: 90px;"
+            name="card_expirationYear" data-field-name='billingcity'>
+            <option id="default_city"></option>
+          </select>
+          <p class='newcardtitle'>Phone Number</p>
+          <input id='phone_number' type='text' placeholder="Phone Number" data-field-name='billingphone'>
+          <p class='newcardtitle'>Address</p>
+          <input id='address1' type='text' placeholder="Address Line 1" data-field-name='billingaddress1'>
+          <p class='newcardtitle'>Address</p>
+          <input id='address2' type='text' placeholder="Address Line 2" data-field-name='billingaddress2'>
+          <p class='newcardtitle'>Post code</p>
+          <input id='postcode' type='text' placeholder="Post Code">
+          <p></p>
+          <input type="checkbox" id="shipping"><label> This Is My Shipping Address </label>
+          <br>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="editaddress" id="address_button"> Button </button>
+      </div>
+
+    </div>
+
+  </div>
+
 
   <div id='includedContent'></div>
-  <div id='address'></div>
-
   <div class='morestuff'>
-
-
-
 
     <div style='width:100%;text-align: center;position:relative;'>
       <div class="profileinfo">

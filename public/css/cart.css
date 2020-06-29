@@ -683,3 +683,12 @@ width:100%;
   font-size:53px;
     width:100%;
 }
+.no{
+    
+    display:none;
+    color:#ffffff;
+        background-color:#ff5964cc;
+padding:4px;
+    font-size:12px;
+    
+}
