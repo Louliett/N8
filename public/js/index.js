@@ -9,6 +9,17 @@ var ratio = window.devicePixelRatio || 1;
 var w = screen.width * ratio;
 var h = screen.height * ratio;
 
+ var query = decodeURIComponent(window.location.search);
+  query = query.replace('?', '');
+if(query=='retuning'){
+    
+    document.cookie = "items=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+
+    
+}
+
+
+
 $("#includedContent").load("/public/html/header.html", () => {
 
 
@@ -324,7 +335,7 @@ $("#includedContent").load("/public/html/header.html", () => {
       cardDiv.addEventListener("mouseover", function () {
         console.log(this);
         //var image=this.childNodes[1].setAttribute("style", "width:60%; height:120%;");
-      });
+      })
     }
 
 

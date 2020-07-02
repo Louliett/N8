@@ -8,7 +8,13 @@ var selectedBilling;
 let isEvent = false;
 var product_ids_check = [];
 var product_ids_values = [];
+var added_products_prices = [];
 var $wrapper = $('.finalize_top, .finalize_bottom')
+
+
+$('.vat').text('VAT: ' + 0 + '.лв');
+$('.total').html('Total: <span class="totaltotal">' + 0 + '</span> .лв');
+
 
 var selectedNewShipping = {
   delivery_postcode: "####",
@@ -18,8 +24,7 @@ var selectedNewShipping = {
   names1: "####",
   names2: "####",
   phonenumber: "####"
-};
-
+}
 var selectedNewBilling = {
   delivery_postcode: "####",
   delivery_address1: "####",
@@ -28,8 +33,7 @@ var selectedNewBilling = {
   names1: "####",
   names2: "####",
   phonenumber: "####"
-};
-
+}
 var sequenceActive = null;
 
 
@@ -81,7 +85,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     setTitle('YOUR CART');
     $('<div class="sequence"><div class="sequencePointParent" data-id="one" data-name="Cart"><div class="partcart sequencepoint active" id="sequencepointactive"  data-id="1"><p class="sequenceText">Cart</p></div><div hidden class="hoverInfo" id="partCartDone"> <span class="hoverInfoText">Cart complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone one"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCartError"> <span class="hoverInfoText cart_error">Your cart is empty!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="two" data-name="Shipping"><div class="partaddress sequencepoint" id="sequencepoint"  data-id="2"><p class="sequenceText">2</p></div><div hidden class="hoverInfo" id="partAddressDone"> <span class="hoverInfoText">Shipping information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone two"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partAddressError"> <span class="hoverInfoText">Problem with your shipping information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="three" data-name="Billing"><div   data-id="3" class="partcard sequencepoint" id="sequencepoint"><p class="sequenceText">3</p></div><div hidden class="hoverInfo" id="partCardDone"> <span class="hoverInfoText">Billing information complete!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone three"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo" id="partCardError"> <span class="hoverInfoText">Problem with your billing information!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div><div class="sequencePointParent" data-id="four" data-name="Summary"><div  data-id="4" class="partfinal sequencepoint" id="sequencepoint"><p class="sequenceText">4</p></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Order ready!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointDone four"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div hidden class="hoverInfo"> <span class="hoverInfoText">Problem with your order!</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px" class="sequencePointWarning"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.73 21h18.53c.77 0 1.25-.83.87-1.5l-9.27-16c-.39-.67-1.35-.67-1.73 0l-9.27 16c-.38.67.1 1.5.87 1.5zM13 18h-2v-2h2v2zm-1-4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z"/></svg></div></div></div>').appendTo($('.free_real_estate'));
 
-    var $sequence = $('.sequencePointParent');
+    $sequence = $('.sequencePointParent');
     sequenceActive = $sequence[0].childNodes[0];
 
     $sequence.click(function (e) {
@@ -206,11 +210,9 @@ function addressCheck() {
     }
   } else {
     for (var i = 0; i < requiredFields.length; i++) {
-      if (requiredFields[i].classList.contains('empty') || requiredFields[i].value.length < 1) {
+      if (complexCheck(requiredFields[i])) {
         error = true;
-        requiredFields[i].classList.add('error');
-        $(requiredFields[i].dataset.errorId).removeAttr('hidden');
-        $(requiredFields[i].dataset.errorId).html('Field cannot be empty!');
+
 
       }
     }
@@ -557,7 +559,12 @@ function createCart(products) {
   product_ids_values = [];
 
   for (var i = 0; i < products.length; i++) {
+    var qty = parseInt(products[i].quantity);
+    var prc = parseFloat(products[i].price);
+    prc = prc * qty;
+    added_products_prices.push(prc);
     product_id = products[i].id + products[i].color;
+    product_id = product_id.replace(/\s/g, "");
     tempCookieArray.push({
       id: products[i].id,
       quantity: products[i].quantity,
@@ -768,32 +775,7 @@ function fixArray() {
 }
 
 
-function calculatePrice() {
 
-  var vat = 20;
-  var shipping = Math.floor(Math.random() * (20 - 4) + 4);
-  var sum = 0;
-  var temmpsum;
-  var quantity;
-  var price;
-  var totals = $('.totalspan');
-
-  for (var i = 0; i < totals.length; i++) {
-
-    sum += (+totals[i].innerHTML);
-
-  }
-
-
-
-
-
-  $('.subtotal').text('Subtotal: ' + sum + '$');
-  $('.shipping').text('Shipping: ' + 8 + '$');
-  $('.vat').text('VAT: ' + 20 + '%');
-  $('.total').html('Total: <span class="totaltotal">' + (sum + (sum * 0.2) + shipping) + '</span>$');
-
-}
 if (loggedin === '1') {
   fetchCustomer();
 } else if (loggedin === '0') {
@@ -898,9 +880,10 @@ function addAddresses(addresses, customer) {
 
 
 
-  $('<div hidden class="shipping_new"><h3>New shipping address</h3><div class="shippingaddress"><div class="input"><p class="new_address_title">First name</p><p id="error_shipping_address_first_name" class="error_address first_name" hidden="">Error</p> <input class="required shipping_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_shipping_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name</p><p id="error_shipping_address_last_name" class="error_address last_name" hidden="">Error</p> <input class="required shipping_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_shipping_address_last_name" /></div><div class="input"><p class="new_address_title">City</p><p id="error_shipping_address_city" class="error_address city" hidden="">Error</p> <select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_shipping_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number</p><p id="error_shipping_address_phone_number" class="error_address phone_number" hidden="">Error</p> <input class="required shipping_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_shipping_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1</p><p id="error_shipping_address_address1" class="error_address address1" hidden="">Error</p> <input class="required shipping_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_shipping_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2</p><p id="error_shipping_address_address2" class="error_address address2" hidden="">Error</p> <input class="required shipping_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_shipping_address_address2" /></div><div class="input"><p class="new_address_title">Postcode</p><p id="error_shipping_address_postcode" class="error_address postcode" hidden="">Error</p> <input class="required shipping_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_shipping_address_postcode" /></div></div>').appendTo($shippingAddress);
 
-  $('<div hidden class="billing_new" hidden=""><h3>New billing address</h3><div class="billingaddress"><div class="input"><p class="new_address_title">First name</p><p id="error_billing_address_first_name" class="error_address first_name" hidden="">Error</p> <input class="required billing_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_billing_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name</p><p id="error_billing_address_last_name" class="error_address last_name" hidden="">Error</p> <input class="required billing_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_billing_address_last_name" /></div><div class="input"><p class="new_address_title">City</p><p id="error_billing_address_city" class="error_address city" hidden="">Error</p> <select id="bulgarian_cities" class="required billing_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_billing_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number</p><p id="error_billing_address_phone_number" class="error_address phone_number" hidden="">Error</p> <input class="required billing_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_billing_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1</p><p id="error_billing_address_address1" class="error_address address1" hidden="">Error</p> <input class="required billing_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_billing_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2</p><p id="error_billing_address_address2" class="error_address address2" hidden="">Error</p> <input class="required billing_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_billing_address_address2" /></div><div class="input"><p class="new_address_title">Postcode</p><p id="error_billing_address_postcode" class="error_address postcode" hidden="">Error</p> <input class="required billing_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_billing_address_postcode" /></div></div>').appendTo($billingAddress);
+  $('<div class="shipping_new"><h3>New shipping address</h3><div class="shippingaddress"><div class="input"><p class="new_address_title">First name<span id="error_shipping_address_first_name" class="error_address first_name" hidden="">Error</span> </p><input class="required shipping_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_shipping_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name<span id="error_shipping_address_last_name" class="error_address last_name" hidden="">Error</span> </p><input class="required shipping_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_shipping_address_last_name" /></div><div class="input"><p class="new_address_title">City<span id="error_shipping_address_city" class="error_address city" hidden="">Error</span> </p><select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_shipping_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number<span id="error_shipping_address_phone_number" class="error_address phone_number" hidden="">Error</span> </p><input class="required shipping_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_shipping_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1<span id="error_shipping_address_address1" class="error_address address1" hidden="">Error</span> </p><input class="required shipping_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_shipping_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2<span id="error_shipping_address_address2" class="error_address address2" hidden="">Error</span> </p><input class="required shipping_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_shipping_address_address2" /></div><div class="input"><p class="new_address_title">Postcode<span id="error_shipping_address_postcode" class="error_address postcode" hidden="">Error</span> </p><input class="required shipping_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_shipping_address_postcode" /></div></div>').appendTo($shippingAddress);
+
+  $('<div class="billing_new"><h3>New billing address</h3><div class="billingaddress"><div class="input"><p class="new_address_title">First name<span id="error_billing_address_first_name" class="error_address first_name" hidden="">Error</span> </p><input class="required billing_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_billing_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name<span id="error_billing_address_last_name" class="error_address last_name" hidden="">Error</span> </p><input class="required billing_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_billing_address_last_name" /></div><div class="input"><p class="new_address_title">City<span id="error_billing_address_city" class="error_address city" hidden="">Error</span> </p><select id="bulgarian_cities" class="required billing_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_billing_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number<span id="error_billing_address_phone_number" class="error_address phone_number" hidden="">Error</span> </p><input class="required billing_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_billing_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1<span id="error_billing_address_address1" class="error_address address1" hidden="">Error</span> </p><input class="required billing_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_billing_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2<span id="error_billing_address_address2" class="error_address address2" hidden="">Error</span> </p><input class="required billing_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_billing_address_address2" /></div><div class="input"><p class="new_address_title">Postcode<span id="error_billing_address_postcode" class="error_address postcode" hidden="">Error</span> </p><input class="required billing_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_billing_address_postcode" /></div></div>').appendTo($billingAddress);
 
 
 
@@ -968,6 +951,8 @@ function addAddresses(addresses, customer) {
 
 
   drawLine();
+  addHandlers();
+
 
 
 
@@ -999,9 +984,9 @@ function fetchCustomerNew() {
 
 
 
-  $('<div class="shipping_new"><h3>New shipping address</h3><div class="shippingaddress"><div class="input"><p class="new_address_title">First name</p><p id="error_shipping_address_first_name" class="error_address first_name" hidden="">Error</p> <input class="required shipping_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_shipping_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name</p><p id="error_shipping_address_last_name" class="error_address last_name" hidden="">Error</p> <input class="required shipping_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_shipping_address_last_name" /></div><div class="input"><p class="new_address_title">City</p><p id="error_shipping_address_city" class="error_address city" hidden="">Error</p> <select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_shipping_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number</p><p id="error_shipping_address_phone_number" class="error_address phone_number" hidden="">Error</p> <input class="required shipping_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_shipping_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1</p><p id="error_shipping_address_address1" class="error_address address1" hidden="">Error</p> <input class="required shipping_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_shipping_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2</p><p id="error_shipping_address_address2" class="error_address address2" hidden="">Error</p> <input class="required shipping_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_shipping_address_address2" /></div><div class="input"><p class="new_address_title">Postcode</p><p id="error_shipping_address_postcode" class="error_address postcode" hidden="">Error</p> <input class="required shipping_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_shipping_address_postcode" /></div></div>').appendTo($shippingAddress);
+  $('<div class="shipping_new"><h3>New shipping address</h3><div class="shippingaddress"><div class="input"><p class="new_address_title">First name<span id="error_shipping_address_first_name" class="error_address first_name" hidden="">Error</span> </p><input class="required shipping_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_shipping_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name<span id="error_shipping_address_last_name" class="error_address last_name" hidden="">Error</span> </p><input class="required shipping_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_shipping_address_last_name" /></div><div class="input"><p class="new_address_title">City<span id="error_shipping_address_city" class="error_address city" hidden="">Error</span> </p><select id="bulgarian_cities" class="required shipping_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_shipping_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number<span id="error_shipping_address_phone_number" class="error_address phone_number" hidden="">Error</span> </p><input class="required shipping_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_shipping_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1<span id="error_shipping_address_address1" class="error_address address1" hidden="">Error</span> </p><input class="required shipping_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_shipping_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2<span id="error_shipping_address_address2" class="error_address address2" hidden="">Error</span> </p><input class="required shipping_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_shipping_address_address2" /></div><div class="input"><p class="new_address_title">Postcode<span id="error_shipping_address_postcode" class="error_address postcode" hidden="">Error</span> </p><input class="required shipping_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_shipping_address_postcode" /></div></div>').appendTo($shippingAddress);
 
-  $('<div class="billing_new"><h3>New billing address</h3><div class="billingaddress"><div class="input"><p class="new_address_title">First name</p><p id="error_billing_address_first_name" class="error_address first_name" hidden="">Error</p> <input class="required billing_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_billing_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name</p><p id="error_billing_address_last_name" class="error_address last_name" hidden="">Error</p> <input class="required billing_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_billing_address_last_name" /></div><div class="input"><p class="new_address_title">City</p><p id="error_billing_address_city" class="error_address city" hidden="">Error</p> <select id="bulgarian_cities" class="required billing_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_billing_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number</p><p id="error_billing_address_phone_number" class="error_address phone_number" hidden="">Error</p> <input class="required billing_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_billing_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1</p><p id="error_billing_address_address1" class="error_address address1" hidden="">Error</p> <input class="required billing_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_billing_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2</p><p id="error_billing_address_address2" class="error_address address2" hidden="">Error</p> <input class="required billing_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_billing_address_address2" /></div><div class="input"><p class="new_address_title">Postcode</p><p id="error_billing_address_postcode" class="error_address postcode" hidden="">Error</p> <input class="required billing_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_billing_address_postcode" /></div></div>').appendTo($billingAddress);
+  $('<div class="billing_new"><h3>New billing address</h3><div class="billingaddress"><div class="input"><p class="new_address_title">First name<span id="error_billing_address_first_name" class="error_address first_name" hidden="">Error</span> </p><input class="required billing_address first_name" type="text" placeholder="First name" data-relevance="names1" data-error-id="#error_billing_address_first_name" /></div><div class="input"><p class="new_address_title">Last Name<span id="error_billing_address_last_name" class="error_address last_name" hidden="">Error</span> </p><input class="required billing_address last_name" type="text" placeholder="Last name" data-relevance="names2" data-error-id="#error_billing_address_last_name" /></div><div class="input"><p class="new_address_title">City<span id="error_billing_address_city" class="error_address city" hidden="">Error</span> </p><select id="bulgarian_cities" class="required billing_address city" style="width: 90px;" data-relevance="delivery_city" data-error-id="#error_billing_address_city"><option id="default_city"></option><option value="Sofia">Sofia</option><option value="Plovdiv">Plovdiv</option><option value="Varna">Varna</option><option value="Burgas">Burgas</option><option value="Ruse">Ruse</option><option value="Stara Zagora">Stara Zagora</option><option value="Pleven">Pleven</option><option value="Sliven">Sliven</option><option value="Dobrich">Dobrich</option><option value="Shumen">Shumen</option><option value="Pernik">Pernik</option><option value="Haskovo">Haskovo</option><option value="Vratsa">Vratsa</option><option value="Kyustendil">Kyustendil</option><option value="Montana">Montana</option><option value="Lovech">Lovech</option><option value="Razgrad">Razgrad</option><option value="Borino">Borino</option><option value="Madan">Madan</option><option value="Zlatograd">Zlatograd</option><option value="Pazardzhik">Pazardzhik</option><option value="Smolyan">Smolyan</option><option value="Blagoevgrad">Blagoevgrad</option><option value="Nedelino">Nedelino</option><option value="Rudozem">Rudozem</option><option value="Devin">Devin</option><option value="Veliko Tarnovo">Veliko Tarnovo</option><option value="Vidin">Vidin</option><option value="Kirkovo">Kirkovo</option><option value="Krumovgrad">Krumovgrad</option><option value="Dzhebel">Dzhebel</option><option value="Silistra">Silistra</option><option value="Sarnitsa">Sarnitsa</option><option value="Shiroka Laka">Shiroka Laka</option><option value="Yambol">Yambol</option><option value="Dospat">Dospat</option><option value="Kardzhali">Kardzhali</option><option value="Gabrovo">Gabrovo</option><option value="Targovishte">Targovishte</option> </select></div><div class="input"><p class="new_address_title">Phone number<span id="error_billing_address_phone_number" class="error_address phone_number" hidden="">Error</span> </p><input class="required billing_address phone_number" type="text" placeholder="+359 XXX XX XXX" data-relevance="phonenumber" data-error-id="#error_billing_address_phone_number" /></div><div class="input"><p class="new_address_title">Address line 1<span id="error_billing_address_address1" class="error_address address1" hidden="">Error</span> </p><input class="required billing_address address1" type="text" placeholder="bul. Kliment Ohrisdski 65e" data-relevance="delivery_address1" data-error-id="#error_billing_address_address1" /></div><div class="input"><p class="new_address_title">Address line 2<span id="error_billing_address_address2" class="error_address address2" hidden="">Error</span> </p><input class="required billing_address address2" type="text" placeholder="floor 2, ap. 3, brown door" data-relevance="delivery_address2" data-error-id="#error_billing_address_address2" /></div><div class="input"><p class="new_address_title">Postcode<span id="error_billing_address_postcode" class="error_address postcode" hidden="">Error</span> </p><input class="required billing_address postcode" type="text" placeholder="1762" data-relevance="delivery_postcode" data-error-id="#error_billing_address_postcode" /></div></div>').appendTo($billingAddress);
 
   $('.required.shipping_address').change(function (e) {
     selectedNewShipping[e.target.dataset.relevance] = e.target.value;
@@ -1010,8 +995,11 @@ function fetchCustomerNew() {
   $('.required.billing_address').change(function (e) {
     selectedNewBilling[e.target.dataset.relevance] = e.target.value;
 
+
+
   });
   drawLine();
+  addHandlers();
 
 
 
@@ -1244,4 +1232,260 @@ function checkAvailability() {
   }).catch((error) => {
     console.log(error)
   })
+}
+
+function addHandlers() {
+  var $fields = $('.required');
+
+  for (var i = 0; i < $fields.length; i++) {
+    var temptemptemp = $($fields[i]);
+
+
+    if (temptemptemp.hasClass('first_name') || temptemptemp.hasClass('last_name')) {
+      temptemptemp.change(function (e) {
+        var v = e.currentTarget.value;
+        var field = e.currentTarget;
+        if (v.length < 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Field cannot be empty!');
+        } else if (v.length == 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Please enter a valid first name!');
+        } else if (/\d/.test(v)) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('No numbers allowed in this field!');
+        } else {
+          field.classList.remove('error');
+          $(field.dataset.errorId).attr('hidden', 'hidden');
+        }
+
+      })
+
+    } else if (temptemptemp.hasClass('city')) {
+
+    } else if (temptemptemp.hasClass('address1')) {
+      temptemptemp.change(function (e) {
+        var v = e.currentTarget.value;
+        var field = e.currentTarget;
+        if (v.length < 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Field cannot be empty!');
+        } else if (v.length == 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Please enter a valid first name!');
+        } else {
+          field.classList.remove('error');
+          $(field.dataset.errorId).attr('hidden', 'hidden');
+        }
+
+      })
+
+    } else if (temptemptemp.hasClass('postcode')) {
+      temptemptemp.change(function (e) {
+        var v = e.currentTarget.value;
+        var field = e.currentTarget;
+        if (v.length < 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Field cannot be empty!');
+        } else if (v.length < 4) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Please enter a valid phone number');
+        } else {
+          field.classList.remove('error');
+          $(field.dataset.errorId).attr('hidden', 'hidden');
+        }
+
+      })
+
+    } else if (temptemptemp.hasClass('phone_number')) {
+      temptemptemp.change(function (e) {
+        var v = e.currentTarget.value;
+        var field = e.currentTarget;
+        if (v.length < 1) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Field cannot be empty!');
+        } else if (v.length > 1 && v.length < 7) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Please enter a valid phone number');
+        } else if (/[A-Za-z]+$/.test(v)) {
+          field.classList.add('error');
+          $(field.dataset.errorId).removeAttr('hidden');
+          $(field.dataset.errorId).html('Please enter a valid phone number!');
+        } else {
+          field.classList.remove('error');
+          $(field.dataset.errorId).attr('hidden', 'hidden');
+        }
+
+      })
+
+    }
+
+
+  }
+
+
+}
+
+
+function complexCheck(vi) {
+
+
+
+  var temptemptemp = $(vi);
+
+
+  if (temptemptemp.hasClass('first_name') || temptemptemp.hasClass('last_name')) {
+    var v = temptemptemp.val();
+    var field = temptemptemp[0];
+    if (v.length < 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Field cannot be empty!');
+      return true;
+    } else if (v.length == 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Please enter a valid first name!');
+      return true;
+
+    } else if (/\d/.test(v)) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('No numbers allowed in this field!');
+      return true;
+
+    } else {
+      field.classList.remove('error');
+      $(field.dataset.errorId).attr('hidden', 'hidden');
+      return false;
+
+    }
+
+
+
+  } else if (temptemptemp.hasClass('city')) {
+    var v = temptemptemp.val();
+    var field = temptemptemp[0];
+    if (v.length < 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Field cannot be empty!');
+      return true;
+    } else {
+      field.classList.remove('error');
+      $(field.dataset.errorId).attr('hidden', 'hidden');
+      return false;
+
+    }
+
+  } else if (temptemptemp.hasClass('address1')) {
+    var v = temptemptemp.val();
+    var field = temptemptemp[0];
+    if (v.length < 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Field cannot be empty!');
+      return true;
+
+    } else if (v.length == 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Please enter a valid first name!');
+      return true;
+
+    } else {
+      field.classList.remove('error');
+      $(field.dataset.errorId).attr('hidden', 'hidden');
+      return false;
+
+    }
+
+
+
+  } else if (temptemptemp.hasClass('postcode')) {
+    var v = temptemptemp.val();
+    var field = temptemptemp[0];
+    if (v.length < 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Field cannot be empty!');
+      return true;
+
+    } else if (v.length < 4) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Please enter a valid phone number');
+      return true;
+
+    } else {
+      field.classList.remove('error');
+      $(field.dataset.errorId).attr('hidden', 'hidden');
+      return false;
+
+    }
+
+
+
+  } else if (temptemptemp.hasClass('phone_number')) {
+    var v = temptemptemp.val();
+    var field = temptemptemp[0];
+    if (v.length < 1) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Field cannot be empty!');
+      return true;
+
+    } else if (v.length > 1 && v.length < 7) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Please enter a valid phone number');
+      return true;
+
+    } else if (/[A-Za-z]+$/.test(v)) {
+      field.classList.add('error');
+      $(field.dataset.errorId).removeAttr('hidden');
+      $(field.dataset.errorId).html('Please enter a valid phone number!');
+      return true;
+
+    } else {
+      field.classList.remove('error');
+      $(field.dataset.errorId).attr('hidden', 'hidden');
+      return false;
+
+    }
+  }
+
+
+
+  return false;
+
+
+}
+
+
+function calculatePrice() {
+
+  var total = added_products_prices.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+  $('.subtotal').text('Subtotal: ' + total + ' .лв');
+
+  total = total + 12.40;
+  total = total + (total * 0.2);
+  total = Number((total).toFixed(2));
+  var vat = total * 0.2;
+  vat = Number((vat).toFixed(2))
+
+  $('.shipping').text('Shipping: 12.40 .лв');
+  $('.vat').text('VAT: ' + vat + '.лв');
+  $('.total').html('Total: <span class="totaltotal">' + total + '</span> .лв');
 }

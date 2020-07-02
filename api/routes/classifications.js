@@ -73,7 +73,7 @@ router.post('/subcategory-id', (req, res, next) => {
 //select category based on id
 router.post('/category-id', (req, res, next) => {
   id = req.body.id;
-  sql = "SELECT name FROM category WHERE id = ?;"
+  sql = "SELECT name FROM category WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if (err) {
       console.log(err);
@@ -86,7 +86,7 @@ router.post('/category-id', (req, res, next) => {
 //select category based on id
 router.post('/section-id', (req, res, next) => {
   id = req.body.id;
-  sql = "SELECT name FROM section WHERE id = ?;"
+  sql = "SELECT name FROM section WHERE id = ?;";
   connection.query(sql, [id], (err, rows, fields) => {
     if (err) {
       console.log(err);

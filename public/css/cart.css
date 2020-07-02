@@ -436,6 +436,11 @@ div{color:#1b1b1b}
 
     
 }
+.shipping-new,  .billing-new{
+    display:none;
+    
+    
+}
 .shipping-button, .billing-button{
     
     
@@ -510,12 +515,15 @@ input[type="radio"]:after {
 }
 .error_address{
     
-    color:#ffffff;
-    background-color:#ff5964cc;
-    margin-top:4px;
-    margin-bottom:4px;
-    padding:2px;
-min-width: 240px;    
+    color:#ff5964cc;
+    padding-left:18px;
+   
+    
+}
+.error_address::before{
+    
+  content: "/";
+   
     
 }
 .new_address_title{

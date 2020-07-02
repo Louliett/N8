@@ -114,16 +114,16 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
         .then((stripe_price) => {
 
           var values = [stripe_product.id, product.name, product.price, stripe_price.id, "",
-            product.ean, product.availability, product.quantity, product.brand,
-            product.design, product.description, product.material, product.diameter,
+            product.sku, product.availability, product.quantity, product.brand,
+            product.design, product.tag, product.description, product.material, product.diameter,
             product.length, product.width, product.height, product.volume, product.weight,
             product.size, product.subcategory, product.category, product.section,
             "default", default_n8_image
           ];
 
-          sql = "INSERT INTO product (stripe_id, name, price, stripe_price, old_price, ean, availability, quantity, brand, design, " +
-            "description, material, diameter, length, width, height, volume, weight, size) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
+          sql = "INSERT INTO product (stripe_id, name, price, stripe_price, old_price, sku, availability, quantity, brand, design, " +
+            "tag, description, material, diameter, length, width, height, volume, weight, size) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); " +
             "SET @productID = LAST_INSERT_ID(); " +
             "INSERT INTO product_classification (product_id, subcategory_id, category_id, section_id) " +
             "VALUES (@productID, " +
@@ -215,7 +215,7 @@ router.post('/get-stripe-product', (req, res) => {
 
 
 //upload images [v]
-router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
+router.post('/upload-images', upload.array('myImage', 9), (req, res) => {
   let product = req.body;
   var colours = [];
 
@@ -274,16 +274,10 @@ router.post('/upload-images', upload.array('myImage', 5), (req, res) => {
         console.log(err);
         console.log("upload images to db failed!");
       } else {
-        res.send({
-          'status': 201
-        });
+        res.sendStatus(201);
         console.log("upload images to db success!");
       }
     });
-
-
-
-
 
   }
 
@@ -352,17 +346,23 @@ router.get('/first-letter/:letter', (req, res) => {
   var letter = req.params.letter + "%";
 
   //default query for dealing with product's first letter
-  sql = "SELECT product.*, subcategory.name as subcategory, category.name as category, section.name as section " +
-    "FROM product " +
-    "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
-    "LEFT JOIN subcategory ON subcategory_id=subcategory.id " +
-    "LEFT JOIN category ON category_id=category.id " +
-    "LEFT JOIN section ON section_id=section.id " +
-    "WHERE product.name LIKE ?;";
+  sql = "SELECT product.id, product.name, product.price, product.old_price, " +
+        "product.sku, product.availability, product.quantity, product.brand, " + 
+        "product.design, product.tag, subcategory.name as subcategory, " + 
+        "category.name as category, section.name as section " +
+        "FROM product " +
+        "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
+        "LEFT JOIN subcategory ON subcategory_id=subcategory.id " +
+        "LEFT JOIN category ON category_id=category.id " +
+        "LEFT JOIN section ON section_id=section.id " +
+        "WHERE product.name LIKE ?;";
 
   //query for selecting all the products
   if (req.params.letter === "*") {
-    sql = "SELECT product.*, subcategory.name as subcategory, category.name as category, section.name as section " +
+    sql = "SELECT product.id, product.name, product.price, product.old_price, " +
+      "product.sku, product.availability, product.quantity, product.brand, " +
+      "product.design, product.tag, subcategory.name as subcategory, " +
+      "category.name as category, section.name as section " +
       "FROM product " +
       "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
       "LEFT JOIN subcategory ON subcategory_id=subcategory.id " +
@@ -478,26 +478,22 @@ router.put('/update-product', (req, res, next) => {
   //first we update the product on stripe
   updateStripeProduct(product.stripe_id, product.name, product.brand, product.description)
     .then((stripe_product) => {
-      
+
       //then we update the price(if needed) for that product
       updateStripePrice(product.price, stripe_product.id, product.stripe_price)
         .then((stripe_price) => {
-          console.log(stripe_price, "function ressult");
-          console.log(product.price, "mysql");
-          console.log(product.old_price, "oldmysql");
-          console.log(product.id, "productid");
 
           //then we update the product in our internal db
-          var values = [product.name, product.price, stripe_price, product.old_price, product.ean,
-            product.availability, product.quantity, product.brand, product.design,
+          var values = [product.name, product.price, stripe_price, product.old_price, product.sku,
+            product.availability, product.quantity, product.brand, product.design, product.tag,
             product.description, product.material, product.diameter, product.length,
             product.width, product.height, product.volume, product.weight, product.size, product.id,
             product.subcategory, product.category, product.section, product.id
           ];
 
           sql = "UPDATE product " +
-            "SET name =?, price=?, stripe_price=?, old_price=?, ean=?, availability=?, quantity=?, " +
-            "brand=?, design=?, description=?, material=?, diameter=?, length=?, " +
+            "SET name =?, price=?, stripe_price=?, old_price=?, sku=?, availability=?, quantity=?, " +
+            "brand=?, design=?, tag =?, description=?, material=?, diameter=?, length=?, " +
             "width=?, height=?, volume=?, weight=?, size=? " +
             "WHERE id=?; " +
             "UPDATE product_classification " +
@@ -508,11 +504,11 @@ router.put('/update-product', (req, res, next) => {
 
           connection.query(sql, values, (err, rows, fields) => {
             if (err) {
-              res.send(err);
+              res.sendStatus(400);
+              console.log(err);
             } else {
-              res.send("product updated!");
+              res.sendStatus(200);
             }
-
           });
 
 
@@ -551,7 +547,7 @@ router.post('/update-stripe', (req, res) => {
 //search for a product on admin side
 router.get('/search/sku/:keyword', (req, res) => {
   var keyword = "%" + req.params.keyword + "%";
-  
+
 });
 
 
@@ -840,8 +836,14 @@ async function deleteStripeProduct(product_id) {
 //Stripe Price -----------------------------------------------------------
 
 async function createStripePrice(prod_price, prod_id) {
+  prod_price = parseFloat(prod_price);
+  prod_price = Number((prod_price).toFixed(2));
+  prod_price = prod_price * 100;
+  prod_price = Number((prod_price).toFixed(0));
+  console.log(prod_price, "afterlife");
+
   let stripePrice = await stripe.prices.create({
-    unit_amount: prod_price * 100,
+    unit_amount: prod_price,
     currency: 'bgn',
     product: prod_id
   });
@@ -853,7 +855,10 @@ async function updateStripePrice(prod_price, prod_id, existing_stripe_price_id) 
 
   var price = await getStripePrice(existing_stripe_price_id);
 
-  console.log(price, "atwhatcost");
+  prod_price = parseFloat(prod_price);
+  prod_price = Number((prod_price).toFixed(2));
+  prod_price = prod_price * 100;
+  prod_price = Number((prod_price).toFixed(0));
 
 
   if (!("statusCode" in price)) {
@@ -861,11 +866,11 @@ async function updateStripePrice(prod_price, prod_id, existing_stripe_price_id) 
     console.log(price, "existing price");
     console.log((prod_price * 100 == price), "evaluation");
 
-    if (prod_price * 100 == price.unit_amount) {
+    if (prod_price == price.unit_amount) {
       return existing_stripe_price_id;
     } else {
       let stripePrice = await stripe.prices.create({
-        unit_amount: prod_price * 100,
+        unit_amount: prod_price,
         currency: 'bgn',
         product: prod_id
       });

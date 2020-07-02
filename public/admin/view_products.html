@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 
 <head>
   <meta charset="utf-8">
   <title>View Products</title>
   <link rel="stylesheet" href="/public/css/view_products.css">
-  <link rel="icon" href="../site/n8.ico">
+  <link rel="icon" href="../site/favicon.ico?" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
@@ -107,6 +108,7 @@
     <a href="create_admin.html">Create Admin</a> |
     <a href="view_admins.html">View Admins</a> |
     <a href="view_customers.html">View Customers</a> |
+    <a href="update_pages.html">Update Pages</a> |
     <a href='' id='logout' onclick="return false;">Logout</a>
   </nav>
   <div class='content'>
@@ -115,30 +117,26 @@
 
     <div class="" id="letter_container"></div>
 
+    <div class="" id="search_container">
+      <input class="search_products" type="text" placeholder="Search" data-relevance="names1"/>
+    </div>
+
     <div id="products_table" class="container">
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>New Price</th>
-            <th>EAN</th>
-            <th>Availability</th>
-            <th>Quantity</th>
-            <th>Brand</th>
-            <th>Design</th>
-            <th>Description</th>
-            <th>Material</th>
-            <th>Diameter</th>
-            <th>Length</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th>Volume</th>
-            <th>Weight</th>
-            <th>Size</th>
-            <th>Subcategory</th>
-            <th>Category</th>
-            <th>Section</th>
+            <th data-column="name" data-order="desc">Name &#9650</th>
+            <th data-column="price" data-order="desc">Price &#9650</th>
+            <th data-column="old_price" data-order="desc">Old Price &#9650</th>
+            <th data-column="sku" data-order="desc">SKU &#9650</th>
+            <th data-column="availability" data-order="desc">Availability &#9650</th>
+            <th data-column="quantity" data-order="desc">Quantity &#9650</th>
+            <th data-column="brand" data-order="desc">Brand &#9650</th>
+            <th data-column="design" data-order="desc">Design &#9650</th>
+            <th data-column="tag" data-order="desc">Tag &#9650</th>
+            <th data-column="subcategory" data-order="desc">Subcategory &#9650</th>
+            <th data-column="category" data-order="desc">Category &#9650</th>
+            <th data-column="section" data-order="desc">Section &#9650</th>
             <th>Update Product</th>
             <th>Delete Product</th>
           </tr>

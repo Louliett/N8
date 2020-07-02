@@ -5,15 +5,43 @@
   <meta charset="utf-8">
   <title>Update Product</title>
   <link rel="stylesheet" href="../css/update_product.css">
-  <link rel="icon" href="../site/n8.ico">
+  <link rel="icon" href="../site/favicon.ico?" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/public/js/adminCancel.js"></script>
 </head>
 
-<body>
+<body id='main'>
   <p class='bigtitle' id='bigtitle'>UPDATE PRODUCT</p>
+
+
+
+  <div class='notifier'>
+    <div class='notifier_body'>
+      <div class='notifier_title'>Product updated successfully!</div>
+      <div class='notifier_draw'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="96px"
+          height="96px">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7c.39-.39.39-1.02 0-1.41-.39-.39-1.03-.39-1.42 0z" />
+          </svg></div>
+      <div class='notifier_hint'>(Click anywhere to close)</div>
+    </div>
+  </div>
+
+  <div class='smol_notifier'>
+    <div class='smol_notifier_body'>
+      <div class='smol_notifier_title'>Saved automatically!</div>
+      <div class='smol_notifier_draw'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"
+          width="96px" height="96px">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7c.39-.39.39-1.02 0-1.41-.39-.39-1.03-.39-1.42 0z" />
+          </svg></div>
+    </div>
+  </div>
+
 
   <nav>
     <a href="admin_home.html">Home</a> |
@@ -44,15 +72,10 @@
         <br>
         <input type="text" id="product_price">
 
-        <!-- <p></p>
-        <label> New Price </label>
-        <br>
-        <input type="text" id="product_new_price"> -->
-
         <p></p>
-        <label> EAN </label>
+        <label> SKU </label>
         <br>
-        <input type="text" id="product_ean">
+        <input type="text" id="product_sku">
 
         <p></p>
         <label> Availability </label>
@@ -73,6 +96,11 @@
         <label> Design </label>
         <br>
         <input type="text" id="product_design">
+
+        <p></p>
+        <label> Tag </label>
+        <br>
+        <input type="text" id="product_tag">
       </div>
 
       <div class="text_fields_div">
@@ -199,9 +227,11 @@
       <div id="images_container"></div>
       <div id="new_colours_images"></div>
       <div class="add_colour_div">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px" id="add_colour">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="48px" height="48px"
+          id="add_colour">
           <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+          <path
+            d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
         </svg>
       </div>
     </div>

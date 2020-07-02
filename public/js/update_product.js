@@ -27,12 +27,12 @@ var default_section;
 //product textfields
 var product_name_txt = document.getElementById('product_name');
 var product_price_txt = document.getElementById('product_price');
-//var product_new_price_txt = document.getElementById('product_new_price');
-var product_ean_txt = document.getElementById('product_ean');
+var product_sku_txt = document.getElementById('product_sku');
 var product_availability_txt = document.getElementById('product_availability');
 var product_quantity_txt = document.getElementById('product_quantity');
 var product_brand_txt = document.getElementById('product_brand');
 var product_design_txt = document.getElementById('product_design');
+var product_tag_txt = document.getElementById('product_tag');
 var product_description_txt = document.getElementById('product_description');
 var product_material_txt = document.getElementById('product_material');
 var product_diameter_txt = document.getElementById('product_diameter');
@@ -96,6 +96,18 @@ var formdata;
 var fileInput;
 var colour;
 var headers;
+
+var notifier = $('.notifier');
+var smol_notifier = $('.smol_notifier');
+notifier.click(function () {
+
+  notifier.css('display', 'none');
+  $('#main').removeClass('noscroll');
+
+
+});
+
+
 
 //populates all the drop down menus
 populateSelectors(sub_table, sub_array, product_subcategory_slc);
@@ -303,9 +315,17 @@ function deleteImages(image_id, url) {
   fetch('http://192.168.0.108:3000/products/delete-images', requestOptions)
     .then(response => response.text())
     .then((result) => {
-      console.log(result);
       $('#images_table').load(document.URL + " #images_table", () => {
         displayProductImages();
+        //display notifier for success start
+        smol_notifier.css('display', 'block');
+        smol_notifier.addClass('show');
+        setTimeout(function () {
+
+          smol_notifier.removeClass('show');
+
+        }, 1400)
+        //display notifier for success end
       });
     }).catch(error => console.log('error', error));
 
@@ -315,12 +335,12 @@ function deleteImages(image_id, url) {
 update_product_button.addEventListener("click", () => {
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
-  //var product_new_price = product_new_price_txt.value;
-  var product_ean = product_ean_txt.value;
+  var product_sku = product_sku_txt.value;
   var product_availability = product_availability_txt.value;
   var product_quantity = product_quantity_txt.value;
   var product_brand = product_brand_txt.value;
   var product_design = product_design_txt.value;
+  var product_tag = product_tag_txt.value;
   var product_description = product_description_txt.value;
   var product_material = product_material_txt.value;
   var product_diameter = product_diameter_txt.value;
@@ -336,15 +356,15 @@ update_product_button.addEventListener("click", () => {
 
   //check if the fields are empty
   var empty_fields = isItEmpty([product_name, product_price,
-    product_ean, product_availability, product_quantity, product_brand, product_design,
-    product_description, product_material, product_diameter, product_length,
+    product_sku, product_availability, product_quantity, product_brand, product_design,
+    product_tag, product_description, product_material, product_diameter, product_length,
     product_width, product_height, product_volume, product_weight, product_size
   ]);
 
   //check if the classifications are strictly not empty
   var empty_classifications = isItEmptyStrict([product_subcategory, product_category, product_section]);
 
-  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_description]);
+  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_sku, product_description]);
 
   var data = {
     'id': product_id,
@@ -353,11 +373,12 @@ update_product_button.addEventListener("click", () => {
     'price': product_price,
     'stripe_price': stripe_price,
     'old_price': product_old_price,
-    'ean': product_ean,
+    'sku': product_sku,
     'availability': product_availability,
     'quantity': product_quantity,
     'brand': product_brand,
     'design': product_design,
+    'tag': product_tag,
     'description': product_description,
     'material': product_material,
     'diameter': product_diameter,
@@ -401,8 +422,8 @@ function updateProductText(data) {
   fetch("http://192.168.0.108:3000/products/update-product", requestOptions)
     .then(response => response.text())
     .then((result) => {
-      console.log(result);
-      //location.reload(true);
+      notifier.css('display', 'inline');
+      $('#main').addClass('noscroll');
     }).catch(error => console.log('error', error));
 }
 
@@ -459,6 +480,18 @@ function updateProductColours() {
 
       $('#images_table').load(document.URL + ' #images_table', () => {
         displayProductImages();
+
+        //display notifier for success start
+        smol_notifier.css('display', 'block');
+        smol_notifier.addClass('show');
+        setTimeout(function () {
+
+          smol_notifier.removeClass('show');
+
+        }, 1400)
+        //display notifier for success end
+
+
       });
 
     }).catch(error => console.log('error', error));
@@ -500,6 +533,18 @@ function newImagesOldColours(fileInput_id) {
 
       $('#images_table').load(document.URL + ' #images_table', () => {
         displayProductImages();
+
+        //display notifier for success start
+        smol_notifier.css('display', 'block');
+        smol_notifier.addClass('show');
+        setTimeout(function () {
+
+          smol_notifier.removeClass('show');
+
+        }, 1400)
+        //display notifier for success end
+
+
       });
 
     }).catch(error => console.log('error', error));
@@ -543,6 +588,15 @@ function newImagesNewColours() {
         document.getElementById('new_colours_images').innerHTML = "";
         displayProductImages();
         $(add_colour_row).show();
+        //display notifier for success start
+        smol_notifier.css('display', 'block');
+        smol_notifier.addClass('show');
+        setTimeout(function () {
+
+          smol_notifier.removeClass('show');
+
+        }, 1400)
+        //display notifier for success end
       });
 
     }).catch(error => console.log('error', error));
@@ -598,6 +652,15 @@ function displayProductImages() {
     .then(response => response.json())
     .then(data => {
       createArraysOfStuff(data);
+      //display notifier for success start
+      smol_notifier.css('display', 'block');
+      smol_notifier.addClass('show');
+      setTimeout(function () {
+
+        smol_notifier.removeClass('show');
+
+      }, 1400)
+      //display notifier for success end
     }).catch(error => console.error(error));
 }
 
@@ -630,12 +693,12 @@ function populateSelectorsFields() {
       product_price_txt.value = data[0].price;
       product_old_price = data[0].price;
       stripe_price = data[0].stripe_price;
-      //product_new_price_txt.value = data[0].new_price;
-      product_ean_txt.value = data[0].ean;
+      product_sku_txt.value = data[0].sku;
       product_availability_txt.value = data[0].availability;
       product_quantity_txt.value = data[0].quantity;
       product_brand_txt.value = data[0].brand;
       product_design_txt.value = data[0].design;
+      product_tag_txt.value = data[0].tag;
       product_description_txt.value = data[0].description;
       product_material_txt.value = data[0].material;
       product_diameter_txt.value = data[0].diameter;

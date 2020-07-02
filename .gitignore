@@ -1,6 +1,7 @@
 #Image Folders
 class_images/
 product_images/
+page_images/
 node_modules
 
 #payment files

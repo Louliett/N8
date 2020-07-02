@@ -210,7 +210,7 @@ $("#includedContent").load("/public/html/header.html", () => {
     
 }
 
-    $(".bigtitle").text(product.name);
+    $(".bigtitle").text(product.category);
     $(".itemtitle").text(product.name);
     $(".itemcategory").text(product.section + "/" + product.category + "/" + product.subcategory);
     $(".itemdetails").text(product.description);

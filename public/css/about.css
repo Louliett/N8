@@ -1,32 +1,78 @@
-.maincontent{
-    margin:140px;
-    height:400px;
+*{
+    
+    
+    font-family: 'Inconsolata', monospace;
 }
-.logodiv{
-    width:150px;
-    height:150px;
+.page_title{
+    color:#ffffff;
+    font-size:38px;
 }
-.logodiv img {
-        object-fit: cover;
-    width: 100%;
+.free_real_estate2{
+    bottom:25% !important;
+    transform: translate(-50%, 50%)!important;
+}
+.about_text p {
+	width: 100%;
+	font-size: 12px;
+	line-height: 23px;
+	margin: 0 auto;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+    
+    
+    margin-top:40px;
+}
+.about_text{
+      display:inline-block;
+    width:40%;
+    box-sizing: border-box;
+        vertical-align: top;
+
+}
+.about_text_bottom{
+    box-sizing: border-box;
+
+}
+.about_image img{
+    width:100%;
     height:100%;
+    object-fit: cover;
 }
-.iconcontainer{
+.about_image{
+    display:inline-block;
+    width:58%;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+.about_image_bottom{
+    box-sizing: border-box;
+}
+.about_image_bottom img{
+    width:100%;
+height:300px;
+    object-fit: cover;
+}
+.about_info{
+    width:100%;
+}
+.about_bodeh{
     width:100%;
     text-align: center;
-    display:inline-block;
-}
-.maincontent{
-    text-align: center;
-        clear: left;
+    height:auto;
+    position:relative;
 
 }
-.header{
-    text-align:center;
+.about_main{
+   position:absolute;
+width:100%;
+    
+    top:0;
+    left:50%;
+    transform: translate(-50%, 0);
 }
-.description{
-text-align: center;}
-
-td{
-    padding: 20px 79px;
+.about_title{
+    font-size:29px;
+}
+.about_info{
+    margin:60px 4px;
 }

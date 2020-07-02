@@ -1,20 +1,45 @@
-.maincontent{
-    display:inline-block;
-width:400px;    
-    margin-top:190px;
-}
-.mapdiv, .addressdiv{
-    display:inline-block;
-    width: 180px;
-    vertical-align: top;
-}
 .beforemain{
     width:100%;
     text-align: center;
+    height:auto;
+    position:relative;
+
 }
-.addressdiv{
-    border-top: 3px solid #000000;
-    text-align: left;
+.maincontent{
+   position:absolute;
+
+    
+    top:0;
+    left:50%;
+    transform: translate(-50%, 0);
+}
+.mapdiv, .addressdiv{
+    display:inline-block;
+    width:300px;
+    box-sizing: border-box;
+    vertical-align: top;
 }
 
+
+.addressdiv{
+    border-top: 3px solid #00000088;
+    background-color:#ffffff;
+    text-align: left;
+    padding:20px;
+}
+.inner{
+}
+.page_title{
+    color:#ffffff;
+    font-size:38px;
+}
+
+.free_real_estate2{
+    bottom:25% !important;
+    transform: translate(-50%, 50%)!important;
+}
+#main{
+        background-color:#E7E7E7 !important;
+
+}
 

@@ -9,12 +9,12 @@ import {
 //textfields
 var product_name_txt = document.getElementById('product_name');
 var product_price_txt = document.getElementById('product_price');
-//var product_new_price_txt = document.getElementById('product_new_price');
-var product_ean_txt = document.getElementById('product_ean');
+var product_sku_txt = document.getElementById('product_sku');
 var product_availability_txt = document.getElementById('product_availability');
 var product_quantity_txt = document.getElementById('product_quantity');
 var product_brand_txt = document.getElementById('product_brand');
 var product_design_txt = document.getElementById('product_design');
+var product_tag_txt = document.getElementById('product_tag');
 var product_description_txt = document.getElementById('product_description');
 var product_material_txt = document.getElementById('product_material');
 var product_diameter_txt = document.getElementById('product_diameter');
@@ -80,6 +80,16 @@ var headers;
 var fileInput;
 var product_colour_txt;
 
+var notifier = $('.notifier');
+notifier.click(function () {
+
+  notifier.css('display', 'none');
+  $('#main').removeClass('noscroll');
+
+
+});
+
+
 
 //fetches the classifications from DB into selectors
 fetchClassifications(sub_slc, cat_slc, sec_slc, null);
@@ -115,12 +125,12 @@ create_product_button.addEventListener("click", () => {
   //initializing
   var product_name = product_name_txt.value;
   var product_price = product_price_txt.value;
-  //var product_new_price = product_new_price_txt.value;
-  var product_ean = product_ean_txt.value;
+  var product_sku = product_sku_txt.value;
   var product_availability = product_availability_txt.value;
   var product_quantity = product_quantity_txt.value;
   var product_brand = product_brand_txt.value;
   var product_design = product_design_txt.value;
+  var product_tag = product_tag_txt.value;
   var product_description = product_description_txt.value;
   var product_material = product_material_txt.value;
   var product_diameter = product_diameter_txt.value;
@@ -136,23 +146,23 @@ create_product_button.addEventListener("click", () => {
 
   //check if the fields are empty
   var empty_fields = isItEmpty([product_name, product_price,
-    product_ean, product_availability, product_quantity, product_brand, product_design,
-    product_description, product_material, product_diameter, product_length,
+    product_sku, product_availability, product_quantity, product_brand, product_design,
+    product_tag, product_description, product_material, product_diameter, product_length,
     product_width, product_height, product_volume, product_weight, product_size
   ]);
   //check if the classifications are strictly not empty
   var empty_classifications = isItEmptyStrict([product_subcategory, product_category, product_section]);
 
-  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_description]);
+  var special_fields = isItEmptyStrict([product_name, product_price, product_brand, product_sku, product_description]);
 
   formdata.append("name", product_name);
   formdata.append("price", product_price);
-  //formdata.append("new_price", product_new_price);
-  formdata.append("ean", product_ean);
+  formdata.append("sku", product_sku);
   formdata.append("availability", product_availability);
   formdata.append("quantity", product_quantity);
   formdata.append("brand", product_brand);
   formdata.append("design", product_design);
+  formdata.append("tag", product_tag);
   formdata.append("description", product_description);
   formdata.append("material", product_material);
   formdata.append("diameter", product_diameter);
@@ -177,6 +187,10 @@ create_product_button.addEventListener("click", () => {
       formdata.append("colour", product_colour_txt.value);
     }
   }
+  for (var pair of formdata.entries()) {
+    console.log(pair[0] + ', ' + pair[1]);
+  }
+
 
   if (empty_fields === true) {
     text_error_txt.innerHTML = "Fields are empty!";
@@ -197,8 +211,8 @@ create_product_button.addEventListener("click", () => {
     fetch("http://192.168.0.108:3000/products/create-product", uploadImagesRequest)
       .then(response => response.text())
       .then((result) => {
-        console.log(result);
-        location.reload(true);
+        notifier.css('display', 'inline');
+        $('#main').addClass('noscroll');
       }).catch(error => console.log('error', error));
 
   }
@@ -312,6 +326,9 @@ function createClassification(txtarea, array, create_class, create_class_img, er
             $(selector_id).html = "";
             //to be changed, the drop down menu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
             $('#tity').load(document.URL + ' ' + '#tity', () => {
+              // $('#product_subcategory').html('')
+              // $('#product_category').html('')
+              // $('#product_section').html('')
               fetchClassifications($('#product_subcategory')[0], $('#product_category')[0], $('#product_section')[0]);
               txtarea.value = "";
             });
@@ -335,6 +352,9 @@ function createClassification(txtarea, array, create_class, create_class_img, er
             error_label.innerHTML = result;
 
             $(selector_id).load(document.URL + ' ' + selector_id, () => {
+              //  $('#product_subcategory').html('')
+              // $('#product_category').html('')
+              // $('#product_section').html('')
               fetchClassifications($('#product_subcategory')[0], $('#product_category')[0], $('#product_section')[0], class_name);
               //$(default_option).val(class_name);
               txtarea.value = "";

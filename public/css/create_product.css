@@ -97,3 +97,48 @@ a:hover {
 #add_colour:hover {
   fill: #000000cc;
 }
+.notifier  {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 4; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(255,255,255); /* Fallback color */
+  background-color: rgba(255,255,255,0.91); /* Black w/ opacity */
+    cursor:pointer;
+}
+.notifier_body {
+    
+  position: relative;
+  margin: auto;
+  padding: 0;
+    object-fit: cover;
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.2s;
+        width: 50%;
+    text-align: center;
+
+}
+.noscroll{
+    overflow:hidden;
+}
+.notifier_title{
+    font-size:80px;
+    color:#3f4045cc;
+}
+.notifier_draw svg{
+    fill:#7DCE82;
+}
+.notifier_draw{
+        margin-top:40px;
+}
+.notifier_hint{
+    color:#3f4045cc;
+    margin-top:40px;
+}

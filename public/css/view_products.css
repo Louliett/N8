@@ -18,6 +18,17 @@ table, th, td {
   border-collapse: collapse;
   padding: 2px 3px;
   text-align: center;
+    overflow:auto;
+      table-layout: fixed;
+
+    
+}
+
+
+th,
+td {
+  width: 100px;height:50px;
+  overflow: hidden;
 }
 
 th {
@@ -69,3 +80,18 @@ nav {
   display: inline-block;
   vertical-align: top;
 }
+.low{
+    background-color:#FFB11A88;
+}
+.no{
+    background-color:#ff596488;
+}
+.hcell{
+    padding:12px;
+    cursor:pointer;
+}
+.hcell:hover{
+    background-color:#00000044;
+    color:#ffffff;
+}
+
