@@ -66,7 +66,7 @@ router.post('/formdata', upload.array('prodImage', 9), (req, res) => {
   //console.log(form.sku, "sku");
   console.log(req.files);
   res.sendStatus(200);
-  
+
 });
 
 router.post('/create', upload.array('prodImage', 9), (req, res) => {
@@ -75,10 +75,12 @@ router.post('/create', upload.array('prodImage', 9), (req, res) => {
   var sizes = [];
   var prices = [];
   var quantities = [];
-  var stripe_product = "";
-  var stripe_skus = [];
   var attributes = [];
+  var unique_colour = "";
+  var unique_size = "";
 
+  console.log(prod, "formdata");
+  
   if (typeof (req.body.colour) === 'string') {
     colours.push(req.body.colour);
     sizes.push(req.body.size);
@@ -87,35 +89,64 @@ router.post('/create', upload.array('prodImage', 9), (req, res) => {
   } else {
     colours = req.body.colour;
     sizes = req.body.size;
-    prices = req.body.quantity;
+    prices = req.body.price;
     quantities = req.body.quantity;
   }
 
   
+  
+  //iterate through the colours and select unique combos of colour-size
+  //this is needed to create unique attributes for the stripe product
+  for (let i = 0; i < req.files.length; i++) {
+    console.log("---------------------------------------------------------------------");
+    console.log(unique_colour !== colours[i] || unique_size !== sizes[i], "evaluation");  
+    console.log(unique_colour, colours[i], unique_size, sizes[i], "values");
+    console.log("---------------------------------------------------------------------");
+    
+    console.log(prices, "entire");
+    
+    console.log(prices[i], "ati");
+    
 
-  createProductSku(prod.name, prod.description, prod.sku_attributes)
-    .then((array) => {
+    if (unique_colour !== colours[i] || unique_size !== sizes[i]) {
+      console.log(attributes, "attributes");
       
+      attributes.push({
+        colour: colours[i],
+        size: sizes[i],
+        price: prices[i],
+        quantity: quantities[i],
+        image: "http://192.168.0.107:3000" + (req.files[0].destination + req.files[0].filename).substr(1)
+      });
+    }
+
+    unique_colour = colours[i];
+    unique_size = sizes[i];
+
+  }
+
+
+
+  console.log(attributes, "sent from create");
+  
+  createProductSku(prod.name, prod.description, attributes)
+    .then((array) => {
+
       console.log(array[0], "prod ready to go");
       console.log(array[1], "sku ready to go");
 
-      //iterate through the colours and select unique combos of colour-size
-      for(let i = 0; i < req.files.lengthl; i++) {
-
-
-      }
-
+      
       //our database
 
     }).catch(error => console.error(error));
-  
-    
 
-  
-  
+
+
+
+
 
   res.send([]);
-  
+
 
 
 
@@ -124,21 +155,27 @@ router.post('/create', upload.array('prodImage', 9), (req, res) => {
 
 async function createProductSku(prod_name, prod_descript, sku_attributes) {
   console.log("sku got called");
+  console.log(sku_attributes, "received from create");
+  
   var prod_price = 0;
-  let stripe_skus = [];
+  var stripe_skus = [];
 
   //we await first for the stripe product to be created and store it into a variable
   var stripe_product = await createStripeProduct(prod_name, prod_descript);
 
   for (let i = 0; i < sku_attributes.length; i++) {
+    //let's make sure we send to stripe the normalized price
     prod_price = createStripeCoins(sku_attributes[i].price);
-    await createStripeSku(stripe_product.id, sku_attributes[i].colour, sku_attributes[i].size, prod_price, sku_attributes[i].quantity, stripe_skus);
+    console.log(prod_price, "refined price");
+    
+    await createStripeSku(stripe_product.id, sku_attributes[i].colour, sku_attributes[i].size, 
+      prod_price, sku_attributes[i].quantity, sku_attributes[i].image, stripe_skus);
   }
-  
+
   console.log(stripe_product, "product sent");
   console.log(stripe_skus, "skus sent");
-  
-  
+
+
   return [stripe_product.id, stripe_skus];
 }
 
@@ -1028,6 +1065,15 @@ router.post('/create-sku', (req, res) => {
 });
 
 async function createStripeSku(id, colour, size, price, quantity, image, sku_array) {
+  console.log({
+    colour: colour,
+    size: size,
+    price: price,
+    quantity: quantity,
+    image: image
+  }, "sku method");
+
+  
   quantity = parseInt(quantity);
   var sku = await stripe.skus.create({
     attributes: {
