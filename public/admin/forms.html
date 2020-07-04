@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shittotest</title>
+
+</head>
+
+<body>
+    <form id='test-form'>
+        image: <input type="file" id="files" name='input1' multiple /><br>
+        color: <input name='input1'><br>
+        quantity: <input name='input1'><br>
+        size: <input name='input1'><br>
+        price: <input name='input1'><br>
+        <br>
+        image: <input type="file" id="files" name='input2' multiple /><br>
+        color: <input name='input2'><br>
+        quantity: <input name='input2'><br>
+        size: <input name='input2'><br>
+        price: <input name='input2'><br>
+        <input type='submit'>
+
+        <button id='send'>sned</button>
+
+        <script id="applicationScript">
+            var Application = function () {
+
+                var testForm = document.getElementById('test-form');
+                var div = document.getElementById('output');
+                var data;
+
+                testForm.onsubmit = function (event) {
+                    event.preventDefault();
+
+                    var request = new XMLHttpRequest();
+
+                    request.open('POST', 'http://httpbin.org/post', /* async = */ false);
+                    //request.open('POST', 'https://postman-echo.com/post', /* async = */ false);
+                    //request.open('POST', 'http://192.168.0.108:3000/products/formdata', /* async = */ false);
+
+                    var formData = new FormData(document.getElementById('test-form'));
+                    console.log((JSON.stringify(formData)));
+                    request.send(formData);
+                    console.log(request.response);
+                }
+
+
+                document.getElementById('send').addEventListener("click", () => {
+                    var headers = new Headers();
+
+
+
+                    //request.open('POST', 'http://192.168.0.108:3000/products/formdata', /* async = */ false);
+
+                    var formData = new FormData(document.getElementById('test-form'));
+                    console.log((JSON.stringify(formData)));
+
+                    headers.append("Content-Type", "multipart/form-data");
+
+                    var uploadImagesRequest = {
+                        method: 'POST',
+                        header: headers,
+                        body: formData
+                    };
+
+                    fetch("http://192.168.0.108:3000/products/formdata", uploadImagesRequest)
+                        // fetch('http://httpbin.org/post', uploadImagesRequest)
+                        //fetch('https://postman-echo.com/post', uploadImagesRequest)
+                        .then(response => response.text())
+                        .then((result) => {
+                            console.log(result);
+                        }).catch(error => console.log('error', error));
+
+
+
+                });
+
+
+            }
+
+            window.application = new Application();
+        </script>
+</body>
+
+</html>

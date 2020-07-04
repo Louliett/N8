@@ -187,6 +187,7 @@ create_product_button.addEventListener("click", () => {
       formdata.append("colour", product_colour_txt.value);
     }
   }
+  
   for (var pair of formdata.entries()) {
     console.log(pair[0] + ', ' + pair[1]);
   }

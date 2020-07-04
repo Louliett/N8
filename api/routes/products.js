@@ -59,32 +59,103 @@ function checkFileType(file, cb) {
   }
 }
 
-//get * from product based on stripe id
-router.post('/stripe-id', (req, res) => {
-  var stripe_product_ids = req.body.stripe_ids;
-  console.log(stripe_product_ids, "received");
+router.post('/formdata', upload.array('prodImage', 9), (req, res) => {
+  var form = req.body;
+  //form = JSON.parse(form);
+  console.log(form);
+  //console.log(form.sku, "sku");
+  console.log(req.files);
+  res.sendStatus(200);
+  
+});
 
-  sql = "SELECT * FROM product WHERE stripe_id = ?; ";
-  var final_query = "";
-  var values = [];
+router.post('/create', upload.array('prodImage', 9), (req, res) => {
+  let prod = req.body;
+  var colours = [];
+  var sizes = [];
+  var prices = [];
+  var quantities = [];
+  var stripe_product = "";
+  var stripe_skus = [];
+  var attributes = [];
 
-  for (let i = 0; i < stripe_product_ids.length; i++) {
-    final_query = final_query + sql;
-    values.push(stripe_product_ids[i]);
+  if (typeof (req.body.colour) === 'string') {
+    colours.push(req.body.colour);
+    sizes.push(req.body.size);
+    prices.push(req.body.price);
+    quantities.push(req.body.quantity);
+  } else {
+    colours = req.body.colour;
+    sizes = req.body.size;
+    prices = req.body.quantity;
+    quantities = req.body.quantity;
   }
 
-  connection.query(final_query, values, (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(rows);
-    }
-  });
+  
+
+  createProductSku(prod.name, prod.description, prod.sku_attributes)
+    .then((array) => {
+      
+      console.log(array[0], "prod ready to go");
+      console.log(array[1], "sku ready to go");
+
+      //iterate through the colours and select unique combos of colour-size
+      for(let i = 0; i < req.files.lengthl; i++) {
+
+
+      }
+
+      //our database
+
+    }).catch(error => console.error(error));
+  
+    
+
+  
+  
+
+  res.send([]);
+  
+
+
 
 });
 
 
-router.post('/create-product', upload.array('myImage', 5), (req, res) => {
+async function createProductSku(prod_name, prod_descript, sku_attributes) {
+  console.log("sku got called");
+  var prod_price = 0;
+  let stripe_skus = [];
+
+  //we await first for the stripe product to be created and store it into a variable
+  var stripe_product = await createStripeProduct(prod_name, prod_descript);
+
+  for (let i = 0; i < sku_attributes.length; i++) {
+    prod_price = createStripeCoins(sku_attributes[i].price);
+    await createStripeSku(stripe_product.id, sku_attributes[i].colour, sku_attributes[i].size, prod_price, sku_attributes[i].quantity, stripe_skus);
+  }
+  
+  console.log(stripe_product, "product sent");
+  console.log(stripe_skus, "skus sent");
+  
+  
+  return [stripe_product.id, stripe_skus];
+}
+
+function createStripeCoins(price) {
+  var new_price = parseFloat(price);
+  new_price = Number((new_price).toFixed(2));
+
+  var coins = new_price * 100;
+  coins = Number((coins).toFixed(0));
+  return coins;
+}
+
+
+
+
+
+router.post('/creates-product', upload.array('myImage', 5), (req, res) => {
   var sql2;
   var finalquery;
   var newboss = [];
@@ -205,8 +276,8 @@ router.post('/create-product', upload.array('myImage', 5), (req, res) => {
 });
 
 
-router.post('/get-stripe-product', (req, res) => {
-  var product_id = req.body.productid;
+router.get('/stripe-product/:id', (req, res) => {
+  var product_id = req.params.id;
   getStripeProduct(product_id).then((stripeProduct) => {
     res.send(stripeProduct);
   }).catch(error => console.error(error));
@@ -347,15 +418,15 @@ router.get('/first-letter/:letter', (req, res) => {
 
   //default query for dealing with product's first letter
   sql = "SELECT product.id, product.name, product.price, product.old_price, " +
-        "product.sku, product.availability, product.quantity, product.brand, " + 
-        "product.design, product.tag, subcategory.name as subcategory, " + 
-        "category.name as category, section.name as section " +
-        "FROM product " +
-        "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
-        "LEFT JOIN subcategory ON subcategory_id=subcategory.id " +
-        "LEFT JOIN category ON category_id=category.id " +
-        "LEFT JOIN section ON section_id=section.id " +
-        "WHERE product.name LIKE ?;";
+    "product.sku, product.availability, product.quantity, product.brand, " +
+    "product.design, product.tag, subcategory.name as subcategory, " +
+    "category.name as category, section.name as section " +
+    "FROM product " +
+    "LEFT JOIN product_classification ON product.id=product_classification.product_id " +
+    "LEFT JOIN subcategory ON subcategory_id=subcategory.id " +
+    "LEFT JOIN category ON category_id=category.id " +
+    "LEFT JOIN section ON section_id=section.id " +
+    "WHERE product.name LIKE ?;";
 
   //query for selecting all the products
   if (req.params.letter === "*") {
@@ -797,18 +868,42 @@ router.post('/quantities', (req, res) => {
 //Stripe Product ----------------------------------------------------------------------
 
 //creates a stripe product, returns the stripe price object
-async function createStripeProduct(prod_name, prod_brand, prod_descript, prod_image) {
+// async function createStripeProduct(prod_name, prod_brand, prod_descript, prod_image) {
 
-  let stripeProduct = await stripe.products.create({
-    name: prod_name,
-    attributes: [prod_brand],
-    description: prod_descript,
-    images: [prod_image],
-    type: "good"
+//   let stripeProduct = await stripe.products.create({
+//     name: prod_name,
+//     attributes: [prod_brand],
+//     description: prod_descript,
+//     images: [prod_image],
+//     type: "good"
+//   });
+
+//   return stripeProduct;
+// }
+
+//get * from product based on stripe id
+router.post('/stripe-id', (req, res) => {
+  var stripe_product_ids = req.body.stripe_ids;
+  console.log(stripe_product_ids, "received");
+
+  sql = "SELECT * FROM product WHERE stripe_id = ?; ";
+  var final_query = "";
+  var values = [];
+
+  for (let i = 0; i < stripe_product_ids.length; i++) {
+    final_query = final_query + sql;
+    values.push(stripe_product_ids[i]);
+  }
+
+  connection.query(final_query, values, (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(rows);
+    }
   });
 
-  return stripeProduct;
-}
+});
 
 //get stripe product based on stripe product id
 async function getStripeProduct(prod_id) {
@@ -833,7 +928,7 @@ async function deleteStripeProduct(product_id) {
 }
 
 
-//Stripe Price -----------------------------------------------------------
+//Stripe Price ----------------------------------------------------------------------------
 
 async function createStripePrice(prod_price, prod_id) {
   prod_price = parseFloat(prod_price);
@@ -898,5 +993,58 @@ async function getStripePrice(price_id) {
 //   return updatedStripePrice;
 // }
 
+//Stripe SKU ---------------------------------------------------------------------
+router.post('/create-stripe-prod', (req, res) => {
+  var prod = req.body;
+
+  createStripeProduct(prod.name, prod.attribute1, prod.attribute2, prod.description)
+    .then((product) => {
+      res.send(product);
+    }).catch(error => console.error(error));
+});
+
+//creates a stripe product, returns the stripe price object
+async function createStripeProduct(prod_name, prod_description) {
+
+  let stripeProduct = await stripe.products.create({
+    name: prod_name,
+    attributes: ["colour", "size"],
+    description: prod_description,
+    type: "good"
+  });
+
+  return stripeProduct;
+}
+
+
+
+router.post('/create-sku', (req, res) => {
+  var product_id = req.body.stripe_product;
+
+  createStripeSku(product_id)
+    .then((sku) => {
+      res.send(sku);
+    }).catch(error => console.error(error));
+});
+
+async function createStripeSku(id, colour, size, price, quantity, image, sku_array) {
+  quantity = parseInt(quantity);
+  var sku = await stripe.skus.create({
+    attributes: {
+      colour: colour,
+      size: size,
+    },
+    price: price,
+    currency: 'bgn',
+    inventory: {
+      type: 'finite',
+      quantity: quantity
+    },
+    image: image,
+    product: id
+  });
+
+  sku_array.push(sku.id);
+}
 
 module.exports = router;
